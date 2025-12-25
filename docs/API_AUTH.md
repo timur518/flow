@@ -1,0 +1,492 @@
+# API Документация - Аутентификация и Личный кабинет
+
+## Базовый URL
+```
+http://your-domain.com/api/v1
+```
+
+## Аутентификация
+
+Все защищенные endpoints требуют токен аутентификации в заголовке:
+```
+Authorization: Bearer {token}
+```
+
+---
+
+## Endpoints
+
+### 1. Регистрация
+
+**POST** `/auth/register`
+
+Регистрация нового пользователя.
+
+**Тело запроса:**
+```json
+{
+  "name": "Иван Иванов",
+  "email": "ivan@example.com",
+  "phone": "+79991234567",
+  "password": "password123",
+  "password_confirmation": "password123"
+}
+```
+
+**Ответ (201):**
+```json
+{
+  "message": "Регистрация прошла успешно",
+  "user": {
+    "id": 1,
+    "name": "Иван Иванов",
+    "email": "ivan@example.com",
+    "phone": "+79991234567",
+    "created_at": "2025-12-24T12:00:00.000000Z"
+  },
+  "token": "1|abc123..."
+}
+```
+
+---
+
+### 2. Вход
+
+**POST** `/auth/login`
+
+Вход пользователя по email или телефону.
+
+**Тело запроса:**
+```json
+{
+  "login": "ivan@example.com",
+  "password": "password123"
+}
+```
+
+или
+
+```json
+{
+  "login": "+79991234567",
+  "password": "password123"
+}
+```
+
+**Ответ (200):**
+```json
+{
+  "message": "Вход выполнен успешно",
+  "user": {
+    "id": 1,
+    "name": "Иван Иванов",
+    "email": "ivan@example.com",
+    "phone": "+79991234567",
+    "created_at": "2025-12-24T12:00:00.000000Z"
+  },
+  "token": "2|xyz789..."
+}
+```
+
+**Ошибка (401):**
+```json
+{
+  "message": "Неверные учетные данные"
+}
+```
+
+---
+
+### 3. Выход
+
+**POST** `/auth/logout`
+
+Выход пользователя (удаление текущего токена).
+
+**Заголовки:**
+```
+Authorization: Bearer {token}
+```
+
+**Ответ (200):**
+```json
+{
+  "message": "Выход выполнен успешно"
+}
+```
+
+---
+
+### 4. Получить профиль
+
+**GET** `/auth/profile`
+
+Получить данные текущего пользователя.
+
+**Заголовки:**
+```
+Authorization: Bearer {token}
+```
+
+**Ответ (200):**
+```json
+{
+  "user": {
+    "id": 1,
+    "name": "Иван Иванов",
+    "email": "ivan@example.com",
+    "phone": "+79991234567",
+    "created_at": "2025-12-24T12:00:00.000000Z"
+  }
+}
+```
+
+---
+
+### 5. Обновить профиль
+
+**PUT** `/auth/profile`
+
+Обновить данные профиля.
+
+**Заголовки:**
+```
+Authorization: Bearer {token}
+```
+
+**Тело запроса:**
+```json
+{
+  "name": "Новое Имя",
+  "email": "newemail@example.com",
+  "phone": "+79999999999"
+}
+```
+
+Все поля опциональны.
+
+**Ответ (200):**
+```json
+{
+  "message": "Профиль обновлен успешно",
+  "user": {
+    "id": 1,
+    "name": "Новое Имя",
+    "email": "newemail@example.com",
+    "phone": "+79999999999",
+    "created_at": "2025-12-24T12:00:00.000000Z"
+  }
+}
+```
+
+---
+
+### 6. Изменить пароль
+
+**POST** `/auth/change-password`
+
+Изменить пароль пользователя.
+
+**Заголовки:**
+```
+Authorization: Bearer {token}
+```
+
+**Тело запроса:**
+```json
+{
+  "current_password": "oldpassword123",
+  "password": "newpassword123",
+  "password_confirmation": "newpassword123"
+}
+```
+
+**Ответ (200):**
+```json
+{
+  "message": "Пароль изменен успешно"
+}
+```
+
+**Ошибка (422):**
+```json
+{
+  "message": "Текущий пароль неверен"
+}
+```
+
+---
+
+## Адреса доставки
+
+### 7. Получить список адресов
+
+**GET** `/addresses`
+
+Получить все адреса текущего пользователя.
+
+**Заголовки:**
+```
+Authorization: Bearer {token}
+```
+
+**Ответ (200):**
+```json
+{
+  "addresses": [
+    {
+      "id": 1,
+      "address": "ул. Ленина, д. 10",
+      "apartment": "25",
+      "entrance": "2",
+      "floor": "5",
+      "intercom": "25",
+      "comment": "Домофон не работает",
+      "latitude": 55.751244,
+      "longitude": 37.618423,
+      "is_default": true,
+      "created_at": "2025-12-24T12:00:00.000000Z"
+    }
+  ]
+}
+```
+
+---
+
+### 8. Создать адрес
+
+**POST** `/addresses`
+
+Создать новый адрес доставки.
+
+**Заголовки:**
+```
+Authorization: Bearer {token}
+```
+
+**Тело запроса:**
+```json
+{
+  "address": "ул. Ленина, д. 10",
+  "apartment": "25",
+  "entrance": "2",
+  "floor": "5",
+  "intercom": "25",
+  "comment": "Домофон не работает",
+  "latitude": 55.751244,
+  "longitude": 37.618423,
+  "is_default": true
+}
+```
+
+**Обязательные поля:**
+- `address` - адрес
+- `latitude` - широта
+- `longitude` - долгота
+
+**Опциональные поля:**
+- `apartment` - квартира
+- `entrance` - подъезд
+- `floor` - этаж
+- `intercom` - домофон
+- `comment` - комментарий
+- `is_default` - установить как основной адрес
+
+**Ответ (201):**
+```json
+{
+  "message": "Адрес создан успешно",
+  "address": {
+    "id": 1,
+    "address": "ул. Ленина, д. 10",
+    "apartment": "25",
+    "entrance": "2",
+    "floor": "5",
+    "intercom": "25",
+    "comment": "Домофон не работает",
+    "latitude": 55.751244,
+    "longitude": 37.618423,
+    "is_default": true,
+    "created_at": "2025-12-24T12:00:00.000000Z"
+  }
+}
+```
+
+---
+
+### 9. Получить адрес
+
+**GET** `/addresses/{id}`
+
+Получить конкретный адрес.
+
+**Заголовки:**
+```
+Authorization: Bearer {token}
+```
+
+**Ответ (200):**
+```json
+{
+  "address": {
+    "id": 1,
+    "address": "ул. Ленина, д. 10",
+    "apartment": "25",
+    "entrance": "2",
+    "floor": "5",
+    "intercom": "25",
+    "comment": "Домофон не работает",
+    "latitude": 55.751244,
+    "longitude": 37.618423,
+    "is_default": true,
+    "created_at": "2025-12-24T12:00:00.000000Z"
+  }
+}
+```
+
+**Ошибка (403):**
+```json
+{
+  "message": "Доступ запрещен"
+}
+```
+
+---
+
+### 10. Обновить адрес
+
+**PUT/PATCH** `/addresses/{id}`
+
+Обновить адрес доставки.
+
+**Заголовки:**
+```
+Authorization: Bearer {token}
+```
+
+**Тело запроса:**
+```json
+{
+  "apartment": "26",
+  "comment": "Обновленный комментарий"
+}
+```
+
+Все поля опциональны.
+
+**Ответ (200):**
+```json
+{
+  "message": "Адрес обновлен успешно",
+  "address": {
+    "id": 1,
+    "address": "ул. Ленина, д. 10",
+    "apartment": "26",
+    "entrance": "2",
+    "floor": "5",
+    "intercom": "25",
+    "comment": "Обновленный комментарий",
+    "latitude": 55.751244,
+    "longitude": 37.618423,
+    "is_default": true,
+    "created_at": "2025-12-24T12:00:00.000000Z"
+  }
+}
+```
+
+---
+
+### 11. Удалить адрес
+
+**DELETE** `/addresses/{id}`
+
+Удалить адрес доставки.
+
+**Заголовки:**
+```
+Authorization: Bearer {token}
+```
+
+**Ответ (200):**
+```json
+{
+  "message": "Адрес удален успешно"
+}
+```
+
+**Примечание:** Если удаляется основной адрес, первый из оставшихся адресов автоматически становится основным.
+
+---
+
+### 12. Установить адрес как основной
+
+**POST** `/addresses/{id}/set-default`
+
+Установить адрес как основной.
+
+**Заголовки:**
+```
+Authorization: Bearer {token}
+```
+
+**Ответ (200):**
+```json
+{
+  "message": "Адрес установлен как основной",
+  "address": {
+    "id": 1,
+    "address": "ул. Ленина, д. 10",
+    "apartment": "25",
+    "entrance": "2",
+    "floor": "5",
+    "intercom": "25",
+    "comment": "Домофон не работает",
+    "latitude": 55.751244,
+    "longitude": 37.618423,
+    "is_default": true,
+    "created_at": "2025-12-24T12:00:00.000000Z"
+  }
+}
+```
+
+---
+
+## Коды ошибок
+
+- **200** - Успешный запрос
+- **201** - Ресурс создан
+- **401** - Не авторизован
+- **403** - Доступ запрещен
+- **422** - Ошибка валидации
+- **500** - Внутренняя ошибка сервера
+
+## Примеры использования
+
+### Пример регистрации и создания адреса
+
+```bash
+# 1. Регистрация
+curl -X POST http://your-domain.com/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Иван Иванов",
+    "email": "ivan@example.com",
+    "phone": "+79991234567",
+    "password": "password123",
+    "password_confirmation": "password123"
+  }'
+
+# Сохраните токен из ответа
+
+# 2. Создание адреса
+curl -X POST http://your-domain.com/api/v1/addresses \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {your-token}" \
+  -d '{
+    "address": "ул. Ленина, д. 10",
+    "apartment": "25",
+    "latitude": 55.751244,
+    "longitude": 37.618423
+  }'
+```
+
