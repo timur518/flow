@@ -42,7 +42,7 @@ class EditProduct extends EditRecord
     protected function afterSave(): void
     {
         // Save images
-        $images = $this->data['images'] ?? [];
+        $images = array_values($this->data['images'] ?? []); // Преобразуем в числовой массив
         $this->record->images()->delete();
         foreach ($images as $index => $image) {
             ProductImage::create([

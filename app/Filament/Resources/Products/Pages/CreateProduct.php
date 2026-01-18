@@ -15,7 +15,7 @@ class CreateProduct extends CreateRecord
     protected function afterCreate(): void
     {
         // Save images
-        $images = $this->data['images'] ?? [];
+        $images = array_values($this->data['images'] ?? []); // Преобразуем в числовой массив
         foreach ($images as $index => $image) {
             ProductImage::create([
                 'product_id' => $this->record->id,
