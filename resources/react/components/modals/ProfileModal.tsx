@@ -109,11 +109,25 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
         }, 350);
     };
 
-    const navigateBack = () => {
+    const navigateBack = async () => {
         setAnimationDirection('back');
         setCurrentSection('main');
         setSelectedOrderId(null);
         setSelectedAddressId(null);
+
+        // Обновляем данные профиля при возврате
+        setIsRefreshing(true);
+        try {
+            await Promise.all([
+                getProfile(),
+                refetchOrders(),
+                refetchAddresses(),
+            ]);
+        } catch (error) {
+            console.error('Ошибка обновления данных профиля:', error);
+        } finally {
+            setIsRefreshing(false);
+        }
 
         // Сбрасываем анимацию после её завершения (350ms анимация)
         setTimeout(() => {
