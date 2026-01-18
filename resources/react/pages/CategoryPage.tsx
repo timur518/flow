@@ -133,12 +133,21 @@ const CategoryPage: React.FC = () => {
 
     const handleCarouselScroll = (direction: 'left' | 'right') => {
         if (!carouselRef.current) return;
-        const scrollAmount = 300;
+
+        const containerWidth = carouselRef.current.offsetWidth;
+        const scrollAmount = containerWidth;
+
         const newOffset = direction === 'left'
             ? Math.max(0, carouselOffset - scrollAmount)
             : carouselOffset + scrollAmount;
         setCarouselOffset(newOffset);
     };
+
+    // Проверяем, можно ли прокручивать карусель
+    const canScrollLeft = carouselOffset > 0;
+    const canScrollRight = carouselRef.current
+        ? carouselOffset < (carouselRef.current.scrollWidth - carouselRef.current.offsetWidth)
+        : false;
 
     // Если категории загружены, но категория не найдена - редирект на 404
     if (!categoriesLoading && !category) {
@@ -317,9 +326,9 @@ const CategoryPage: React.FC = () => {
                                     <div className="tags-carousel">
                                         {/* Стрелка влево */}
                                         <button
-                                            className={`carousel-arrow carousel-arrow-left ${carouselOffset === 0 ? 'disabled' : ''}`}
+                                            className={`carousel-arrow carousel-arrow-left ${!canScrollLeft ? 'disabled' : ''}`}
                                             onClick={() => handleCarouselScroll('left')}
-                                            disabled={carouselOffset === 0}
+                                            disabled={!canScrollLeft}
                                         >
                                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -346,8 +355,9 @@ const CategoryPage: React.FC = () => {
 
                                         {/* Стрелка вправо */}
                                         <button
-                                            className="carousel-arrow carousel-arrow-right"
+                                            className={`carousel-arrow carousel-arrow-right ${!canScrollRight ? 'disabled' : ''}`}
                                             onClick={() => handleCarouselScroll('right')}
+                                            disabled={!canScrollRight}
                                         >
                                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

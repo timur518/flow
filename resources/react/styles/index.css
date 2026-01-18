@@ -1870,12 +1870,14 @@ body {
 
 .tags-carousel-container {
     overflow: hidden;
+    width: 100%;
 }
 
 .tags-carousel-track {
     display: flex;
     gap: 20px;
     transition: transform 0.3s ease;
+    width: max-content;
 }
 
 .tag-circle-item {
