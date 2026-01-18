@@ -7,6 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCart, useAuth } from '@/hooks';
 import { CartEmpty, Plus, Minus, Close } from '@/components/icons';
+import { yandexMetrikaService } from '@/api/services';
 
 interface CartSidebarProps {
     onCheckout?: () => void;
@@ -64,6 +65,22 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ onCheckout, onClose }) => {
     }, [items, isInitialized]);
 
     const handleRemoveItem = (id: number) => {
+        // Находим товар для отправки в Яндекс Метрику
+        const item = items.find(i => i.id === id);
+        if (item) {
+            // Отправка события "Удаление из корзины" в Яндекс Метрику
+            yandexMetrikaService.removeFromCart(
+                {
+                    id: item.id,
+                    name: item.name,
+                    price: item.price.toString(),
+                    sale_price: null,
+                    image: item.image,
+                },
+                item.quantity
+            );
+        }
+
         // Добавляем в список удаляемых
         setRemovingItems(prev => new Set(prev).add(id));
 

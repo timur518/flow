@@ -13,4 +13,5 @@ export { productService } from './productService';
 export { authService } from './authService';
 export { addressService } from './addressService';
 export { orderService } from './orderService';
+export { yandexMetrikaService } from './yandexMetrikaService';
 

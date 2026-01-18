@@ -85,7 +85,7 @@ export interface OrderItemData {
 }
 
 export type OrderStatus = 'new' | 'processing' | 'assembling' | 'awaiting_delivery' | 'delivering' | 'completed' | 'cancelled';
-export type PaymentType = 'cash' | 'online';
+export type PaymentType = 'on_delivery' | 'online';
 export type PaymentStatus = 'pending' | 'succeeded' | 'cancelled';
 export type DeliveryType = 'delivery' | 'pickup';
 

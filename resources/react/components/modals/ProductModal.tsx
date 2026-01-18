@@ -10,6 +10,7 @@ import { Product } from '@/api/types';
 import { useProductDetail, useProducts, useCart } from '@/hooks';
 import ProductCard from '../blocks/ProductCard';
 import { Close, ArrowsVertical, ArrowsHorizontal } from '@/components/icons';
+import { yandexMetrikaService } from '@/api/services';
 
 interface ProductModalProps {
     isOpen: boolean;
@@ -42,6 +43,13 @@ const ProductModal: React.FC<ProductModalProps> = ({
         }
     }, [product?.id]);
 
+    // Отправка события "Просмотр товара" в Яндекс Метрику
+    useEffect(() => {
+        if (isOpen && productDetail) {
+            yandexMetrikaService.viewProduct(productDetail);
+        }
+    }, [isOpen, productDetail]);
+
     if (!product) return null;
 
     const detail = productDetail || product;
@@ -54,6 +62,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
     const firstTag = detail.tags?.length > 0 ? detail.tags[0] : null;
 
     const handleAddToCart = () => {
+        // Отправка события "Добавление в корзину" в Яндекс Метрику
+        yandexMetrikaService.addToCart(detail, quantity);
+
         if (onAddToCart) {
             onAddToCart(product, quantity);
         } else {

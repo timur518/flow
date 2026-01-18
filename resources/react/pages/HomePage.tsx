@@ -24,7 +24,7 @@ import {
 import { SEOHead } from '@/components/common';
 import { useAuth, useCart, useCity, useStores } from '@/hooks';
 import { Product, Address } from '@/api/types';
-import { orderService } from '@/api/services';
+import { orderService, yandexMetrikaService } from '@/api/services';
 
 interface HomePageProps {
     initialProduct?: Product | null;
@@ -195,6 +195,22 @@ const HomePage: React.FC<HomePageProps> = ({
 
             console.log('Заказ создан:', response);
 
+            // Отправка события "Успешное оформление заказа" в Яндекс Метрику
+            yandexMetrikaService.purchase(
+                response.order.order_number,
+                orderData.items.map((item: any) => ({
+                    product: {
+                        id: item.id,
+                        name: item.name,
+                        price: item.price.toString(),
+                        sale_price: null,
+                        image: item.image,
+                    },
+                    quantity: item.quantity,
+                })),
+                parseFloat(response.order.total)
+            );
+
             // Очищаем корзину
             clearCart();
 
@@ -202,7 +218,7 @@ const HomePage: React.FC<HomePageProps> = ({
             setCheckoutModalOpen(false);
 
             // Показываем сообщение об успехе
-            alert(`Заказ №${response.order.order_number} успешно оформлен!\n\nСтатус: ${response.order.status}\nОплата: ${response.order.payment_type === 'cash' ? 'При получении' : 'Онлайн'}`);
+            alert(`Заказ №${response.order.order_number} успешно оформлен!\n\nСтатус: ${response.order.status}\nОплата: ${response.order.payment_type === 'on_delivery' ? 'При получении' : 'Онлайн'}`);
 
             // Если есть URL для оплаты (когда будет интеграция с YooKassa)
             if (response.payment_url) {
