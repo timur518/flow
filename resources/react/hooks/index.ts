@@ -5,6 +5,7 @@
 
 export { useBanners } from './useBanners';
 export { useCategories } from './useCategories';
+export { useTags } from './useTags';
 export { useCity } from './useCity';
 export { useStores, useStore } from './useStores';
 export { useProducts, useProduct } from './useProducts';

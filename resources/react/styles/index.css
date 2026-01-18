@@ -584,6 +584,7 @@ body {
 .banner-nav-button.disabled {
     opacity: 0.0;
     cursor: not-allowed;
+    pointer-events: none;
 }
 
 .banner-nav-prev {
@@ -1608,5 +1609,342 @@ body {
 .skeleton-card {
     height: 100px;
     border-radius: 16px;
+}
+
+/* ============================================
+   CATEGORY PAGE - Страница категории
+   ============================================ */
+
+/* Обложка категории */
+.category-cover {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    border-radius: 24px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.category-cover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.4) 100%);
+    z-index: 1;
+}
+
+.category-cover-breadcrumb {
+    position: relative;
+    z-index: 2;
+    font-size: 10px;
+    font-weight: 600;
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.category-cover-breadcrumb:hover {
+    opacity: 0.8;
+}
+
+.category-cover-title {
+    position: relative;
+    z-index: 2;
+    font-size: 28px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin: 0;
+}
+
+/* Хлебные крошки */
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.breadcrumb-link {
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-link:hover {
+    color: #FC6C5F;
+}
+
+.breadcrumb-separator {
+    font-size: 10px;
+    color: #737373;
+}
+
+.breadcrumb-current {
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+}
+
+/* Заголовок категории */
+.category-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #222222;
+    margin-bottom: 10px;
+}
+
+/* Фильтры по тегам */
+.category-filters {
+    margin-bottom: 20px;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tag-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 32px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+}
+
+.tag-filter.inactive {
+    background-color: #FFFFFF;
+    color: #737373;
+}
+
+.tag-filter.active {
+    background-color: #FC6C5F;
+    color: #F2DBE3;
+}
+
+.tag-filter-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    color: #F2DBE3;
+}
+
+/* Разделительная линия */
+.category-divider {
+    height: 1px;
+    background-color: #EDEDED;
+    margin: 20px 0;
+}
+
+/* Панель сортировки */
+.category-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.products-count {
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+}
+
+/* Кнопка сортировки */
+.sort-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.sort-button-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FC6C5F;
+}
+
+.sort-button-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FC6C5F;
+}
+
+.sort-button-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    color: #FC6C5F;
+}
+
+/* Выпадающее меню сортировки */
+.sort-dropdown {
+    position: absolute;
+    top: calc(100% + 3px);
+    right: 0;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 100%;
+    z-index: 10;
+}
+
+.sort-option {
+    font-size: 10px;
+    font-weight: 600;
+    color: #222222;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+    margin-bottom: 10px;
+}
+
+.sort-option:last-child {
+    margin-bottom: 0;
+}
+
+.sort-option:hover {
+    background-color: #F9F9F9;
+}
+
+.sort-option-reset {
+    margin-top: 15px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.sort-option-reset:hover {
+    background-color: #F9F9F9;
+}
+
+/* Блок "Ищу подарок" */
+.gift-finder {
+    margin-bottom: 40px;
+}
+
+.gift-finder-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #222222;
+    margin-bottom: 20px;
+}
+
+/* Карусель тегов */
+.tags-carousel {
+    position: relative;
+}
+
+.tags-carousel-container {
+    overflow: hidden;
+}
+
+.tags-carousel-track {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.3s ease;
+}
+
+.tag-circle-item {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.tag-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.tag-circle:hover {
+    transform: scale(1.05);
+}
+
+.tag-circle-name {
+    font-size: 10px;
+    font-weight: 600;
+    color: #222222;
+    text-align: center;
+}
+
+/* Стрелки карусели */
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 35px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.carousel-arrow svg {
+    width: 18px;
+    height: 18px;
+    color: #737373;
+}
+
+.carousel-arrow.disabled {
+    opacity: 0.0;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.carousel-arrow-left {
+    left: 0;
+    transform: translate(10px, -50%);
+}
+
+.carousel-arrow-right {
+    right: 0;
+    transform: translate(-10px, -50%);
 }
 
