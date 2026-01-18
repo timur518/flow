@@ -10,5 +10,10 @@ Route::get('/welcome', function () {
 // React SPA - все маршруты возвращают одно и то же представление
 // Роутинг обрабатывается на стороне React Router
 Route::get('/{any}', function () {
-    return view('app');
+    // Получаем настройки сайта для передачи в Blade
+    $settings = \App\Models\SiteSetting::first();
+
+    return view('app', [
+        'settings' => $settings,
+    ]);
 })->where('any', '.*');

@@ -18,6 +18,7 @@ import { Product, ProductTag } from '@/api/types';
 import { Header, Footer } from '@/components';
 import { CategoriesSidebar, CartSidebar, BouquetBuilder, ProductCard } from '@/components/blocks';
 import { ProductModal } from '@/components/modals';
+import { SEOHead } from '@/components/common';
 import { SortLines, Close, ChevronRight } from '@/components/icons';
 
 type SortOption = 'price_asc' | 'price_desc' | null;
@@ -175,6 +176,9 @@ const CategoryPage: React.FC = () => {
 
     return (
         <div className="app-container">
+            {/* SEO метатеги */}
+            <SEOHead title={category?.name ? `${category.name} - Доставка цветов` : undefined} />
+
             <Header />
 
             <main className="main-content">

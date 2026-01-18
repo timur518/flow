@@ -5,4 +5,5 @@
 
 export { default as AddressAutocomplete } from './AddressAutocomplete';
 export { default as CollapsibleBlock } from './CollapsibleBlock';
+export { default as SEOHead } from './SEOHead';
 

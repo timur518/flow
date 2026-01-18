@@ -21,6 +21,7 @@ import {
     ProductModal,
     CheckoutModal,
 } from '@/components/modals';
+import { SEOHead } from '@/components/common';
 import { useAuth, useCart, useCity, useStores } from '@/hooks';
 import { Product, Address } from '@/api/types';
 import { orderService } from '@/api/services';
@@ -219,6 +220,9 @@ const HomePage: React.FC<HomePageProps> = ({
 
     return (
         <div className="min-h-screen flex flex-col bg-white">
+            {/* SEO метатеги */}
+            <SEOHead />
+
             {/* Header на всю ширину */}
             <Header
                 onLoginClick={handleLoginClick}
