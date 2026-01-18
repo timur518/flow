@@ -22,7 +22,7 @@ class NewOrdersWidget extends BaseWidget
             ->query(
                 Order::query()
                     ->where('status', OrderStatus::NEW->value)
-                    ->with(['user', 'city', 'deliveryPeriod'])
+                    ->with(['user', 'city'])
                     ->latest()
             )
             ->columns([
@@ -50,7 +50,7 @@ class NewOrdersWidget extends BaseWidget
                     ->badge()
                     ->color('info')
                     ->formatStateUsing(function ($record) {
-                        return $record->deliveryPeriod?->time_range ?? $record->delivery_time ?? '—';
+                        return $record->delivery_time ?? '—';
                     }),
 
                 TextColumn::make('city.name')
