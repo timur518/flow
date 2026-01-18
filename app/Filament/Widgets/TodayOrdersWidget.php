@@ -37,7 +37,7 @@ class TodayOrdersWidget extends BaseWidget
                     ->badge()
                     ->color('info')
                     ->formatStateUsing(function ($record) {
-                        return $record->deliveryPeriod?->time_range ?? $record->delivery_time ?? '—';
+                        return $record->delivery_time ?? '—';
                     }),
 
                 TextColumn::make('user.name')
