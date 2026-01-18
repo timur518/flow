@@ -11,7 +11,7 @@
  * - Блок "Собрать свой букет"
  */
 
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { useCategories, useProducts, useCity, useCart, useTags } from '@/hooks';
 import { Product, ProductTag } from '@/api/types';
@@ -35,6 +35,7 @@ const CategoryPage: React.FC = () => {
     const [sortBy, setSortBy] = useState<SortOption>(null);
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
     const [carouselOffset, setCarouselOffset] = useState(0);
+    const [maxScroll, setMaxScroll] = useState(0);
     const carouselRef = useRef<HTMLDivElement>(null);
 
     // Находим категорию по slug
@@ -131,6 +132,24 @@ const CategoryPage: React.FC = () => {
         setSortBy(null);
     };
 
+    // Обновляем максимальную прокрутку при изменении размеров
+    useEffect(() => {
+        const updateMaxScroll = () => {
+            if (carouselRef.current) {
+                const container = carouselRef.current;
+                const track = container.querySelector('.tags-carousel-track') as HTMLElement;
+                if (track) {
+                    const max = Math.max(0, track.scrollWidth - container.offsetWidth);
+                    setMaxScroll(max);
+                }
+            }
+        };
+
+        updateMaxScroll();
+        window.addEventListener('resize', updateMaxScroll);
+        return () => window.removeEventListener('resize', updateMaxScroll);
+    }, [allTags]);
+
     const handleCarouselScroll = (direction: 'left' | 'right') => {
         if (!carouselRef.current) return;
 
@@ -139,15 +158,13 @@ const CategoryPage: React.FC = () => {
 
         const newOffset = direction === 'left'
             ? Math.max(0, carouselOffset - scrollAmount)
-            : carouselOffset + scrollAmount;
+            : Math.min(maxScroll, carouselOffset + scrollAmount);
         setCarouselOffset(newOffset);
     };
 
     // Проверяем, можно ли прокручивать карусель
     const canScrollLeft = carouselOffset > 0;
-    const canScrollRight = carouselRef.current
-        ? carouselOffset < (carouselRef.current.scrollWidth - carouselRef.current.offsetWidth)
-        : false;
+    const canScrollRight = carouselOffset < maxScroll;
 
     // Если категории загружены, но категория не найдена - редирект на 404
     if (!categoriesLoading && !category) {

@@ -1866,18 +1866,18 @@ body {
 /* Карусель тегов */
 .tags-carousel {
     position: relative;
+    width: 100%;
 }
 
 .tags-carousel-container {
     overflow: hidden;
-    width: 100%;
+    position: relative;
 }
 
 .tags-carousel-track {
     display: flex;
     gap: 20px;
     transition: transform 0.3s ease;
-    width: max-content;
 }
 
 .tag-circle-item {
