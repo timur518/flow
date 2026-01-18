@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class CourierStatsWidget extends BaseWidget
 {
+    protected static bool $isDiscovered = false; // Временно отключаем виджет
     protected static ?int $sort = 5;
     protected int | string | array $columnSpan = [
         'md' => 2,
@@ -26,29 +27,20 @@ class CourierStatsWidget extends BaseWidget
 
     public function table(Table $table): Table
     {
-        // Создаем подзапрос для группировки
-        $subQuery = DB::table('orders')
-            ->select([
-                'courier',
-                DB::raw('COUNT(*) as orders_count'),
-                DB::raw('SUM(total) as total_amount')
-            ])
-            ->where('status', OrderStatus::COMPLETED->value)
-            ->whereNotNull('courier')
-            ->where('courier', '!=', '')
-            ->groupBy('courier');
-
         return $table
             ->heading('Статистика по курьерам')
             ->query(
                 Order::query()
-                    ->fromSub($subQuery, 'courier_stats')
                     ->select([
+                        'id',
                         'courier',
-                        'orders_count',
-                        'total_amount',
-                        DB::raw('courier as id') // Используем courier как id
+                        DB::raw('COUNT(*) OVER (PARTITION BY courier) as orders_count'),
+                        DB::raw('SUM(total) OVER (PARTITION BY courier) as total_amount')
                     ])
+                    ->where('status', OrderStatus::COMPLETED->value)
+                    ->whereNotNull('courier')
+                    ->where('courier', '!=', '')
+                    ->groupBy('id', 'courier', 'total')
             )
             ->columns([
                 TextColumn::make('courier')
