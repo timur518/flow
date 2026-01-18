@@ -73,9 +73,8 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ onCheckout, onClose }) => {
                 {
                     id: item.id,
                     name: item.name,
-                    price: item.price.toString(),
-                    sale_price: null,
-                    image: item.image,
+                    price: item.price,
+                    categories: item.category ? [{ id: 0, name: item.category, slug: '' }] : [],
                 },
                 item.quantity
             );

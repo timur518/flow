@@ -202,11 +202,11 @@ const HomePage: React.FC<HomePageProps> = ({
                     product: {
                         id: item.id,
                         name: item.name,
-                        price: item.price.toString(),
-                        sale_price: null,
-                        image: item.image,
+                        price: item.price,
+                        categories: item.category ? [{ id: 0, name: item.category, slug: '' }] : [],
                     },
                     quantity: item.quantity,
+                    category: item.category, // Передаем категорию явно
                 })),
                 parseFloat(response.order.total)
             );

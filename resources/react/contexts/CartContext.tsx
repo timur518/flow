@@ -10,11 +10,12 @@ export interface CartItem {
     price: string;
     quantity: number;
     image?: string;
+    category?: string; // Добавляем категорию
 }
 
 interface CartContextType {
     items: CartItem[];
-    addItem: (item: { id: number; name: string; price: string; quantity: number; image?: string }) => void;
+    addItem: (item: { id: number; name: string; price: string; quantity: number; image?: string; category?: string }) => void;
     removeItem: (id: number) => void;
     updateQuantity: (id: number, quantity: number) => void;
     clearCart: () => void;

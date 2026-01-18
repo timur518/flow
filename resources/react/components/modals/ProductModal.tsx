@@ -68,12 +68,18 @@ const ProductModal: React.FC<ProductModalProps> = ({
         if (onAddToCart) {
             onAddToCart(product, quantity);
         } else {
+            // Получаем первую категорию для сохранения в корзине
+            const category = detail.categories && detail.categories.length > 0
+                ? detail.categories[0].name
+                : undefined;
+
             addItem({
                 id: product.id,
                 name: product.name,
                 price: product.sale_price || product.price,
                 quantity,
                 image: product.image,
+                category: category,
             });
         }
         onClose();

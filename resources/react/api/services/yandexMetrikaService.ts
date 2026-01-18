@@ -1,7 +1,7 @@
 /**
  * Yandex Metrika E-commerce Service
  * Сервис для отправки данных электронной коммерции в Яндекс Метрику
- * 
+ *
  * Документация: https://yandex.ru/support/metrica/ru/ecommerce/data.html
  */
 
@@ -16,6 +16,14 @@ interface YMProduct {
     category?: string;
     variant?: string;
     quantity?: number;
+}
+
+// Упрощенный тип товара для случаев, когда нет полной информации
+interface SimpleProduct {
+    id: number;
+    name: string;
+    price: string;
+    categories?: Array<{ id: number; name: string; slug: string }>;
 }
 
 interface YMEcommerceData {
@@ -61,12 +69,30 @@ class YandexMetrikaService {
     /**
      * Преобразование Product в формат YM
      */
-    private formatProduct(product: Product | ProductDetail, quantity: number = 1): YMProduct {
+    private formatProduct(
+        product: Product | ProductDetail | SimpleProduct,
+        quantity: number = 1,
+        categoryName?: string
+    ): YMProduct {
+        // Получаем категорию: либо переданную явно, либо из массива categories
+        let category = categoryName;
+        if (!category && 'categories' in product && product.categories && product.categories.length > 0) {
+            category = product.categories[0].name;
+        }
+
+        // Определяем цену
+        let price: number;
+        if ('sale_price' in product) {
+            price = parseFloat(product.sale_price || product.price);
+        } else {
+            price = parseFloat(product.price);
+        }
+
         return {
             id: product.id,
             name: product.name,
-            price: product.sale_price || product.price,
-            category: 'category' in product && product.category ? product.category.name : undefined,
+            price: price,
+            category: category,
             quantity: quantity,
         };
     }
@@ -122,7 +148,7 @@ class YandexMetrikaService {
      */
     purchase(
         orderId: string | number,
-        products: Array<{ product: Product | ProductDetail; quantity: number }>,
+        products: Array<{ product: Product | ProductDetail | SimpleProduct; quantity: number; category?: string }>,
         totalPrice: number
     ): void {
         this.push({
@@ -133,8 +159,8 @@ class YandexMetrikaService {
                         id: orderId.toString(),
                         revenue: totalPrice,
                     },
-                    products: products.map(({ product, quantity }) =>
-                        this.formatProduct(product, quantity)
+                    products: products.map(({ product, quantity, category }) =>
+                        this.formatProduct(product, quantity, category)
                     ),
                 },
             },
