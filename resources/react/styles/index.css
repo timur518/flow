@@ -363,6 +363,16 @@ body {
     flex-shrink: 0;
 }
 
+/* Сообщение "Ничего не найдено" */
+.search-suggestion-empty {
+    padding: 20px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #999999;
+}
+
 /* Кнопки в header */
 .header-actions {
     display: flex;

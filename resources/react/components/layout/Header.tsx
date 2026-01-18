@@ -89,7 +89,7 @@ const Header: React.FC<HeaderProps> = ({
         // Устанавливаем флаг поиска
         setIsSearching(true);
 
-        // Запускаем поиск с задержкой 500ms
+        // Запускаем поиск с задержкой 2 секунды (защита от избыточных запросов)
         searchTimeoutRef.current = setTimeout(async () => {
             try {
                 const products = await productService.getProducts({
@@ -107,15 +107,16 @@ const Header: React.FC<HeaderProps> = ({
                 }));
 
                 setSearchSuggestions(suggestions);
-                setShowSuggestions(suggestions.length > 0);
+                // Показываем подсказки всегда, даже если результатов нет (для сообщения "Ничего не найдено")
+                setShowSuggestions(true);
             } catch (error) {
                 console.error('Search error:', error);
                 setSearchSuggestions([]);
-                setShowSuggestions(false);
+                setShowSuggestions(true); // Показываем сообщение об ошибке/отсутствии результатов
             } finally {
                 setIsSearching(false);
             }
-        }, 500);
+        }, 2000); // 2 секунды задержки
 
         // Cleanup
         return () => {
@@ -258,6 +259,8 @@ const Header: React.FC<HeaderProps> = ({
                                     suggestions={searchSuggestions}
                                     onSuggestionClick={handleSuggestionClick}
                                     selectedIndex={selectedSuggestionIndex}
+                                    isSearching={isSearching}
+                                    searchQuery={searchQuery}
                                 />
                             )}
                         </div>

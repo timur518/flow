@@ -18,15 +18,31 @@ interface SearchSuggestionsProps {
     suggestions: SearchSuggestion[];
     onSuggestionClick: (suggestion: SearchSuggestion) => void;
     selectedIndex: number;
+    isSearching: boolean;
+    searchQuery: string;
 }
 
 const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
     suggestions,
     onSuggestionClick,
     selectedIndex,
+    isSearching,
+    searchQuery,
 }) => {
-    if (suggestions.length === 0) {
+    // Не показываем ничего, если поиск не выполнялся или запрос пустой
+    if (!isSearching || !searchQuery.trim()) {
         return null;
+    }
+
+    // Показываем сообщение "Ничего не найдено", если нет результатов
+    if (suggestions.length === 0) {
+        return (
+            <div className="search-suggestions">
+                <div className="search-suggestion-empty">
+                    Ничего не найдено. Попробуйте другие слова
+                </div>
+            </div>
+        );
     }
 
     return (
