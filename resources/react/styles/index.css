@@ -1887,6 +1887,7 @@ body {
     align-items: center;
     gap: 10px;
     cursor: pointer;
+    width: 80px;
 }
 
 .tag-circle {
@@ -1908,6 +1909,10 @@ body {
     font-weight: 600;
     color: #222222;
     text-align: center;
+    width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 /* Стрелки карусели */
