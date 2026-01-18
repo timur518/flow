@@ -40,6 +40,7 @@ const Header: React.FC<HeaderProps> = ({
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
     const [isSearching, setIsSearching] = useState(false);
+    const [isWaitingForSearch, setIsWaitingForSearch] = useState(false);
 
     const cityDropdownRef = useRef<HTMLDivElement>(null);
     const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -83,13 +84,19 @@ const Header: React.FC<HeaderProps> = ({
             setSearchSuggestions([]);
             setShowSuggestions(false);
             setIsSearching(false);
+            setIsWaitingForSearch(false);
             return;
         }
+
+        // Показываем индикатор ожидания сразу
+        setIsWaitingForSearch(true);
+        setShowSuggestions(true);
 
         // Запускаем поиск с задержкой 2 секунды после остановки ввода (защита от избыточных запросов)
         searchTimeoutRef.current = setTimeout(async () => {
             // Устанавливаем флаг поиска только перед самим запросом
             setIsSearching(true);
+            setIsWaitingForSearch(false);
 
             try {
                 const products = await productService.getProducts({
@@ -260,6 +267,7 @@ const Header: React.FC<HeaderProps> = ({
                                     onSuggestionClick={handleSuggestionClick}
                                     selectedIndex={selectedSuggestionIndex}
                                     searchQuery={searchQuery}
+                                    isLoading={isWaitingForSearch || isSearching}
                                 />
                             )}
                         </div>

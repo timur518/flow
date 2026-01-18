@@ -373,6 +373,26 @@ body {
     color: #999999;
 }
 
+/* Индикатор загрузки поиска */
+.search-suggestion-loading {
+    padding: 20px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #FC6C5F;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
 /* Кнопки в header */
 .header-actions {
     display: flex;

@@ -19,6 +19,7 @@ interface SearchSuggestionsProps {
     onSuggestionClick: (suggestion: SearchSuggestion) => void;
     selectedIndex: number;
     searchQuery: string;
+    isLoading?: boolean;
 }
 
 const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
@@ -26,10 +27,22 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
     onSuggestionClick,
     selectedIndex,
     searchQuery,
+    isLoading = false,
 }) => {
     // Не показываем ничего, если запрос пустой
     if (!searchQuery.trim()) {
         return null;
+    }
+
+    // Показываем индикатор загрузки
+    if (isLoading) {
+        return (
+            <div className="search-suggestions">
+                <div className="search-suggestion-loading">
+                    Ищем, что вам подойдет...
+                </div>
+            </div>
+        );
     }
 
     // Показываем сообщение "Ничего не найдено", если нет результатов
