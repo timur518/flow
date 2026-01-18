@@ -36,17 +36,6 @@ const AppLoader: React.FC<AppLoaderProps> = ({ children }) => {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-purple-50 to-pink-50">
                 <div className="text-center">
-                    {/* Логотип из настроек */}
-                    {settings?.appearance?.logo_url && (
-                        <div className="mb-8 flex justify-center">
-                            <img
-                                src={settings.appearance.logo_url}
-                                alt={settings.site_brand || 'Logo'}
-                                className="h-24 w-auto object-contain"
-                            />
-                        </div>
-                    )}
-
                     {/* Индикатор загрузки */}
                     <div className="flex flex-col items-center gap-4">
                         {/* Спиннер */}
