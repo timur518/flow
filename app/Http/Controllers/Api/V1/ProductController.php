@@ -26,7 +26,6 @@ class ProductController
     {
         $query = Product::query()
             ->where('is_active', true)
-            ->withActiveIngredients() // Исключаем товары с неактивными ингредиентами
             ->with(['categories', 'tags', 'images']);
 
         // Фильтрация по городу
@@ -50,10 +49,56 @@ class ProductController
             });
         }
 
-        // Поиск по названию
+        // Исключаем товары с неактивными ингредиентами
+        // Применяем это условие ПЕРЕД поиском, чтобы избежать конфликтов
+        $query->whereDoesntHave('ingredients', function ($q) {
+            $q->where('ingredients.is_active', false);
+        });
+
+        // Расширенный поиск по названию, описанию и составу (ингредиентам)
+        // Поиск регистронезависимый (case-insensitive)
+        // На MySQL с utf8mb4_unicode_ci работает автоматически
+        // На SQLite используем mb_strtolower для совместимости
         if ($request->has('search')) {
             $search = $request->input('search');
-            $query->where('name', 'like', "%{$search}%");
+            $driver = config('database.default');
+
+            $query->where(function ($q) use ($search, $driver) {
+                if ($driver === 'sqlite') {
+                    // SQLite: используем поиск по обоим регистрам
+                    $searchLower = mb_strtolower($search);
+                    $searchUpper = mb_strtoupper($search);
+                    $searchTitle = mb_convert_case($search, MB_CASE_TITLE, 'UTF-8');
+
+                    $q->where(function ($subQ) use ($search, $searchLower, $searchUpper, $searchTitle) {
+                        $subQ->where('name', 'like', "%{$search}%")
+                            ->orWhere('name', 'like', "%{$searchLower}%")
+                            ->orWhere('name', 'like', "%{$searchUpper}%")
+                            ->orWhere('name', 'like', "%{$searchTitle}%");
+                    })
+                    ->orWhere(function ($subQ) use ($search, $searchLower, $searchUpper, $searchTitle) {
+                        $subQ->where('description', 'like', "%{$search}%")
+                            ->orWhere('description', 'like', "%{$searchLower}%")
+                            ->orWhere('description', 'like', "%{$searchUpper}%")
+                            ->orWhere('description', 'like', "%{$searchTitle}%");
+                    })
+                    ->orWhereHas('ingredients', function ($ingredientQuery) use ($search, $searchLower, $searchUpper, $searchTitle) {
+                        $ingredientQuery->where(function ($subQ) use ($search, $searchLower, $searchUpper, $searchTitle) {
+                            $subQ->where('ingredients.name', 'like', "%{$search}%")
+                                ->orWhere('ingredients.name', 'like', "%{$searchLower}%")
+                                ->orWhere('ingredients.name', 'like', "%{$searchUpper}%")
+                                ->orWhere('ingredients.name', 'like', "%{$searchTitle}%");
+                        });
+                    });
+                } else {
+                    // MySQL/MariaDB: используем стандартный LIKE (case-insensitive по умолчанию с utf8mb4_unicode_ci)
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%")
+                        ->orWhereHas('ingredients', function ($ingredientQuery) use ($search) {
+                            $ingredientQuery->where('ingredients.name', 'like', "%{$search}%");
+                        });
+                }
+            });
         }
 
         // Фильтр по наличию акции

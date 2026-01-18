@@ -10,9 +10,12 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSettings, useCities } from '@/contexts';
 import { useAuth, useCity } from '@/hooks';
+import { productService } from '@/api/services';
+import { SearchSuggestions } from '@/components/common';
+import type { SearchSuggestion } from '@/components/common/SearchSuggestions';
 
 interface HeaderProps {
     onLoginClick?: () => void;
@@ -29,16 +32,27 @@ const Header: React.FC<HeaderProps> = ({
     const { cities, loading: citiesLoading } = useCities();
     const { user } = useAuth();
     const { selectedCityId, setSelectedCityId, isInitialized: cityInitialized } = useCity();
+    const navigate = useNavigate();
 
     const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchSuggestions, setSearchSuggestions] = useState<SearchSuggestion[]>([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+    const [isSearching, setIsSearching] = useState(false);
+
     const cityDropdownRef = useRef<HTMLDivElement>(null);
+    const searchContainerRef = useRef<HTMLDivElement>(null);
+    const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     // Закрытие dropdown при клике вне его
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (cityDropdownRef.current && !cityDropdownRef.current.contains(event.target as Node)) {
                 setIsCityDropdownOpen(false);
+            }
+            if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+                setShowSuggestions(false);
             }
         };
 
@@ -57,10 +71,106 @@ const Header: React.FC<HeaderProps> = ({
         return currentCity?.name || 'Выберите город';
     };
 
+    // Поиск товаров с debounce
+    useEffect(() => {
+        // Очищаем предыдущий таймер
+        if (searchTimeoutRef.current) {
+            clearTimeout(searchTimeoutRef.current);
+        }
+
+        // Если запрос пустой, очищаем подсказки
+        if (!searchQuery.trim()) {
+            setSearchSuggestions([]);
+            setShowSuggestions(false);
+            setIsSearching(false);
+            return;
+        }
+
+        // Устанавливаем флаг поиска
+        setIsSearching(true);
+
+        // Запускаем поиск с задержкой 500ms
+        searchTimeoutRef.current = setTimeout(async () => {
+            try {
+                const products = await productService.getProducts({
+                    search: searchQuery,
+                    city_id: selectedCityId || undefined,
+                });
+
+                // Ограничиваем количество подсказок до 5
+                const suggestions: SearchSuggestion[] = products.slice(0, 5).map(product => ({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    sale_price: product.sale_price,
+                    image: product.image,
+                }));
+
+                setSearchSuggestions(suggestions);
+                setShowSuggestions(suggestions.length > 0);
+            } catch (error) {
+                console.error('Search error:', error);
+                setSearchSuggestions([]);
+                setShowSuggestions(false);
+            } finally {
+                setIsSearching(false);
+            }
+        }, 500);
+
+        // Cleanup
+        return () => {
+            if (searchTimeoutRef.current) {
+                clearTimeout(searchTimeoutRef.current);
+            }
+        };
+    }, [searchQuery, selectedCityId]);
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Search:', searchQuery);
-        // TODO: Реализовать поиск
+        if (searchQuery.trim()) {
+            // Переходим на страницу поиска или каталога с фильтром
+            navigate(`/catalog?search=${encodeURIComponent(searchQuery)}`);
+            setShowSuggestions(false);
+        }
+    };
+
+    const handleSuggestionClick = (suggestion: SearchSuggestion) => {
+        setSearchQuery('');
+        setShowSuggestions(false);
+        setSearchSuggestions([]);
+        navigate(`/product/${suggestion.id}`);
+    };
+
+    const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+        setSelectedSuggestionIndex(-1);
+    };
+
+    const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!showSuggestions || searchSuggestions.length === 0) return;
+
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                setSelectedSuggestionIndex(prev =>
+                    prev < searchSuggestions.length - 1 ? prev + 1 : prev
+                );
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                setSelectedSuggestionIndex(prev => prev > 0 ? prev - 1 : -1);
+                break;
+            case 'Enter':
+                if (selectedSuggestionIndex >= 0 && selectedSuggestionIndex < searchSuggestions.length) {
+                    e.preventDefault();
+                    handleSuggestionClick(searchSuggestions[selectedSuggestionIndex]);
+                }
+                break;
+            case 'Escape':
+                setShowSuggestions(false);
+                setSelectedSuggestionIndex(-1);
+                break;
+        }
     };
 
     return (
@@ -123,13 +233,15 @@ const Header: React.FC<HeaderProps> = ({
 
                     {/* Поиск */}
                     <form onSubmit={handleSearch} className="search-form">
-                        <div className="search-container">
+                        <div className="search-container" ref={searchContainerRef}>
                             <input
                                 type="text"
                                 value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onChange={handleSearchInputChange}
+                                onKeyDown={handleSearchKeyDown}
                                 placeholder="Поиск по цветам"
                                 className="search-input"
+                                autoComplete="off"
                             />
                             <button
                                 type="submit"
@@ -139,6 +251,15 @@ const Header: React.FC<HeaderProps> = ({
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </button>
+
+                            {/* Поисковые подсказки */}
+                            {showSuggestions && (
+                                <SearchSuggestions
+                                    suggestions={searchSuggestions}
+                                    onSuggestionClick={handleSuggestionClick}
+                                    selectedIndex={selectedSuggestionIndex}
+                                />
+                            )}
                         </div>
                     </form>
 
