@@ -60,23 +60,11 @@ const Header: React.FC<HeaderProps> = ({
                 <div className="header-content">
                     {/* Логотип */}
                     <a href="/" className="header-logo">
-                        {settings?.appearance?.logo_url ? (
+                        {settings?.appearance?.logo_url && (
                             <img
                                 src={settings.appearance.logo_url}
                                 alt={settings.site_brand || 'Logo'}
                             />
-                        ) : (
-                            <div className="flex items-center gap-2">
-                                <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-500 rounded-lg flex items-center justify-center">
-                                    <span className="text-2xl">🌸</span>
-                                </div>
-                                <div>
-                                    <div className="font-bold text-xl text-gray-900">
-                                        {settings?.site_brand || 'FlowerShop'}
-                                    </div>
-                                    <div className="text-xs text-gray-500">Доставка цветов</div>
-                                </div>
-                            </div>
                         )}
                     </a>
 
