@@ -29,10 +29,10 @@ class CourierStatsWidget extends BaseWidget
         return $table
             ->heading('Статистика по курьерам')
             ->query(
-                Order::query()
+                DB::table('orders')
                     ->select([
-                        DB::raw('courier as id'), // Используем courier как id для Filament
                         'courier',
+                        DB::raw('courier as id'), // Используем courier как id
                         DB::raw('COUNT(*) as orders_count'),
                         DB::raw('SUM(total) as total_amount')
                     ])
@@ -40,18 +40,17 @@ class CourierStatsWidget extends BaseWidget
                     ->whereNotNull('courier')
                     ->where('courier', '!=', '')
                     ->groupBy('courier')
+                    ->orderBy('total_amount', 'desc')
             )
             ->columns([
                 TextColumn::make('courier')
                     ->label('Курьер')
                     ->searchable()
-                    ->sortable()
                     ->icon('heroicon-o-truck')
                     ->iconColor('primary'),
 
                 TextColumn::make('orders_count')
                     ->label('Кол-во заказов')
-                    ->sortable()
                     ->alignCenter()
                     ->badge()
                     ->color('success')
@@ -59,11 +58,9 @@ class CourierStatsWidget extends BaseWidget
 
                 TextColumn::make('total_amount')
                     ->label('Сумма заказов')
-                    ->sortable()
                     ->money('RUB')
                     ->alignEnd(),
             ])
-            ->defaultSort('total_amount', 'desc')
             ->paginated([10, 25, 50])
             ->emptyStateHeading('Нет данных по курьерам')
             ->emptyStateDescription('Статистика по курьерам появится после завершения первых доставок')
