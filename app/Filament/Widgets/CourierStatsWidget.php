@@ -26,21 +26,29 @@ class CourierStatsWidget extends BaseWidget
 
     public function table(Table $table): Table
     {
+        // Создаем подзапрос для группировки
+        $subQuery = DB::table('orders')
+            ->select([
+                'courier',
+                DB::raw('COUNT(*) as orders_count'),
+                DB::raw('SUM(total) as total_amount')
+            ])
+            ->where('status', OrderStatus::COMPLETED->value)
+            ->whereNotNull('courier')
+            ->where('courier', '!=', '')
+            ->groupBy('courier');
+
         return $table
             ->heading('Статистика по курьерам')
             ->query(
-                DB::table('orders')
+                Order::query()
+                    ->fromSub($subQuery, 'courier_stats')
                     ->select([
                         'courier',
-                        DB::raw('courier as id'), // Используем courier как id
-                        DB::raw('COUNT(*) as orders_count'),
-                        DB::raw('SUM(total) as total_amount')
+                        'orders_count',
+                        'total_amount',
+                        DB::raw('courier as id') // Используем courier как id
                     ])
-                    ->where('status', OrderStatus::COMPLETED->value)
-                    ->whereNotNull('courier')
-                    ->where('courier', '!=', '')
-                    ->groupBy('courier')
-                    ->orderBy('total_amount', 'desc')
             )
             ->columns([
                 TextColumn::make('courier')
@@ -61,6 +69,7 @@ class CourierStatsWidget extends BaseWidget
                     ->money('RUB')
                     ->alignEnd(),
             ])
+            ->defaultSort('total_amount', 'desc')
             ->paginated([10, 25, 50])
             ->emptyStateHeading('Нет данных по курьерам')
             ->emptyStateDescription('Статистика по курьерам появится после завершения первых доставок')
