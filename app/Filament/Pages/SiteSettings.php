@@ -75,6 +75,7 @@ class SiteSettings extends Page implements HasForms
                                             ->image()
                                             ->directory('site-settings')
                                             ->visibility('public')
+                                            ->disk('public')
                                             ->maxSize(3048)
                                             ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/svg+xml'])
                                             ->helperText('Рекомендуемый формат: PNG, SVG. Максимальный размер: 2MB'),
@@ -83,6 +84,7 @@ class SiteSettings extends Page implements HasForms
                                             ->image()
                                             ->directory('site-settings')
                                             ->visibility('public')
+                                            ->disk('public')
                                             ->maxSize(2048)
                                             ->acceptedFileTypes(['image/x-icon', 'image/png'])
                                             ->helperText('Рекомендуемый формат: ICO, PNG, SVG. Размер: 32x32px или больше'),

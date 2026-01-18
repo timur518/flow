@@ -30,4 +30,9 @@ class City extends Model
     {
         return $this->hasMany(Store::class);
     }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
 }

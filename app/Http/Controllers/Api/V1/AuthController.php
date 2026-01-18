@@ -120,4 +120,29 @@ class AuthController extends Controller
             'message' => 'Пароль изменен успешно',
         ]);
     }
+
+    /**
+     * Запросить восстановление пароля
+     */
+    public function forgotPassword(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Пользователь с таким email не найден',
+            ], 404);
+        }
+
+        // TODO: Здесь должна быть логика отправки письма для восстановления пароля
+        // Например, через Password::sendResetLink()
+
+        return response()->json([
+            'message' => 'Письмо для восстановления пароля отправлено на указанный email',
+        ]);
+    }
 }

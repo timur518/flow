@@ -28,6 +28,9 @@ class StoreOrderRequest extends FormRequest
             // Промокод (опционально)
             'promo_code' => ['nullable', 'string', 'max:50'],
 
+            // Анонимный заказ
+            'is_anonymous' => ['nullable', 'boolean'],
+
             // Получатель заказа
             'recipient_name' => ['nullable', 'string', 'max:255'],
             'recipient_phone' => ['nullable', 'string', 'max:20'],
@@ -37,8 +40,9 @@ class StoreOrderRequest extends FormRequest
             'city_id' => ['required', 'exists:cities,id'],
             'delivery_type' => ['required', 'string', 'in:delivery,pickup'],
             'delivery_address' => ['required_if:delivery_type,delivery', 'nullable', 'string', 'max:500'],
-            'delivery_latitude' => ['required_if:delivery_type,delivery', 'nullable', 'numeric', 'between:-90,90'],
-            'delivery_longitude' => ['required_if:delivery_type,delivery', 'nullable', 'numeric', 'between:-180,180'],
+            // Координаты обязательны только для доставки и если адрес НЕ "Уточнить у получателя"
+            'delivery_latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'delivery_longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'delivery_date' => ['required', 'date', 'after_or_equal:today'],
             'delivery_time' => ['required', 'string', 'max:50'],
 

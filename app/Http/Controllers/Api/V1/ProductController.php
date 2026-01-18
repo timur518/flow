@@ -3,12 +3,19 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Product;
+use App\Services\PriceModifierService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController
 {
+    protected PriceModifierService $priceModifier;
+
+    public function __construct(PriceModifierService $priceModifier)
+    {
+        $this->priceModifier = $priceModifier;
+    }
     /**
      * Получить список товаров с фильтрацией
      *
@@ -19,6 +26,7 @@ class ProductController
     {
         $query = Product::query()
             ->where('is_active', true)
+            ->withActiveIngredients() // Исключаем товары с неактивными ингредиентами
             ->with(['categories', 'tags', 'images']);
 
         // Фильтрация по городу
@@ -72,12 +80,13 @@ class ProductController
             'success' => true,
             'data' => $products->map(function ($product) {
                 $firstImage = $product->images->first();
+                $prices = $this->priceModifier->getModifiedPrices($product);
 
                 return [
                     'id' => $product->id,
                     'name' => $product->name,
-                    'price' => $product->price,
-                    'sale_price' => $product->sale_price,
+                    'price' => $prices['price'],
+                    'sale_price' => $prices['sale_price'],
                     'image' => $firstImage ? url(Storage::disk('public')->url($firstImage->image)) : null,
                     'width' => $product->width,
                     'height' => $product->height,
@@ -113,14 +122,16 @@ class ProductController
             ->with(['categories', 'tags', 'images', 'cities', 'ingredients'])
             ->findOrFail($id);
 
+        $prices = $this->priceModifier->getModifiedPrices($product);
+
         return response()->json([
             'success' => true,
             'data' => [
                 'id' => $product->id,
                 'name' => $product->name,
                 'description' => $product->description,
-                'price' => $product->price,
-                'sale_price' => $product->sale_price,
+                'price' => $prices['price'],
+                'sale_price' => $prices['sale_price'],
                 'width' => $product->width,
                 'height' => $product->height,
                 'categories' => $product->categories->map(function ($category) {

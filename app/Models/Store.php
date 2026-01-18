@@ -64,4 +64,9 @@ class Store extends Model
     {
         return $this->hasMany(DeliveryZone::class)->orderBy('sort_order');
     }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'city_id', 'city_id');
+    }
 }

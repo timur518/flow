@@ -96,7 +96,7 @@ class OrderSettings extends Page implements HasForms
                                             ->helperText('Получите токен у @BotFather в Telegram'),
 
                                         TextInput::make('telegram_chat_ids')
-                                            ->label('Telegram Chat ID')
+                                            ->label('Telegram Chat ID для теста')
                                             ->placeholder('123456789, 987654321')
                                             ->helperText('ID чатов через запятую. Получите ID у @userinfobot')
                                             ->belowContent(

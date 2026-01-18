@@ -54,11 +54,6 @@ class Order extends Model
         return $this->belongsTo(City::class);
     }
 
-    public function deliveryPeriod(): BelongsTo
-    {
-        return $this->belongsTo(DeliveryPeriod::class);
-    }
-
     public function deliveryZone(): BelongsTo
     {
         return $this->belongsTo(DeliveryZone::class);

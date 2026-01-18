@@ -71,11 +71,36 @@ class AddressController extends Controller
             ], 403);
         }
 
-        $address->update($request->validated());
+        // Получаем валидированные данные
+        $validatedData = $request->validated();
 
-        // Если указано is_default, делаем адрес основным
-        if ($request->has('is_default') && $request->is_default) {
-            $this->setDefaultAddress($request->user(), $address);
+        // Обрабатываем is_default отдельно
+        $shouldBeDefault = $validatedData['is_default'] ?? null;
+
+        // Удаляем is_default из данных для обновления, обработаем его отдельно
+        unset($validatedData['is_default']);
+
+        // Обновляем остальные поля адреса
+        $address->update($validatedData);
+
+        // Обрабатываем is_default
+        if ($shouldBeDefault !== null) {
+            if ($shouldBeDefault) {
+                // Устанавливаем этот адрес как основной
+                $this->setDefaultAddress($request->user(), $address);
+            } else {
+                // Если снимаем галочку с основного адреса
+                if ($address->is_default) {
+                    $address->update(['is_default' => false]);
+                    // Делаем основным первый из оставшихся адресов
+                    $firstAddress = $request->user()->addresses()
+                        ->where('id', '!=', $address->id)
+                        ->first();
+                    if ($firstAddress) {
+                        $firstAddress->update(['is_default' => true]);
+                    }
+                }
+            }
         }
 
         return response()->json([

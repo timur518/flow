@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Store;
 use App\Services\DeliveryService;
+use App\Services\PriceModifierService;
 use App\Services\PromoCodeService;
 use App\Services\TelegramService;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +22,8 @@ class OrderController extends Controller
     public function __construct(
         private PromoCodeService $promoCodeService,
         private TelegramService $telegramService,
-        private DeliveryService $deliveryService
+        private DeliveryService $deliveryService,
+        private PriceModifierService $priceModifier
     ) {}
 
     /**
@@ -74,11 +76,25 @@ class OrderController extends Controller
             $subtotal = 0;
             $orderItems = [];
 
-            foreach ($request->items as $item) {
-                $product = Product::findOrFail($item['product_id']);
+            // Проверяем, нужно ли применять массовое изменение цен
+            $priceChangeInfo = $this->priceModifier->getPriceChangeInfo();
+            $shouldModifyPrices = $priceChangeInfo !== null;
 
-                // Используем sale_price если есть, иначе обычную цену
-                $price = $product->sale_price ?? $product->price;
+            foreach ($request->items as $item) {
+                // Загружаем категории только если нужно применять изменение цен
+                $product = $shouldModifyPrices
+                    ? Product::with('categories')->findOrFail($item['product_id'])
+                    : Product::findOrFail($item['product_id']);
+
+                // Получаем цену с учетом массового изменения (если активировано)
+                if ($shouldModifyPrices) {
+                    $prices = $this->priceModifier->getModifiedPrices($product);
+                    $price = $prices['sale_price'] ?? $prices['price'];
+                } else {
+                    // Используем sale_price если есть, иначе обычную цену
+                    $price = $product->sale_price ?? $product->price;
+                }
+
                 $quantity = $item['quantity'];
                 $total = $price * $quantity;
 
@@ -115,33 +131,47 @@ class OrderController extends Controller
             $deliveryZoneId = null;
 
             if ($request->delivery_type === 'delivery') {
-                // Находим магазин по city_id
-                $store = Store::where('city_id', $request->city_id)
-                    ->where('is_active', true)
-                    ->first();
+                // Проверяем, не выбран ли вариант "Уточнить у получателя"
+                $isClarifyWithRecipient = $request->delivery_address === 'Уточнить у получателя';
 
-                if (!$store) {
-                    return response()->json([
-                        'message' => 'Магазин в выбранном городе не найден',
-                    ], 404);
+                // Если адрес нужно уточнить, пропускаем расчет доставки
+                if (!$isClarifyWithRecipient) {
+                    // Проверяем наличие координат
+                    if (!$request->delivery_latitude || !$request->delivery_longitude) {
+                        return response()->json([
+                            'message' => 'Координаты адреса обязательны для расчета стоимости доставки',
+                        ], 422);
+                    }
+
+                    // Находим магазин по city_id
+                    $store = Store::where('city_id', $request->city_id)
+                        ->where('is_active', true)
+                        ->first();
+
+                    if (!$store) {
+                        return response()->json([
+                            'message' => 'Магазин в выбранном городе не найден',
+                        ], 404);
+                    }
+
+                    // Рассчитываем стоимость доставки
+                    $deliveryResult = $this->deliveryService->calculateDeliveryCost(
+                        latitude: (float) $request->delivery_latitude,
+                        longitude: (float) $request->delivery_longitude,
+                        storeId: $store->id,
+                        subtotal: $subtotal
+                    );
+
+                    if (!$deliveryResult['success']) {
+                        return response()->json([
+                            'message' => $deliveryResult['message'],
+                        ], 422);
+                    }
+
+                    $deliveryCost = $deliveryResult['delivery_cost'];
+                    $deliveryZoneId = $deliveryResult['zone_id'];
                 }
-
-                // Рассчитываем стоимость доставки
-                $deliveryResult = $this->deliveryService->calculateDeliveryCost(
-                    latitude: (float) $request->delivery_latitude,
-                    longitude: (float) $request->delivery_longitude,
-                    storeId: $store->id,
-                    subtotal: $subtotal
-                );
-
-                if (!$deliveryResult['success']) {
-                    return response()->json([
-                        'message' => $deliveryResult['message'],
-                    ], 422);
-                }
-
-                $deliveryCost = $deliveryResult['delivery_cost'];
-                $deliveryZoneId = $deliveryResult['zone_id'];
+                // Если "Уточнить у получателя", стоимость доставки остается 0
             }
 
             $total = $subtotal - $discount + $deliveryCost;
@@ -155,7 +185,7 @@ class OrderController extends Controller
                 'promo_code' => $request->promo_code,
                 'user_id' => $request->user()->id,
                 'customer_phone' => $request->user()->phone,
-                'is_anonymous' => false,
+                'is_anonymous' => $request->is_anonymous ?? false,
                 'recipient_name' => $request->recipient_name,
                 'recipient_phone' => $request->recipient_phone,
                 'recipient_social' => $request->recipient_social,
@@ -204,8 +234,6 @@ class OrderController extends Controller
             // Отправляем уведомление в Telegram
             $this->telegramService->sendNewOrderNotification($order);
 
-            //TODO: Email-уведомление клиенту о созданном заказе
-
             return response()->json($response, 201);
 
         } catch (\Exception $e) {
@@ -240,6 +268,8 @@ class OrderController extends Controller
             }
 
             $order->load(['items.product.images', 'city', 'user']);
+
+            //TODO: Email-уведомление клиенту о созданном и оплаченном заказе
 
             return response()->json([
                 'message' => 'Статус оплаты обновлен',

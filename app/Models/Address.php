@@ -24,8 +24,8 @@ class Address extends Model
     ];
 
     protected $casts = [
-        'latitude' => 'decimal:8',
-        'longitude' => 'decimal:8',
+        'latitude' => 'decimal:10',
+        'longitude' => 'decimal:11',
         'is_default' => 'boolean',
     ];
 

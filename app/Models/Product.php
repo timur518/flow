@@ -45,6 +45,17 @@ class Product extends Model
         return $this->belongsToMany(Ingredient::class)->withPivot('quantity');
     }
 
+    /**
+     * Scope для фильтрации товаров только с активными ингредиентами
+     * Исключает товары, у которых есть хотя бы один неактивный ингредиент
+     */
+    public function scopeWithActiveIngredients($query)
+    {
+        return $query->whereDoesntHave('ingredients', function ($q) {
+            $q->where('ingredients.is_active', false);
+        });
+    }
+
     public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class)->orderBy('sort_order');

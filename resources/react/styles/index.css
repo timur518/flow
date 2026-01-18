@@ -1,0 +1,1612 @@
+/**
+ * Main Styles - Основные стили приложения
+ *
+ * Структура файла:
+ * 1. GLOBAL STYLES - Глобальные стили (reset, body, контейнеры)
+ * 2. HEADER - Шапка сайта (логотип, город, поиск, кнопки)
+ * 3. CATEGORIES SIDEBAR - Боковая панель категорий
+ * 4. BANNER SLIDER - Слайдер баннеров
+ * 5. PRODUCTS GRID - Сетка товаров
+ * 6. PRODUCT CARD - Карточка товара
+ * 7. CART SIDEBAR - Боковая панель корзины
+ * 8. BOUQUET BUILDER - Конструктор букетов
+ * 9. FOOTER - Футер
+ * 10. SKELETON - Скелетоны загрузки
+ */
+
+@import 'tailwindcss';
+
+/* ============================================
+   GLOBAL STYLES - Глобальные стили
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+body {
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #ffffff;
+    color: #333333;
+    line-height: 1.5;
+}
+
+#root {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ffffff;
+}
+
+/* Основной контейнер */
+.body-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.main-content {
+    flex: 1;
+    background-color: #ffffff;
+}
+
+/* Универсальный контейнер для блоков */
+.block-container {
+    background-color: #F9F9F9;
+    border-radius: 24px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* ============================================
+   HEADER - Шапка сайта
+   ============================================ */
+
+.header {
+    background-color: #FFFFFF;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid #F9F9F9;
+    margin-bottom: 20px;
+}
+
+.header-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 15px 0;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Логотип */
+.header-logo {
+    flex-shrink: 0;
+    width: 180px;
+    height: 45px;
+    transition: opacity 0.2s ease;
+}
+
+.header-logo:hover {
+    opacity: 0.9;
+}
+
+.header-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Кнопка выбора города */
+.city-selector-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #F9F9F9;
+    border: none;
+    border-radius: 32px;
+    padding: 0;
+    width: 200px;
+    cursor: pointer;
+    transition: opacity 0.2s ease, border-radius 0.3s ease;
+}
+
+.city-selector-button:hover {
+    opacity: 0.8;
+}
+
+.city-selector-button.open {
+    border-radius: 32px 32px 0 0;
+}
+
+.city-selector-icon {
+    width: 35px;
+    height: 35px;
+    margin: 10px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.city-selector-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: #FDAFC0;
+}
+
+.city-selector-text {
+    font-weight: 600;
+    font-size: 14px;
+    color: #737373;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 8px;
+}
+
+/* Dropdown городов */
+.city-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0;
+    width: 200px;
+    background-color: #F9F9F9;
+    border-top: 1px solid transparent;
+    border-radius: 0 0 32px 32px;
+    overflow: hidden;
+    z-index: 50;
+    max-height: 0;
+    padding: 0;
+    transform: translateY(-10px);
+    transition: max-height 0.3s ease, padding 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+
+.city-dropdown.open {
+    max-height: 400px;
+    padding: 10px 0;
+    transform: translateY(0);
+    border-top-color: #EDEDED;
+}
+
+.city-dropdown-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    margin-bottom: 10px;
+}
+
+.city-dropdown-item:last-child {
+    margin-bottom: 0;
+}
+
+.city-dropdown-item:hover {
+    opacity: 0.8;
+}
+
+.city-dropdown-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.city-dropdown-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: #FDAFC0;
+}
+
+.city-dropdown-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #737373;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.city-dropdown-item.active .city-dropdown-text {
+    color: #FDAFC0;
+}
+
+/* Поисковая строка */
+.search-form {
+    flex: 1;
+}
+
+.search-container {
+    position: relative;
+    width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    padding: 20px 20px 20px 30px;
+    background-color: #F9F9F9;
+    border: none;
+    border-radius: 32px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #737373;
+    outline: none;
+    transition: box-shadow 0.2s ease;
+}
+
+.search-input::placeholder {
+    color: #737373;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.search-input:focus {
+    box-shadow: 0 0 0 2px #FBCFE8;
+}
+
+.search-button {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #737373;
+    transition: color 0.2s ease;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.search-button:hover {
+    color: #FDAFC0;
+}
+
+/* Кнопки в header */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.header-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    background-color: #F9F9F9;
+    border: none;
+    border-radius: 32px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.header-button:hover {
+    opacity: 0.8;
+}
+
+.header-button-round {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: #F9F9F9;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.header-button-round:hover {
+    opacity: 0.8;
+}
+
+.header-button-icon {
+    width: 35px;
+    height: 35px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.header-button-icon svg {
+    width: 20px;
+    height: 20px;
+    color: #FDAFC0;
+}
+
+.header-button-text {
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+    padding-right: 8px;
+}
+
+/* ============================================
+   CATEGORIES SIDEBAR - Боковая панель категорий
+   ============================================ */
+.categories-sidebar {
+    width: 262px;
+    position: sticky;
+    top: 116px; /* Высота header (76px) + отступ (40px) */
+    align-self: flex-start;
+    max-height: calc(100vh - 156px); /* Высота экрана минус header и отступы */
+}
+
+/* Навигация категорий */
+.categories-nav {
+    width: 100%;
+    height: 605px;
+    overflow: hidden;
+}
+
+/* Список категорий */
+.categories-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+/* Элемент списка категории */
+.category-item {
+    width: 100%;
+}
+
+/* Кнопка категории */
+.category-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.category-button:hover {
+    opacity: 0.8;
+}
+
+/* Картинка категории */
+.category-image {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Плейсхолдер для категории без картинки */
+.category-placeholder {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background-color: #d9d9d9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+/* Название категории */
+.category-name {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #737373;
+    letter-spacing: -0.32px;
+    line-height: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Состояние загрузки */
+.category-skeleton {
+    position: relative;
+    width: auto;
+    height: 32px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.category-skeleton-image {
+    background-color: #D1D5DB;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+}
+
+.category-skeleton-text {
+    background-color: #D1D5DB;
+    border-radius: 4px;
+    height: 16px;
+    width: 128px;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* ============================================
+   BANNER SLIDER - Слайдер баннеров
+   ============================================ */
+.banner-carousel {
+    position: relative;
+}
+
+/* Внутренний контейнер */
+.banner-carousel-inner {
+    position: relative;
+}
+
+/* Контейнер прокрутки */
+.banner-carousel-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.banner-carousel-scroll:active {
+    cursor: grabbing;
+}
+
+/* Элемент баннера */
+.banner-item {
+    flex-shrink: 0;
+    width: calc(33.333% - 10.667px);
+}
+
+.banner-item:first-child {
+    margin-left: 0;
+}
+
+/* Обертка изображения баннера */
+.banner-image-wrapper {
+    position: relative;
+    aspect-ratio: 3/4;
+    border-radius: 24px;
+    overflow: hidden;
+    background-color: #F3F4F6;
+    cursor: pointer;
+}
+
+/* Изображение баннера */
+.banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.banner-image-wrapper:hover .banner-image {
+    transform: scale(1.05);
+}
+
+/* Название баннера */
+.banner-title {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    padding: 0 15px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFFFFF;
+    text-align: left;
+    pointer-events: none;
+    user-select: none;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Кнопки навигации */
+.banner-nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 35px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.banner-nav-button svg {
+    width: 18px;
+    height: 18px;
+    color: #737373;
+}
+
+.banner-nav-button.disabled {
+    opacity: 0.0;
+    cursor: not-allowed;
+}
+
+.banner-nav-prev {
+    left: 0;
+    transform: translate(10px, -50%);
+}
+
+.banner-nav-next {
+    right: 0;
+    transform: translate(-10px, -50%);
+}
+
+
+/* ============================================
+   PRODUCTS GRID - Сетка товаров
+   ============================================ */
+.products-grid-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #222222;
+    margin-bottom: 20px;
+}
+
+/* Сетка товаров */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+}
+
+@media (min-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1280px) {
+    .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Пустое состояние */
+.products-grid-empty {
+    text-align: center;
+    padding: 48px 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+}
+
+.products-grid-empty-text {
+    color: #6B7280;
+    font-size: 18px;
+}
+
+/* Скелетон загрузки */
+.product-skeleton {
+    background-color: #ffffff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.product-skeleton-image {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background-color: #E5E7EB;
+}
+
+.product-skeleton-content {
+    padding: 16px;
+}
+
+.product-skeleton-title {
+    height: 24px;
+    background-color: #E5E7EB;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.product-skeleton-price {
+    height: 16px;
+    background-color: #E5E7EB;
+    border-radius: 16px;
+    width: 66.666%;
+    margin-bottom: 8px;
+}
+
+.product-skeleton-button {
+    height: 32px;
+    background-color: #E5E7EB;
+    border-radius: 32px;
+}
+
+/* ============================================
+   PRODUCT CARD - Карточка товара
+   ============================================ */
+.product-card {
+    overflow: hidden;
+    cursor: pointer;
+}
+
+/* Контейнер изображения */
+.product-image-container {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 24px;
+}
+
+.product-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+}
+
+/* Теги на изображении */
+.product-tags {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+/* Тег скидки */
+.product-discount-tag {
+    background-color: #222222;
+    color: #FFFFFF;
+    padding: 4px 5px 4px 5px;
+    border-radius: 32px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+/* Тег товара */
+.product-tag {
+    padding: 4px 5px 4px 5px;
+    border-radius: 32px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+/* Информация о товаре */
+.product-info {
+    padding-top: 10px;
+}
+
+/* Название товара */
+.product-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+    margin-bottom: 12px;
+    min-height: 48px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Кнопка добавить в корзину */
+.product-add-button {
+    width: auto;
+    background-color: #FFFFFF;
+    color: #F2DBE3;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 32px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.product-add-button:hover,
+.product-add-button.active {
+    background-color: #FC6C5F;
+}
+
+/* Цены внутри кнопки */
+.product-add-button .product-price-old {
+    font-size: 10px;
+    color: #737373;
+    text-decoration: line-through;
+    font-weight: 600;
+}
+
+.product-add-button:hover .product-price-old,
+.product-add-button.active .product-price-old {
+    color: #F2DBE3;
+}
+
+.product-add-button .product-price-sale {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FC6C5F;
+}
+
+.product-add-button:hover .product-price-sale,
+.product-add-button.active .product-price-sale {
+    color: #F2DBE3;
+}
+
+.product-add-button .product-price-regular {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FC6C5F;
+}
+
+.product-add-button:hover .product-price-regular,
+.product-add-button.active .product-price-regular {
+    color: #FFFFFF;
+}
+
+/* Иконка плюсика */
+.product-add-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.product-add-icon svg {
+    width: 12px;
+    height: 12px;
+    color: #FC6C5F;
+}
+
+.product-add-button:hover .product-add-icon svg,
+.product-add-button.active .product-add-icon svg {
+    color: #F2DBE3;
+}
+
+/* Иконка минуса */
+.product-remove-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    animation: fadeInScale 0.3s ease-out;
+    transform-origin: center;
+}
+
+.product-remove-icon svg {
+    width: 12px;
+    height: 12px;
+    color: #F2DBE3;
+    transition: opacity 0.2s ease;
+}
+
+.product-remove-icon:hover svg {
+    opacity: 0.8;
+}
+
+/* Анимация появления минуса */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ============================================
+   CART SIDEBAR - Боковая панель корзины
+   ============================================ */
+.cart-sidebar {
+    width: 377px;
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 116px; /* Высота header (76px) + отступ (40px) */
+    align-self: flex-start;
+    max-height: calc(100vh - 156px); /* Высота экрана минус header и отступы */
+}
+
+.cart-sidebar-container {
+    width: 377px;
+    height: 646px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+/* Заголовок корзины */
+.cart-header {
+    flex-shrink: 0;
+    margin-bottom: 20px;
+}
+
+.cart-title {
+    color: #222222;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.48px;
+    line-height: 24px;
+}
+
+/* Пустая корзина */
+.cart-empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.cart-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-empty-text {
+    width: 214px;
+    color: #737373;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: -0.32px;
+    line-height: 16px;
+}
+
+.cart-empty-button {
+    display: flex;
+    width: 100%;
+    height: 55px;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px;
+    background-color: #fc6c5f;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-top: auto;
+}
+
+.cart-empty-button:hover {
+    opacity: 0.9;
+}
+
+.cart-empty-button:active {
+    opacity: 0.8;
+}
+
+.cart-empty-button-text {
+    color: #f2dbe3;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: -0.28px;
+    line-height: 14px;
+}
+
+/* Список товаров */
+.cart-items-list {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 20px;
+    padding-right: 5px;
+}
+
+.cart-items-list > * + * {
+    margin-top: 10px;
+}
+
+/* Скроллбар для списка товаров */
+.cart-items-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.cart-items-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.cart-items-list::-webkit-scrollbar-thumb {
+    background: #E5E5E5;
+    border-radius: 2px;
+}
+
+.cart-items-list::-webkit-scrollbar-thumb:hover {
+    background: #D4D4D4;
+}
+
+/* Товар в корзине */
+.cart-item {
+    width: 100%;
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background-color: #ffffff;
+    border-radius: 24px;
+    transition: opacity 0.3s ease-out;
+}
+
+.cart-item-image {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 16px;
+}
+
+.cart-item-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.cart-item-name {
+    color: #222222;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: -0.24px;
+    line-height: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cart-item-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.cart-item-price {
+    color: #222222;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.28px;
+    line-height: 14px;
+}
+
+/* Счетчик количества */
+.cart-item-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background-color: #f9f9f9;
+    border-radius: 100px;
+}
+
+.cart-item-counter-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.cart-item-counter-button:hover {
+    opacity: 0.7;
+}
+
+.cart-item-counter-value {
+    color: #fc6c5f;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: -0.24px;
+    line-height: 12px;
+    min-width: 16px;
+    text-align: center;
+}
+
+/* Итого */
+.cart-total {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cart-total-label {
+    color: #222222;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.40px;
+    line-height: 20px;
+}
+
+.cart-total-value {
+    color: #222222;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: right;
+    letter-spacing: -0.40px;
+    line-height: 20px;
+}
+
+/* Кнопка оформления */
+.cart-checkout-button {
+    flex-shrink: 0;
+    width: 100%;
+    height: 55px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background-color: #fc6c5f;
+    border-radius: 100px;
+    transition: opacity 0.2s;
+}
+
+.cart-checkout-button:hover {
+    opacity: 0.9;
+}
+
+.cart-checkout-button:active {
+    opacity: 0.8;
+}
+
+.cart-checkout-button-text {
+    color: #F2DBE3;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: -0.28px;
+    line-height: 14px;
+}
+
+.cart-checkout-button-subtext {
+    color: #f2dbe3;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: -0.20px;
+    line-height: 10px;
+}
+
+/* Анимация появления товара в корзине */
+.cart-item.adding {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Анимация удаления товара из корзины */
+.cart-item.removing {
+    animation: fadeOut 0.3s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        max-height: 132px;
+        margin-bottom: 10px;
+    }
+    50% {
+        opacity: 0;
+        max-height: 132px;
+        margin-bottom: 10px;
+    }
+    100% {
+        opacity: 0;
+        max-height: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+/* ============================================
+   BOUQUET BUILDER - Конструктор букетов
+   ============================================ */
+.bouquet-builder {
+    padding: 30px 0;
+}
+
+/* Содержимое блока */
+.bouquet-builder-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Заголовок */
+.bouquet-builder-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #222222;
+    text-align: center;
+    margin: 0;
+}
+
+/* Подзаголовок */
+.bouquet-builder-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+    text-align: center;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Контейнер кнопок */
+.bouquet-builder-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Кнопка (Telegram/WhatsApp) */
+.bouquet-builder-button {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.bouquet-builder-button:hover {
+    opacity: 0.8;
+}
+
+.bouquet-builder-button:active {
+    opacity: 0.6;
+}
+
+/* Иконка в кнопке */
+.bouquet-builder-icon {
+    width: 20px;
+    height: 20px;
+    color: #FDAFC0;
+}
+
+/* ============================================
+   FOOTER - Футер
+   ============================================ */
+
+/* Основной контейнер футера */
+.footer {
+    margin-top: 20px;
+    margin-bottom:30px;
+    border-radius: 24px;
+    background-image: url('/images/footer-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+/* Внутренний контейнер с отступами */
+.footer-content {
+    padding: 20px;
+}
+
+/* Сетка колонок */
+.footer-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr 200px;
+    gap: 32px;
+}
+
+/* Колонка футера */
+.footer-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Заголовки колонок */
+.footer-heading {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 16px;
+}
+
+/* Обычный текст */
+.footer-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #FFFFFF;
+    line-height: 1.5;
+}
+
+/* Кнопки приложений (Apple/Android) */
+.footer-app-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.footer-app-button {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.footer-app-button:hover {
+    opacity: 0.8;
+}
+
+.footer-app-button:active {
+    opacity: 0.6;
+}
+
+.footer-app-icon {
+    width: 20px;
+    height: 20px;
+    color: #737373;
+}
+
+/* Блок владельца сайта */
+.footer-owner {
+    margin-top: 40px;
+}
+
+.footer-owner .footer-heading {
+    margin-bottom: 0;
+}
+
+.footer-owner-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.footer-owner-info .footer-text {
+    line-height: 1;
+}
+
+/* Список ссылок */
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.footer-links li {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+}
+
+.footer-link {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    line-height: 1;
+    display: block;
+}
+
+.footer-link:hover {
+    opacity: 0.8;
+}
+
+/* Информационный блок */
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Телефон */
+.footer-phone-wrapper {
+    margin-bottom: 16px;
+}
+
+.footer-phone {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.footer-phone:hover {
+    opacity: 0.8;
+}
+
+/* Кнопки соцсетей (Telegram/WhatsApp) */
+.footer-social-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.footer-social-button {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.footer-social-button:hover {
+    opacity: 0.8;
+}
+
+.footer-social-button:active {
+    opacity: 0.6;
+}
+
+.footer-social-icon {
+    width: 20px;
+    height: 20px;
+    color: #FDAFC0;
+}
+
+/* Адаптивность для планшетов */
+@media (max-width: 1024px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+/* ============================================
+   ADDRESS AUTOCOMPLETE - Автозаполнение адреса
+   ============================================ */
+
+.address-autocomplete-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.address-autocomplete-wrapper input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.address-autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #E5E5E5;
+    border-radius: 16px;
+    margin-top: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.address-autocomplete-suggestion {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #F9F9F9;
+}
+
+.address-autocomplete-suggestion:last-child {
+    border-bottom: none;
+}
+
+.address-autocomplete-suggestion:hover,
+.address-autocomplete-suggestion.selected {
+    background-color: #F9F9F9;
+}
+
+.address-autocomplete-suggestion-value {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.address-autocomplete-loading {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    color: #737373;
+}
+
+/* Скроллбар для списка подсказок */
+.address-autocomplete-suggestions::-webkit-scrollbar {
+    width: 4px;
+}
+
+.address-autocomplete-suggestions::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.address-autocomplete-suggestions::-webkit-scrollbar-thumb {
+    background: #E5E5E5;
+    border-radius: 2px;
+}
+
+.address-autocomplete-suggestions::-webkit-scrollbar-thumb:hover {
+    background: #D4D4D4;
+}
+
+/* ============================================
+   SKELETON - Скелетон загрузки
+   ============================================ */
+
+@keyframes skeletonLoading {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #F0F0F0 0px, #F8F8F8 40px, #F0F0F0 80px);
+    background-size: 200px 100%;
+    animation: skeletonLoading 1.5s infinite;
+    border-radius: 8px;
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 24px;
+}
+
+.skeleton-title {
+    height: 32px;
+    width: 70%;
+    margin-bottom: 16px;
+}
+
+.skeleton-text {
+    height: 16px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.skeleton-price {
+    height: 40px;
+    width: 150px;
+    margin-bottom: 16px;
+}
+
+.skeleton-button {
+    height: 48px;
+    border-radius: 32px;
+}
+
+.skeleton-heading {
+    height: 24px;
+    width: 60%;
+    margin-bottom: 16px;
+}
+
+.skeleton-card {
+    height: 100px;
+    border-radius: 16px;
+}
+

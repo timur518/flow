@@ -15,6 +15,17 @@ class LoginRequest extends FormRequest
     }
 
     /**
+     * Подготовка данных перед валидацией
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            // Очищаем логин от пробелов и приводим к нижнему регистру
+            'login' => strtolower(trim($this->login ?? '')),
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -22,8 +33,19 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'login' => ['required', 'string'], // email или phone
-            'password' => ['required', 'string'],
+            // Логин: email или телефон
+            'login' => [
+                'required',
+                'string',
+                'max:255'
+            ],
+
+            // Пароль
+            'password' => [
+                'required',
+                'string',
+                'max:255'
+            ],
         ];
     }
 
@@ -34,7 +56,10 @@ class LoginRequest extends FormRequest
     {
         return [
             'login.required' => 'Email или телефон обязателен для заполнения',
+            'login.max' => 'Email или телефон не должен превышать 255 символов',
+
             'password.required' => 'Пароль обязателен для заполнения',
+            'password.max' => 'Пароль не должен превышать 255 символов',
         ];
     }
 }

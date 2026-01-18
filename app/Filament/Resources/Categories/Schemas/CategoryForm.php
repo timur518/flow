@@ -25,6 +25,14 @@ class CategoryForm
                             ->visibility('public')
                             ->imageEditor()
                             ->helperText('Необязательно'),
+                        FileUpload::make('menu_image')
+                            ->label('Картинка в меню')
+                            ->image()
+                            ->disk('public')
+                            ->directory('categories/menu')
+                            ->visibility('public')
+                            ->imageEditor()
+                            ->helperText('Необязательно. Используется для отображения в меню категорий'),
                         TextInput::make('name')
                             ->label('Название')
                             ->required()

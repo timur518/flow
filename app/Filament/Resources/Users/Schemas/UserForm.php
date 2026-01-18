@@ -22,6 +22,9 @@ class UserForm
                     ->label('Email')
                     ->email()
                     ->required(),
+                TextInput::make('phone')
+                    ->label('Телефон')
+                    ->placeholder('+7 (___) ___-__-__'),
                 //DateTimePicker::make('email_verified_at'),
                 TextInput::make('password')
                     ->label('Пароль')

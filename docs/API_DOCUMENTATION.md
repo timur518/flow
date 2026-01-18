@@ -173,6 +173,7 @@ curl http://127.0.0.1:8000/api/v1/categories?include_inactive=1
       "name": "Букеты",
       "slug": "bukety",
       "image": "http://127.0.0.1:8000/storage/categories/image.png",
+      "menu_image": "http://127.0.0.1:8000/storage/categories/menu/icon.png",
       "sort_order": 0,
       "is_active": true
     }
@@ -186,9 +187,14 @@ curl http://127.0.0.1:8000/api/v1/categories?include_inactive=1
   - `id` (integer) - ID категории
   - `name` (string) - название категории
   - `slug` (string) - URL-friendly идентификатор
-  - `image` (string|null) - полный URL изображения категории или null
+  - `image` (string|null) - полный URL обложки категории или null
+  - `menu_image` (string|null) - полный URL картинки для меню категорий или null
   - `sort_order` (integer) - порядок сортировки
   - `is_active` (boolean) - активна ли категория
+
+**Примечание:**
+- `image` - используется для обложки категории (например, на странице категории)
+- `menu_image` - используется для отображения в меню/списке категорий (обычно иконка или упрощенное изображение)
 
 **Коды ответа:**
 - `200 OK` - успешный запрос

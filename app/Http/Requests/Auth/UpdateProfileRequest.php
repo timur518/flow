@@ -15,6 +15,28 @@ class UpdateProfileRequest extends FormRequest
     }
 
     /**
+     * Подготовка данных перед валидацией
+     */
+    protected function prepareForValidation(): void
+    {
+        $data = [];
+
+        if ($this->has('name')) {
+            $data['name'] = trim($this->name);
+        }
+
+        if ($this->has('email')) {
+            $data['email'] = strtolower(trim($this->email));
+        }
+
+        if ($this->has('phone')) {
+            $data['phone'] = trim($this->phone);
+        }
+
+        $this->merge($data);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -24,9 +46,31 @@ class UpdateProfileRequest extends FormRequest
         $userId = auth()->id();
 
         return [
-            'name' => ['sometimes', 'string', 'max:255'],
-            'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,' . $userId],
-            'phone' => ['sometimes', 'string', 'max:20', 'unique:users,phone,' . $userId],
+            // Имя: только буквы (кириллица, латиница), пробелы, дефисы
+            'name' => [
+                'sometimes',
+                'string',
+                'min:2',
+                'max:100',
+                'regex:/^[а-яА-ЯёЁa-zA-Z\s\-]+$/u'
+            ],
+
+            // Email: стандартная валидация + проверка на уникальность (исключая текущего пользователя)
+            'email' => [
+                'sometimes',
+                'string',
+                'email:rfc,dns',
+                'max:255',
+                'unique:users,email,' . $userId
+            ],
+
+            // Телефон: формат +7(XXX)XXX-XX-XX
+            'phone' => [
+                'sometimes',
+                'string',
+                'regex:/^\+7\(\d{3}\)\d{3}-\d{2}-\d{2}$/',
+                'unique:users,phone,' . $userId
+            ],
         ];
     }
 
@@ -36,10 +80,15 @@ class UpdateProfileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.string' => 'Имя должно быть строкой',
-            'email.email' => 'Введите корректный email',
-            'email.unique' => 'Пользователь с таким email уже существует',
-            'phone.unique' => 'Пользователь с таким телефоном уже существует',
+            'name.min' => 'Имя должно содержать минимум 2 символа',
+            'name.max' => 'Имя не должно превышать 100 символов',
+            'name.regex' => 'Имя может содержать только буквы, пробелы и дефисы',
+
+            'email.email' => 'Введите корректный email адрес',
+            'email.unique' => 'Пользователь с таким email уже зарегистрирован',
+
+            'phone.regex' => 'Телефон должен быть в формате +7(XXX)XXX-XX-XX',
+            'phone.unique' => 'Пользователь с таким телефоном уже зарегистрирован',
         ];
     }
 }

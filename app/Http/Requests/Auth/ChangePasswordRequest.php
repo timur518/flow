@@ -22,8 +22,21 @@ class ChangePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'current_password' => ['required', 'string'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'current_password' => [
+                'required',
+                'string',
+                'max:255'
+            ],
+
+            // Новый пароль: минимум 6 символов, без опасных символов
+            'password' => [
+                'required',
+                'string',
+                'min:6',
+                'max:255',
+                'regex:/^[a-zA-Zа-яА-ЯёЁ0-9!@#$%^&*()_+\-=\[\]{};:,.<>?\/\\|`~]+$/',
+                'confirmed'
+            ],
         ];
     }
 
@@ -34,8 +47,11 @@ class ChangePasswordRequest extends FormRequest
     {
         return [
             'current_password.required' => 'Текущий пароль обязателен для заполнения',
+
             'password.required' => 'Новый пароль обязателен для заполнения',
-            'password.min' => 'Пароль должен содержать минимум 8 символов',
+            'password.min' => 'Пароль должен содержать минимум 6 символов',
+            'password.max' => 'Пароль не должен превышать 255 символов',
+            'password.regex' => 'Пароль содержит недопустимые символы',
             'password.confirmed' => 'Пароли не совпадают',
         ];
     }
