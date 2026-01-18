@@ -18,7 +18,6 @@ interface SearchSuggestionsProps {
     suggestions: SearchSuggestion[];
     onSuggestionClick: (suggestion: SearchSuggestion) => void;
     selectedIndex: number;
-    isSearching: boolean;
     searchQuery: string;
 }
 
@@ -26,11 +25,10 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
     suggestions,
     onSuggestionClick,
     selectedIndex,
-    isSearching,
     searchQuery,
 }) => {
-    // Не показываем ничего, если поиск не выполнялся или запрос пустой
-    if (!isSearching || !searchQuery.trim()) {
+    // Не показываем ничего, если запрос пустой
+    if (!searchQuery.trim()) {
         return null;
     }
 

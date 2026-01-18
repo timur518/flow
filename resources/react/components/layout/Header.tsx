@@ -86,11 +86,11 @@ const Header: React.FC<HeaderProps> = ({
             return;
         }
 
-        // Устанавливаем флаг поиска
-        setIsSearching(true);
-
-        // Запускаем поиск с задержкой 2 секунды (защита от избыточных запросов)
+        // Запускаем поиск с задержкой 2 секунды после остановки ввода (защита от избыточных запросов)
         searchTimeoutRef.current = setTimeout(async () => {
+            // Устанавливаем флаг поиска только перед самим запросом
+            setIsSearching(true);
+
             try {
                 const products = await productService.getProducts({
                     search: searchQuery,
@@ -116,7 +116,7 @@ const Header: React.FC<HeaderProps> = ({
             } finally {
                 setIsSearching(false);
             }
-        }, 2000); // 2 секунды задержки
+        }, 2000); // 2 секунды задержки после остановки ввода
 
         // Cleanup
         return () => {
@@ -259,7 +259,6 @@ const Header: React.FC<HeaderProps> = ({
                                     suggestions={searchSuggestions}
                                     onSuggestionClick={handleSuggestionClick}
                                     selectedIndex={selectedSuggestionIndex}
-                                    isSearching={isSearching}
                                     searchQuery={searchQuery}
                                 />
                             )}
