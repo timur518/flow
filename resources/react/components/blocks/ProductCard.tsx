@@ -11,6 +11,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Product } from '@/api/types';
 import { useCart } from '@/hooks';
 
@@ -35,13 +36,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onClick
     // Берем первый тег для отображения (tags - это массив)
     const firstTag = product.tags?.length > 0 ? product.tags[0] : null;
 
-    const handleCardClick = () => {
+    // Берем первую категорию для формирования URL
+    const firstCategory = product.categories?.length > 0 ? product.categories[0] : null;
+    const productUrl = firstCategory ? `/${firstCategory.slug}/${product.id}` : '#';
+
+    const handleCardClick = (e: React.MouseEvent) => {
+        // Если есть onClick, используем его (для модального окна)
+        // Иначе переход по ссылке произойдет автоматически
         if (onClick) {
+            e.preventDefault();
             onClick(product);
         }
     };
 
     const handleAddToCart = (e: React.MouseEvent) => {
+        e.preventDefault();
         e.stopPropagation();
         if (onAddToCart) {
             onAddToCart(product);
@@ -49,12 +58,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onClick
     };
 
     const handleRemoveFromCart = (e: React.MouseEvent) => {
+        e.preventDefault();
         e.stopPropagation();
         removeItem(product.id);
     };
 
     return (
-        <div
+        <Link
+            to={productUrl}
             className="product-card"
             onClick={handleCardClick}
         >
@@ -140,7 +151,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onClick
                     </div>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 };
 

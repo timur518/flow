@@ -1,6 +1,6 @@
 /**
  * CategoryPage - Страница категории товаров
- * 
+ *
  * Содержит:
  * - Хлебные крошки
  * - Название категории
@@ -9,98 +9,135 @@
  * - Блок "Собрать свой букет"
  */
 
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useMemo } from 'react';
+import { useParams, Link, Navigate } from 'react-router-dom';
+import { useCategories, useProducts, useCity, useCart } from '@/hooks';
+import { Product } from '@/api/types';
+import { Header, Footer } from '@/components';
+import { CategoriesSidebar, CartSidebar, BouquetBuilder, ProductCard } from '@/components/blocks';
+import { ProductModal } from '@/components/modals';
 
 const CategoryPage: React.FC = () => {
-    const { categorySlug } = useParams<{ categorySlug: string }>();
+    const { slug } = useParams<{ slug: string }>();
+    const { categories, loading: categoriesLoading } = useCategories();
+    const { selectedCityId } = useCity();
+    const { addItem } = useCart();
+
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [productModalOpen, setProductModalOpen] = useState(false);
+
+    // Находим категорию по slug
+    const category = useMemo(() => {
+        return categories.find(c => c.slug === slug);
+    }, [categories, slug]);
+
+    // Загружаем товары для этой категории
+    const { products, loading: productsLoading } = useProducts({
+        city_id: selectedCityId || undefined,
+        category_id: category?.id,
+    });
+
+    const handleProductClick = (product: Product) => {
+        setSelectedProduct(product);
+        setProductModalOpen(true);
+    };
+
+    const handleAddToCart = (product: Product) => {
+        addItem({
+            id: product.id,
+            name: product.name,
+            price: product.sale_price || product.price,
+            quantity: 1,
+            image: product.image,
+        });
+    };
+
+    // Если категории загружены, но категория не найдена - редирект на 404
+    if (!categoriesLoading && !category) {
+        return <Navigate to="/404" replace />;
+    }
+
+    const loading = categoriesLoading || productsLoading;
 
     return (
-        <div className="category-page">
-            {/* Хлебные крошки */}
-            <section className="breadcrumbs py-4">
-                <div className="container mx-auto px-4">
-                    <nav className="text-sm text-gray-600">
-                        <a href="/" className="hover:text-gray-900">Главная</a>
+        <div className="app-container">
+            <Header />
+
+            <main className="main-content">
+                <div className="body-container mt-5">
+                    {/* Хлебные крошки */}
+                    <nav className="text-sm text-gray-600 mb-4">
+                        <Link to="/" className="hover:text-gray-900">Главная</Link>
                         <span className="mx-2">/</span>
-                        <span className="text-gray-900">{categorySlug || 'Категория'}</span>
+                        <span className="text-gray-900">{category?.name || 'Категория'}</span>
                     </nav>
-                </div>
-            </section>
 
-            {/* Заголовок категории */}
-            <section className="category-header py-6">
-                <div className="container mx-auto px-4">
-                    <h1 className="text-4xl font-bold">{categorySlug || 'Категория'}</h1>
-                </div>
-            </section>
+                    {/* Заголовок категории */}
+                    <h1 className="text-4xl font-bold mb-6">{category?.name || 'Категория'}</h1>
 
-            <div className="container mx-auto px-4">
-                <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Фильтры (боковая панель) */}
-                    <aside className="lg:w-64 flex-shrink-0">
-                        <div className="bg-white rounded-lg p-6 shadow-sm">
-                            <h3 className="font-bold mb-4">Фильтры</h3>
-                            {/* TODO: Добавить компонент фильтров */}
-                            <div className="space-y-4">
-                                <div>
-                                    <h4 className="font-semibold mb-2">Цена</h4>
-                                    <div className="bg-gray-100 h-20 rounded flex items-center justify-center">
-                                        <p className="text-gray-500 text-sm">Фильтр цены</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold mb-2">Теги</h4>
-                                    <div className="bg-gray-100 h-32 rounded flex items-center justify-center">
-                                        <p className="text-gray-500 text-sm">Фильтр тегов</p>
-                                    </div>
-                                </div>
+                    <div className="flex gap-6">
+                        {/* Левая колонка - Категории */}
+                        <CategoriesSidebar selectedCategoryId={category?.id} />
+
+                        {/* Центральная колонка - Товары */}
+                        <div className="flex-1 space-y-6">
+                            {/* Количество товаров */}
+                            <div className="flex justify-between items-center">
+                                <p className="text-gray-600">
+                                    Найдено товаров: {loading ? '...' : products.length}
+                                </p>
                             </div>
-                        </div>
-                    </aside>
 
-                    {/* Основной контент */}
-                    <main className="flex-1">
-                        {/* Сортировка и количество товаров */}
-                        <div className="flex justify-between items-center mb-6">
-                            <p className="text-gray-600">Найдено товаров: 0</p>
-                            <select className="border rounded-lg px-4 py-2">
-                                <option>По популярности</option>
-                                <option>По цене (возрастанию)</option>
-                                <option>По цене (убыванию)</option>
-                                <option>Новинки</option>
-                            </select>
-                        </div>
-
-                        {/* Список товаров */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                            {[1, 2, 3, 4, 5, 6].map((item) => (
-                                <div key={item} className="bg-white rounded-lg shadow-sm h-96 flex items-center justify-center">
-                                    <p className="text-gray-500">Карточка товара {item}</p>
+                            {/* Список товаров */}
+                            {loading ? (
+                                <div className="products-grid">
+                                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                                        <div key={i} className="product-skeleton">
+                                            <div className="product-skeleton-image"></div>
+                                            <div className="product-skeleton-content">
+                                                <div className="product-skeleton-title"></div>
+                                                <div className="product-skeleton-price"></div>
+                                                <div className="product-skeleton-button"></div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-
-                        {/* Пагинация */}
-                        <div className="flex justify-center mb-12">
-                            <div className="bg-gray-100 h-12 w-64 rounded flex items-center justify-center">
-                                <p className="text-gray-500">Пагинация</p>
-                            </div>
-                        </div>
-
-                        {/* Блок "Собрать свой букет" */}
-                        <section className="custom-bouquet-section py-12 bg-gray-50 rounded-lg">
-                            <div className="px-6">
-                                <h2 className="text-3xl font-bold mb-6">Собрать свой букет</h2>
-                                {/* TODO: Добавить компонент CustomBouquetBlock */}
-                                <div className="bg-white h-64 rounded-lg flex items-center justify-center">
-                                    <p className="text-gray-500">Блок "Собрать свой букет"</p>
+                            ) : products.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <p className="text-gray-500">В этой категории пока нет товаров</p>
                                 </div>
-                            </div>
-                        </section>
-                    </main>
+                            ) : (
+                                <div className="products-grid">
+                                    {products.map((product) => (
+                                        <ProductCard
+                                            key={product.id}
+                                            product={product}
+                                            onClick={handleProductClick}
+                                            onAddToCart={handleAddToCart}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+
+                            {/* Блок "Собрать свой букет" */}
+                            <BouquetBuilder />
+
+                            {/* Footer */}
+                            <Footer />
+                        </div>
+
+                        {/* Правая колонка - Корзина */}
+                        <CartSidebar onCheckout={() => {}} />
+                    </div>
                 </div>
-            </div>
+            </main>
+
+            {/* Модальное окно товара */}
+            <ProductModal
+                isOpen={productModalOpen}
+                onClose={() => setProductModalOpen(false)}
+                product={selectedProduct}
+            />
         </div>
     );
 };

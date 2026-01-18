@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useCategories } from '@/hooks';
 
 interface CategoriesSidebarProps {
@@ -45,8 +46,8 @@ const CategoriesSidebar: React.FC<CategoriesSidebarProps> = ({ onCategoryClick, 
                 <ul className="categories-list">
                     {categories.map((category) => (
                         <li key={category.id} className="category-item">
-                            <button
-                                onClick={() => onCategoryClick?.(category.id)}
+                            <Link
+                                to={`/category/${category.slug}`}
                                 className="category-button"
                                 aria-label={category.name}
                                 aria-current={selectedCategoryId === category.id ? 'true' : undefined}
@@ -68,7 +69,7 @@ const CategoriesSidebar: React.FC<CategoriesSidebarProps> = ({ onCategoryClick, 
                                 <span className="category-name">
                                     {category.name}
                                 </span>
-                            </button>
+                            </Link>
                         </li>
                     ))}
                 </ul>

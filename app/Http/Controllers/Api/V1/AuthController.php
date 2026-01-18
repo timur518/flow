@@ -80,8 +80,10 @@ class AuthController extends Controller
      */
     public function profile(Request $request): JsonResponse
     {
+        $user = $request->user()->load('city');
+
         return response()->json([
-            'user' => new UserResource($request->user()),
+            'user' => new UserResource($user),
         ]);
     }
 
@@ -95,7 +97,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Профиль обновлен успешно',
-            'user' => new UserResource($user->fresh()),
+            'user' => new UserResource($user->fresh('city')),
         ]);
     }
 

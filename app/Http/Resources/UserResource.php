@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
+            'city_id' => $this->city_id,
             'city' => $this->when($this->city, [
                 'id' => $this->city?->id,
                 'name' => $this->city?->name,

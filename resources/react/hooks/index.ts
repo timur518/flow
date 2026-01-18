@@ -3,10 +3,8 @@
  * Экспорт всех хуков
  */
 
-export { useSettings } from './useSettings';
 export { useBanners } from './useBanners';
 export { useCategories } from './useCategories';
-export { useCities } from './useCities';
 export { useCity } from './useCity';
 export { useStores, useStore } from './useStores';
 export { useProducts, useProduct } from './useProducts';

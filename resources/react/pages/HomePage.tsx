@@ -2,7 +2,7 @@
  * HomePage - Главная страница приложения
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Header,
     Footer,
@@ -25,7 +25,17 @@ import { useAuth, useCart, useCity, useStores } from '@/hooks';
 import { Product, Address } from '@/api/types';
 import { orderService } from '@/api/services';
 
-const HomePage: React.FC = () => {
+interface HomePageProps {
+    initialProduct?: Product | null;
+    initialModalOpen?: boolean;
+    onModalClose?: () => void;
+}
+
+const HomePage: React.FC<HomePageProps> = ({
+    initialProduct = null,
+    initialModalOpen = false,
+    onModalClose
+}) => {
     const { user } = useAuth();
     const { items: cartItems, addItem, clearCart } = useCart();
     const { selectedCityId } = useCity();
@@ -41,9 +51,19 @@ const HomePage: React.FC = () => {
     const [addressesModalOpen, setAddressesModalOpen] = useState(false);
     const [addressFormModalOpen, setAddressFormModalOpen] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
-    const [productModalOpen, setProductModalOpen] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [productModalOpen, setProductModalOpen] = useState(initialModalOpen);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(initialProduct);
     const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
+
+    // Обновляем состояние при изменении props
+    useEffect(() => {
+        if (initialProduct) {
+            setSelectedProduct(initialProduct);
+        }
+        if (initialModalOpen) {
+            setProductModalOpen(true);
+        }
+    }, [initialProduct, initialModalOpen]);
 
     // Обработчики для Header
     const handleLoginClick = () => {
@@ -103,6 +123,14 @@ const HomePage: React.FC = () => {
     const handleProductClick = (product: Product) => {
         setSelectedProduct(product);
         setProductModalOpen(true);
+    };
+
+    const handleProductModalClose = () => {
+        setProductModalOpen(false);
+        // Если передан обработчик закрытия (из ProductPage), вызываем его
+        if (onModalClose) {
+            onModalClose();
+        }
     };
 
     const handleAddToCart = (product: Product, quantity: number) => {
@@ -203,7 +231,7 @@ const HomePage: React.FC = () => {
                 <div className="body-container mt-5">
                     <div className="flex gap-6">
                         {/* Левая колонка - Категории */}
-                        <CategoriesSidebar onCategoryClick={(id) => console.log('Category:', id)} />
+                        <CategoriesSidebar />
 
                         {/* Центральная колонка - Основной контент */}
                         <div className="flex-1 space-y-6">
@@ -249,7 +277,7 @@ const HomePage: React.FC = () => {
             {/* Модальное окно товара */}
             <ProductModal
                 isOpen={productModalOpen}
-                onClose={() => setProductModalOpen(false)}
+                onClose={handleProductModalClose}
                 product={selectedProduct}
                 onAddToCart={handleAddToCart}
             />

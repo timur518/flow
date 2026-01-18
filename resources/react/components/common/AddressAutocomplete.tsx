@@ -6,7 +6,8 @@
  */
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { useDaData, DaDataSuggestion, useCities } from '@/hooks';
+import { useDaData, DaDataSuggestion } from '@/hooks';
+import { useCities } from '@/contexts';
 
 interface AddressData {
     address: string;

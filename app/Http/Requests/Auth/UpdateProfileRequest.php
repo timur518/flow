@@ -71,6 +71,13 @@ class UpdateProfileRequest extends FormRequest
                 'regex:/^\+7\(\d{3}\)\d{3}-\d{2}-\d{2}$/',
                 'unique:users,phone,' . $userId
             ],
+
+            // Город
+            'city_id' => [
+                'sometimes',
+                'integer',
+                'exists:cities,id'
+            ],
         ];
     }
 
@@ -89,6 +96,9 @@ class UpdateProfileRequest extends FormRequest
 
             'phone.regex' => 'Телефон должен быть в формате +7(XXX)XXX-XX-XX',
             'phone.unique' => 'Пользователь с таким телефоном уже зарегистрирован',
+
+            'city_id.integer' => 'Некорректный ID города',
+            'city_id.exists' => 'Выбранный город не существует',
         ];
     }
 }

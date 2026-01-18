@@ -10,7 +10,9 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useSettings, useCities, useAuth, useCity } from '@/hooks';
+import { Link } from 'react-router-dom';
+import { useSettings, useCities } from '@/contexts';
+import { useAuth, useCity } from '@/hooks';
 
 interface HeaderProps {
     onLoginClick?: () => void;
@@ -24,9 +26,9 @@ const Header: React.FC<HeaderProps> = ({
     cartItemsCount = 0
 }) => {
     const { settings } = useSettings();
-    const { cities } = useCities();
+    const { cities, loading: citiesLoading } = useCities();
     const { user } = useAuth();
-    const { selectedCityId, setSelectedCityId } = useCity();
+    const { selectedCityId, setSelectedCityId, isInitialized: cityInitialized } = useCity();
 
     const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -47,6 +49,14 @@ const Header: React.FC<HeaderProps> = ({
     const currentCity = cities.find(city => city.id === selectedCityId);
     const telegramUrl = 'https://t.me/your_channel'; // TODO: Получать из настроек магазина
 
+    // Определяем текст для отображения
+    const getCityDisplayText = () => {
+        if (citiesLoading || !cityInitialized) {
+            return 'Загрузка...';
+        }
+        return currentCity?.name || 'Выберите город';
+    };
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         console.log('Search:', searchQuery);
@@ -59,14 +69,14 @@ const Header: React.FC<HeaderProps> = ({
             <div className="header-container">
                 <div className="header-content">
                     {/* Логотип */}
-                    <a href="/" className="header-logo">
+                    <Link to="/" className="header-logo">
                         {settings?.appearance?.logo_url && (
                             <img
                                 src={settings.appearance.logo_url}
                                 alt={settings.site_brand || 'Logo'}
                             />
                         )}
-                    </a>
+                    </Link>
 
                     {/* Выбор города */}
                     <div className="relative flex-shrink-0" ref={cityDropdownRef}>
@@ -82,7 +92,7 @@ const Header: React.FC<HeaderProps> = ({
                                 </svg>
                             </div>
                             <span className="city-selector-text">
-                                {currentCity?.name || 'Выберите город'}
+                                {getCityDisplayText()}
                             </span>
                         </button>
 

@@ -9,6 +9,11 @@ export interface User extends BaseModel, Timestamps {
     name: string;
     email: string;
     phone: string | null;
+    city_id: number | null;
+    city?: {
+        id: number;
+        name: string;
+    };
 }
 
 export interface AuthResponse {
@@ -34,6 +39,7 @@ export interface UpdateProfileData {
     name?: string;
     email?: string;
     phone?: string;
+    city_id?: number;
 }
 
 export interface ChangePasswordData {
