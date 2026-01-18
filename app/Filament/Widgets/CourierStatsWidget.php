@@ -33,7 +33,8 @@ class CourierStatsWidget extends BaseWidget
                     ->select([
                         'courier',
                         DB::raw('COUNT(*) as orders_count'),
-                        DB::raw('SUM(total) as total_amount')
+                        DB::raw('SUM(total) as total_amount'),
+                        DB::raw('MAX(id) as id') // Добавляем id для совместимости с Filament
                     ])
                     ->where('status', OrderStatus::COMPLETED->value)
                     ->whereNotNull('courier')
