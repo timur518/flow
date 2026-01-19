@@ -186,13 +186,13 @@ const ProductModal: React.FC<ProductModalProps> = ({
                                 <div className="product-modal-dimensions">
                                     {detail.height && (
                                         <div className="product-modal-dimension-item">
-                                            <ArrowsVertical className="product-modal-dimension-icon" />
+                                            <img src="/images/height.svg" alt="Высота" className="product-modal-dimension-icon" />
                                             {detail.height} см
                                         </div>
                                     )}
                                     {detail.width && (
                                         <div className="product-modal-dimension-item">
-                                            <ArrowsHorizontal className="product-modal-dimension-icon" />
+                                            <img src="/images/width.svg" alt="Ширина" className="product-modal-dimension-icon" />
                                             {detail.width} см
                                         </div>
                                     )}
