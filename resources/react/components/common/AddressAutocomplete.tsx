@@ -48,7 +48,9 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         const regions = cities
             .map(city => city.region)
             .filter((region): region is string => region !== null && region !== '');
-        return [...new Set(regions)]; // Убираем дубликаты
+        const uniqueRegions = [...new Set(regions)]; // Убираем дубликаты
+        console.log('AddressAutocomplete: allowedRegions =', uniqueRegions);
+        return uniqueRegions;
     }, [cities]);
 
     const { getSuggestions, loading } = useDaData(allowedRegions);
