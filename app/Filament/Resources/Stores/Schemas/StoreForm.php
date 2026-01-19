@@ -139,7 +139,29 @@ class StoreForm
                                                 Textarea::make('polygon_coordinates')
                                                     ->label('Координаты полигона')
                                                     ->rows(3)
-                                                    ->helperText('JSON массив координат'),
+                                                    ->helperText('JSON массив координат: [[lat,lng],[lat,lng],...]')
+                                                    ->formatStateUsing(function ($state) {
+                                                        if (is_array($state)) {
+                                                            return json_encode($state, JSON_UNESCAPED_UNICODE);
+                                                        }
+                                                        return $state;
+                                                    })
+                                                    ->dehydrateStateUsing(function ($state) {
+                                                        if (empty($state)) {
+                                                            return null;
+                                                        }
+                                                        // Если это уже массив, возвращаем как есть
+                                                        if (is_array($state)) {
+                                                            return $state;
+                                                        }
+                                                        // Пытаемся декодировать JSON
+                                                        $decoded = json_decode($state, true);
+                                                        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                                                            return $decoded;
+                                                        }
+                                                        // Если не удалось декодировать, возвращаем null
+                                                        return null;
+                                                    }),
                                                 TextInput::make('delivery_cost')
                                                     ->label('Стоимость доставки')
                                                     ->numeric()
