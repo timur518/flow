@@ -16,11 +16,11 @@ class IngredientForm
                 Section::make('Основная информация')
                     ->schema([
                         TextInput::make('name')
-                            ->label('Название цветка')
+                            ->label('Название предмета')
                             ->required()
                             ->maxLength(255)
                             ->validationMessages([
-                                'required' => 'Введите название цветка',
+                                'required' => 'Введите название предмета',
                             ]),
                     ]),
 
