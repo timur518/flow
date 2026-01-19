@@ -367,7 +367,7 @@
     padding: 20px 0 20px 20px;
     display: flex;
     flex-direction: column;
-    height: 530px;
+    height: 550px;
 }
 
 .product-modal-slider-wrapper {
@@ -542,8 +542,8 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    height: 530px;
-    max-height: 530px;
+    height: 550px;
+    max-height: 550px;
 }
 
 /* Заголовок и кнопка закрыть */
@@ -757,8 +757,8 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    height: 530px;
-    max-height: 530px;
+    height: 550px;
+    max-height: 550px;
 }
 
 .product-modal-recommendations-title {
