@@ -48,6 +48,8 @@ class Store extends Model
         'payment_online' => 'boolean',
         'vat_code' => VatCode::class,
         'is_active' => 'boolean',
+        'inn' => 'string',
+        'ogrn' => 'string',
     ];
 
     public function city(): BelongsTo

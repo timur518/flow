@@ -165,11 +165,15 @@ class StoreForm
                                 TextInput::make('inn')
                                     ->label('ИНН')
                                     ->maxLength(12)
-                                    ->numeric(),
+                                    ->tel()
+                                    ->telRegex('/^[0-9]+$/')
+                                    ->helperText('Только цифры, до 12 символов'),
                                 TextInput::make('ogrn')
                                     ->label('ОГРН')
                                     ->maxLength(15)
-                                    ->numeric(),
+                                    ->tel()
+                                    ->telRegex('/^[0-9]+$/')
+                                    ->helperText('Только цифры, до 15 символов'),
                                 TextInput::make('legal_address')
                                     ->label('Юр. адрес')
                                     ->maxLength(255)
