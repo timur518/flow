@@ -6,8 +6,9 @@
 import React, { useState, lazy, Suspense, useEffect } from 'react';
 import Modal from './Modal';
 import { useAuth, useOrders, useAddresses } from '@/hooks';
-import { Telegram, WhatsApp } from '@/components/icons';
+import { Telegram } from '@/components/icons';
 import { ProfileSectionSkeleton } from './profile-sections';
+import waIcon from '/public/images/icons/wa.svg';
 
 // Ленивая загрузка подразделов
 const EditProfile = lazy(() => import('./profile-sections/EditProfile'));
@@ -297,7 +298,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
 
                                     <a href="#" className="profile-modal-support-item">
                                         <div className="profile-modal-support-icon profile-modal-support-icon-whatsapp">
-                                            <WhatsApp />
+                                            <img src={waIcon} alt="WhatsApp" />
                                         </div>
                                         <span className="profile-modal-support-text">Написать в WhatsApp</span>
                                     </a>

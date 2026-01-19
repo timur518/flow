@@ -6,8 +6,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useCart, useAuth } from '@/hooks';
-import { CartEmpty, Plus, Minus, Close } from '@/components/icons';
+import { Plus, Minus, Close } from '@/components/icons';
 import { yandexMetrikaService } from '@/api/services';
+import cartIcon from '/public/images/icons/cart.svg';
 
 interface CartSidebarProps {
     onCheckout?: () => void;
@@ -74,7 +75,12 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ onCheckout, onClose }) => {
                     id: item.id,
                     name: item.name,
                     price: item.price,
-                    categories: item.category ? [{ id: 0, name: item.category, slug: '' }] : [],
+                    categories: item.category ? [{id: 0, name: item.category, slug: ''}] : [],
+                    sale_price: '',
+                    image: '',
+                    width: 0,
+                    height: 0,
+                    tags: []
                 },
                 item.quantity
             );
@@ -117,7 +123,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ onCheckout, onClose }) => {
                     <>
                         <div className="cart-empty-state">
                             <div className="cart-empty-icon">
-                                <CartEmpty className="w-[66px] h-[60px]" />
+                                <img src={cartIcon} alt="Корзина" className="w-[66px] h-[60px]" />
                             </div>
 
                             <p className="cart-empty-text">

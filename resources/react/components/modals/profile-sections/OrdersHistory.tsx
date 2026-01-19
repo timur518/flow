@@ -7,6 +7,9 @@ import React from 'react';
 import { useOrders } from '@/hooks';
 import { Order } from '@/api/types';
 import ProfileSectionSkeleton from './ProfileSectionSkeleton';
+import inprocessIcon from '/public/images/icons/inprocess.svg';
+import completedIcon from '/public/images/icons/completed.svg';
+import cancelledIcon from '/public/images/icons/cancelled.svg';
 
 interface OrdersHistoryProps {
     onBack: () => void;
@@ -49,6 +52,16 @@ const OrdersHistory: React.FC<OrdersHistoryProps> = ({ onBack, onViewOrder }) =>
             cancelled: '#737373',
         };
         return colorMap[status] || '#737373';
+    };
+
+    const getStatusIcon = (status: Order['status']) => {
+        if (status === 'completed') {
+            return completedIcon;
+        } else if (status === 'cancelled') {
+            return cancelledIcon;
+        } else {
+            return inprocessIcon;
+        }
     };
 
     const formatDateTime = (dateString: string) => {
@@ -176,7 +189,13 @@ const OrdersHistory: React.FC<OrdersHistoryProps> = ({ onBack, onViewOrder }) =>
                                                     <div
                                                         className="orders-history-card-status-badge"
                                                         style={{ backgroundColor: getStatusColor(order.status) }}
-                                                    />
+                                                    >
+                                                        <img
+                                                            src={getStatusIcon(order.status)}
+                                                            alt={getStatusText(order.status)}
+                                                            style={{ maxWidth: '10px', height: 'auto' }}
+                                                        />
+                                                    </div>
                                                 </button>
                                             );
                                         })}

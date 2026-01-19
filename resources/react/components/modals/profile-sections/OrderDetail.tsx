@@ -8,6 +8,9 @@ import { useOrder } from '@/hooks';
 import { Order } from '@/api/types';
 import { Telegram, WhatsApp } from '@/components/icons';
 import ProfileSectionSkeleton from './ProfileSectionSkeleton';
+import inprocessIcon from '/public/images/icons/inprocess.svg';
+import completedIcon from '/public/images/icons/completed.svg';
+import cancelledIcon from '/public/images/icons/cancelled.svg';
 
 interface OrderDetailProps {
     orderId: number;
@@ -46,6 +49,16 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId, onBack }) => {
             cancelled: '#737373',
         };
         return colorMap[status] || '#737373';
+    };
+
+    const getStatusIcon = (status: Order['status']) => {
+        if (status === 'completed') {
+            return completedIcon;
+        } else if (status === 'cancelled') {
+            return cancelledIcon;
+        } else {
+            return inprocessIcon;
+        }
     };
 
     const isInProgress = (status: Order['status']) => {
@@ -90,7 +103,13 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId, onBack }) => {
                             <div
                                 className="order-detail-status-badge"
                                 style={{ backgroundColor: getStatusColor(order.status) }}
-                            />
+                            >
+                                <img
+                                    src={getStatusIcon(order.status)}
+                                    alt={getStatusText(order.status)}
+                                    style={{ maxWidth: '10px', height: 'auto' }}
+                                />
+                            </div>
                         </div>
 
                         {/* Статус заказа */}

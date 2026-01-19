@@ -12,10 +12,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSettings, useCities } from '@/contexts';
-import { useAuth, useCity } from '@/hooks';
+import { useAuth, useCity, useStores } from '@/hooks';
 import { productService } from '@/api/services';
 import { SearchSuggestions } from '@/components/common';
 import type { SearchSuggestion } from '@/components/common/SearchSuggestions';
+import markerIcon from '/public/images/icons/marker.svg';
+import profileIcon from '/public/images/icons/profile.svg';
 
 interface HeaderProps {
     onLoginClick?: () => void;
@@ -32,6 +34,7 @@ const Header: React.FC<HeaderProps> = ({
     const { cities, loading: citiesLoading } = useCities();
     const { user } = useAuth();
     const { selectedCityId, setSelectedCityId, isInitialized: cityInitialized } = useCity();
+    const { stores } = useStores({ city_id: selectedCityId || undefined });
     const navigate = useNavigate();
 
     const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
@@ -62,7 +65,8 @@ const Header: React.FC<HeaderProps> = ({
     }, []);
 
     const currentCity = cities.find(city => city.id === selectedCityId);
-    const telegramUrl = 'https://t.me/your_channel'; // TODO: Получать из настроек магазина
+    const currentStore = stores.length > 0 ? stores[0] : null;
+    const telegramUrl = currentStore?.social_links?.telegram_chat;
 
     // Определяем текст для отображения
     const getCityDisplayText = () => {
@@ -204,10 +208,7 @@ const Header: React.FC<HeaderProps> = ({
                         >
                             {/* Иконка в белом кружке 35px */}
                             <div className="city-selector-icon">
-                                <svg fill="none" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
+                                <img src={markerIcon} alt="Город" />
                             </div>
                             <span className="city-selector-text">
                                 {getCityDisplayText()}
@@ -228,10 +229,7 @@ const Header: React.FC<HeaderProps> = ({
                                         }`}
                                     >
                                         <div className="city-dropdown-icon">
-                                            <svg fill="none" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
+                                            <img src={markerIcon} alt="Город" />
                                         </div>
                                         <span className="city-dropdown-text">{city.name}</span>
                                     </button>
@@ -276,19 +274,21 @@ const Header: React.FC<HeaderProps> = ({
                     {/* Кнопки действий */}
                     <div className="header-actions">
                         {/* Telegram - круглая кнопка, фон #F9F9F9, иконка #FDAFC0 */}
-                        <a
-                            href={telegramUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="header-button-round"
-                            title="Telegram"
-                        >
-                            <div className="header-button-icon">
-                                <svg fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
-                                </svg>
-                            </div>
-                        </a>
+                        {telegramUrl && (
+                            <a
+                                href={telegramUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="header-button-round"
+                                title="Telegram"
+                            >
+                                <div className="header-button-icon">
+                                    <svg fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                                    </svg>
+                                </div>
+                            </a>
+                        )}
 
                         {/* Профиль - фон #F9F9F9, радиус 32px, иконка в белом кружке #FDAFC0 */}
                         <button
@@ -296,9 +296,7 @@ const Header: React.FC<HeaderProps> = ({
                             className="header-button"
                         >
                             <div className="header-button-icon">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
+                                <img src={profileIcon} alt="Профиль" />
                             </div>
                             <span className="header-button-text">
                                 {user ? user.name : 'Войти'}
