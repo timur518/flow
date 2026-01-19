@@ -9,8 +9,10 @@ import ProductModalSkeleton from './ProductModalSkeleton';
 import { Product } from '@/api/types';
 import { useProductDetail, useProducts, useCart } from '@/hooks';
 import ProductCard from '../blocks/ProductCard';
-import { Close, ArrowsVertical, ArrowsHorizontal } from '@/components/icons';
+import { Close } from '@/components/icons';
 import { yandexMetrikaService } from '@/api/services';
+import heightIcon from '/public/images/icons/height.svg';
+import widthIcon from '/public/images/icons/width.svg';
 
 interface ProductModalProps {
     isOpen: boolean;
@@ -186,13 +188,13 @@ const ProductModal: React.FC<ProductModalProps> = ({
                                 <div className="product-modal-dimensions">
                                     {detail.height && (
                                         <div className="product-modal-dimension-item">
-                                            <img src="/images/height.svg" alt="Высота" className="product-modal-dimension-icon" />
+                                            <img src={heightIcon} alt="Высота" className="product-modal-dimension-icon" />
                                             {detail.height} см
                                         </div>
                                     )}
                                     {detail.width && (
                                         <div className="product-modal-dimension-item">
-                                            <img src="/images/width.svg" alt="Ширина" className="product-modal-dimension-icon" />
+                                            <img src={widthIcon} alt="Ширина" className="product-modal-dimension-icon" />
                                             {detail.width} см
                                         </div>
                                     )}
