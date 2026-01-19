@@ -10,7 +10,8 @@
 
 import React from 'react';
 import { useCity, useStores, useStore } from '@/hooks';
-import { Apple, Android, Telegram, WhatsApp } from '@/components/icons';
+import { Apple, Android, Telegram } from '@/components/icons';
+import waIcon from '/public/images/icons/wa.svg';
 
 const Footer: React.FC = () => {
     const { selectedCityId } = useCity();
@@ -160,7 +161,7 @@ const Footer: React.FC = () => {
                                     className="footer-social-button"
                                     title="WhatsApp"
                                 >
-                                    <WhatsApp className="footer-social-icon" />
+                                    <img src={waIcon} alt="WhatsApp" className="footer-social-icon" />
                                 </a>
                             )}
                         </div>

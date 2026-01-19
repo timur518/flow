@@ -1081,7 +1081,8 @@
     background-color: #FFFFFF;
 }
 
-.profile-modal-support-icon svg {
+.profile-modal-support-icon svg,
+.profile-modal-support-icon img {
     width: 20px;
     height: 20px;
     position: relative;

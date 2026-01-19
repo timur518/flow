@@ -5,7 +5,8 @@
 
 import React from 'react';
 import { useCity, useStores } from '@/hooks';
-import { Telegram, WhatsApp } from '@/components/icons';
+import { Telegram } from '@/components/icons';
+import waIcon from '/public/images/icons/wa.svg';
 
 const BouquetBuilder: React.FC = () => {
     const { selectedCityId } = useCity();
@@ -48,7 +49,7 @@ const BouquetBuilder: React.FC = () => {
                             className="bouquet-builder-button"
                             title="WhatsApp"
                         >
-                            <WhatsApp className="bouquet-builder-icon" />
+                            <img src={waIcon} alt="WhatsApp" className="bouquet-builder-icon" />
                         </a>
                     )}
                 </div>
