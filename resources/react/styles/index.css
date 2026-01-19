@@ -795,12 +795,15 @@ body {
 .product-card {
     overflow: hidden;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 /* Контейнер изображения */
 .product-image-container {
     position: relative;
-    aspect-ratio: 3/4;
+    aspect-ratio: 1/1;
     overflow: hidden;
 }
 
@@ -855,6 +858,9 @@ body {
 /* Информация о товаре */
 .product-info {
     padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 /* Название товара */
@@ -886,6 +892,8 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    margin-top: auto;
+    align-self: flex-start;
 }
 
 .product-add-button:hover,

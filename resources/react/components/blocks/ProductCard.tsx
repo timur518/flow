@@ -63,6 +63,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onClick
         removeItem(product.id);
     };
 
+    const handleButtonClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
     return (
         <Link
             to={productUrl}
@@ -115,7 +120,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onClick
                 </h3>
 
                 {/* Кнопка "Добавить в корзину" с ценами */}
-                <div className={`product-add-button ${isInCart ? 'active' : ''}`}>
+                <div className={`product-add-button ${isInCart ? 'active' : ''}`} onClick={handleButtonClick}>
                     {/* Минус (слева) - показываем только если товар в корзине */}
                     {isInCart && (
                         <div
@@ -130,13 +135,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onClick
 
                     {hasDiscount && (
                         /* Старая цена (зачеркнутая) */
-                        <div className="product-price-old">
+                        <div className="product-price-old" onClick={handleAddToCart}>
                             {parseFloat(product.price).toLocaleString('ru-RU')} ₽
                         </div>
                     )}
 
                     {/* Актуальная цена (по центру) - sale_price если есть, иначе price */}
-                    <div className="product-price-sale">
+                    <div className="product-price-sale" onClick={handleAddToCart}>
                         {parseFloat(product.sale_price || product.price).toLocaleString('ru-RU')} ₽
                     </div>
 

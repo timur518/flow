@@ -354,7 +354,7 @@
 /* Основной контейнер с 3 колонками */
 .product-modal-content {
     display: grid;
-    grid-template-columns: 350px 354px 320px;
+    grid-template-columns: 350px 324px 350px;
     gap: 0;
     height: 530px;
     max-height: 530px;
