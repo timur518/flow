@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useCart, useAuth } from '@/hooks';
+import { useCart, useAuth, useCity, useStores } from '@/hooks';
 import { Plus, Minus, Close } from '@/components/icons';
 import { yandexMetrikaService } from '@/api/services';
 import cartIcon from '/public/images/icons/cart.svg';
@@ -18,6 +18,8 @@ interface CartSidebarProps {
 const CartSidebar: React.FC<CartSidebarProps> = ({ onCheckout, onClose }) => {
     const { items, removeItem, updateQuantity, total, itemsCount } = useCart();
     const { user } = useAuth();
+    const { selectedCityId } = useCity();
+    const { stores } = useStores({ city_id: selectedCityId || undefined });
     const [removingItems, setRemovingItems] = useState<Set<number>>(new Set());
     const [addingItems, setAddingItems] = useState<Set<number>>(new Set());
     const [previousItemIds, setPreviousItemIds] = useState<Set<number>>(() => {
@@ -223,11 +225,15 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ onCheckout, onClose }) => {
                             <div className="cart-checkout-button-text">
                                 Оформить заказ
                             </div>
-                            {!user && (
+                            {!user ? (
                                 <div className="cart-checkout-button-subtext">
                                     и зарегистрироваться
                                 </div>
-                            )}
+                            ) : stores.length > 0 && stores[0].working_hours ? (
+                                <div className="cart-checkout-button-subtext">
+                                    Доставляем {stores[0].working_hours.toLowerCase()}
+                                </div>
+                            ) : null}
                         </button>
                     </>
                 )}

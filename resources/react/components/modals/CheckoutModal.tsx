@@ -656,7 +656,9 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                             <div className="checkout-store-details">
                                                 <div className="checkout-store-city">{stores.length > 0 ? stores[0].city?.name : 'Город'}</div>
                                                 <div className="checkout-store-street">{stores.length > 0 ? stores[0].address : 'Адрес магазина'}</div>
-                                                <div className="checkout-store-hours">График работы: TODO</div>
+                                                {stores.length > 0 && stores[0].working_hours && (
+                                                    <div className="checkout-store-hours">{stores[0].working_hours}</div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
