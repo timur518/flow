@@ -356,8 +356,8 @@
     display: grid;
     grid-template-columns: 350px 324px 350px;
     gap: 0;
-    height: 530px;
-    max-height: 530px;
+    height: 550px;
+    max-height: 550px;
 }
 
 /* Колонка 1: Слайдер фотографий */
