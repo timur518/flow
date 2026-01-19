@@ -65,6 +65,10 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId, onBack }) => {
         return ['new', 'processing', 'assembling', 'awaiting_delivery', 'delivering'].includes(status);
     };
 
+    const getDeliveryTypeText = (deliveryType: Order['delivery_type']) => {
+        return deliveryType === 'delivery' ? 'Доставка' : 'Самовывоз';
+    };
+
     const formatDeliveryDate = (dateString: string) => {
         const date = new Date(dateString);
         const day = String(date.getDate()).padStart(2, '0');
@@ -133,6 +137,10 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId, onBack }) => {
                         <div className="order-detail-section white-block">
                             <h3 className="order-detail-section-title">Информация о заказе</h3>
                             <div className="order-detail-info-list">
+                                <div className="order-detail-info-row">
+                                    <label className="order-detail-info-label">Тип доставки</label>
+                                    <div className="order-detail-info-value">{getDeliveryTypeText(order.delivery_type)}</div>
+                                </div>
                                 <div className="order-detail-info-row">
                                     <label className="order-detail-info-label">Получатель</label>
                                     <div className="order-detail-info-value">{order.recipient_name}</div>
