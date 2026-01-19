@@ -301,8 +301,8 @@
 /* Размер для ProductModal */
 .modal-container.max-w-7xl {
     width: 1024px;
-    height: 530px;
-    max-height: 530px;
+    height: 550px;
+    max-height: 550px;
 }
 
 /* Размер для ProfileModal */
