@@ -98,17 +98,17 @@ export interface DaDataResponse {
     suggestions: DaDataSuggestion[];
 }
 
-export const useDaData = (allowedCities?: string[]) => {
+export const useDaData = (allowedRegions?: string[]) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const apiKey = import.meta.env.VITE_DADATA_API_KEY;
     const apiUrl = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address';
 
-    // Мемоизируем строковое представление городов для стабильности зависимостей
-    const citiesKey = useMemo(() =>
-        allowedCities ? JSON.stringify(allowedCities) : '',
-        [allowedCities]
+    // Мемоизируем строковое представление регионов для стабильности зависимостей
+    const regionsKey = useMemo(() =>
+        allowedRegions ? JSON.stringify(allowedRegions) : '',
+        [allowedRegions]
     );
 
     /**
@@ -134,10 +134,10 @@ export const useDaData = (allowedCities?: string[]) => {
                 count: 10,
             };
 
-            // Если указаны разрешенные города, добавляем фильтр
-            if (allowedCities && allowedCities.length > 0) {
-                requestBody.locations = allowedCities.map(city => ({
-                    city: city
+            // Если указаны разрешенные регионы, добавляем фильтр
+            if (allowedRegions && allowedRegions.length > 0) {
+                requestBody.locations = allowedRegions.map(region => ({
+                    region: region
                 }));
             }
 
@@ -164,7 +164,7 @@ export const useDaData = (allowedCities?: string[]) => {
         } finally {
             setLoading(false);
         }
-    }, [apiKey, citiesKey, allowedCities]);
+    }, [apiKey, regionsKey, allowedRegions]);
 
     return {
         getSuggestions,

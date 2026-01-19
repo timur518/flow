@@ -19,7 +19,7 @@ class CityController extends Controller
             ->where('is_active', true)
             ->orderBy('sort_order')
             ->orderBy('name')
-            ->get(['id', 'name', 'latitude', 'longitude', 'sort_order']);
+            ->get(['id', 'name', 'region', 'latitude', 'longitude', 'sort_order']);
 
         return response()->json([
             'success' => true,
@@ -27,6 +27,7 @@ class CityController extends Controller
                 return [
                     'id' => $city->id,
                     'name' => $city->name,
+                    'region' => $city->region,
                     'latitude' => $city->latitude,
                     'longitude' => $city->longitude,
                     'sort_order' => $city->sort_order,

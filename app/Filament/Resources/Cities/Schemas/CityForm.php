@@ -16,6 +16,11 @@ class CityForm
                     ->label('Название города')
                     ->required()
                     ->maxLength(255),
+                TextInput::make('region')
+                    ->label('Область/регион')
+                    ->placeholder('Белгородская область')
+                    ->helperText('Используется для фильтрации адресов в DaData')
+                    ->maxLength(255),
                 TextInput::make('latitude')
                     ->label('Широта')
                     ->numeric()

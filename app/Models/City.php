@@ -9,6 +9,7 @@ class City extends Model
 {
     protected $fillable = [
         'name',
+        'region',
         'latitude',
         'longitude',
         'sort_order',

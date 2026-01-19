@@ -42,10 +42,16 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     // Получаем список городов из базы данных
     const { cities } = useCities();
 
-    // Формируем список названий городов для фильтрации (мемоизируем)
-    const allowedCities = useMemo(() => cities.map(city => city.name), [cities]);
+    // Формируем список регионов для фильтрации (мемоизируем)
+    const allowedRegions = useMemo(() => {
+        // Получаем уникальные регионы из городов
+        const regions = cities
+            .map(city => city.region)
+            .filter((region): region is string => region !== null && region !== '');
+        return [...new Set(regions)]; // Убираем дубликаты
+    }, [cities]);
 
-    const { getSuggestions, loading } = useDaData(allowedCities);
+    const { getSuggestions, loading } = useDaData(allowedRegions);
     const [suggestions, setSuggestions] = useState<DaDataSuggestion[]>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
