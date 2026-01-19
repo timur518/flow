@@ -131,8 +131,15 @@ export const useDaData = (allowedRegions?: string[]) => {
             // Формируем тело запроса
             const requestBody: any = {
                 query,
-                count: 20, // Увеличиваем количество для фильтрации на фронтенде
+                count: 10,
             };
+
+            // Если указаны разрешенные регионы, добавляем фильтр
+            if (allowedRegions && allowedRegions.length > 0) {
+                requestBody.locations = allowedRegions.map(region => ({
+                    region: region
+                }));
+            }
 
             console.log('DaData request body:', requestBody);
 
@@ -152,23 +159,8 @@ export const useDaData = (allowedRegions?: string[]) => {
 
             const data: DaDataResponse = await response.json();
             console.log('DaData response:', data);
-            console.log('DaData suggestions count (before filter):', data.suggestions.length);
-
-            // Фильтруем результаты по регионам на фронтенде
-            let filteredSuggestions = data.suggestions;
-            if (allowedRegions && allowedRegions.length > 0) {
-                filteredSuggestions = data.suggestions.filter(suggestion => {
-                    const regionWithType = suggestion.data.region_with_type || '';
-                    // Проверяем, содержится ли регион в списке разрешенных
-                    return allowedRegions.some(allowedRegion =>
-                        regionWithType.toLowerCase().includes(allowedRegion.toLowerCase().replace(' область', '').replace(' обл', ''))
-                    );
-                });
-                console.log('DaData suggestions count (after filter):', filteredSuggestions.length);
-                console.log('Filtered by regions:', allowedRegions);
-            }
-
-            return filteredSuggestions;
+            console.log('DaData suggestions count:', data.suggestions.length);
+            return data.suggestions;
         } catch (err: any) {
             setError(err.message || 'Error fetching suggestions');
             console.error('DaData error:', err);

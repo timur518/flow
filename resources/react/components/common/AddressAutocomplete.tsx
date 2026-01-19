@@ -47,7 +47,15 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         // Получаем уникальные регионы из городов
         const regions = cities
             .map(city => city.region)
-            .filter((region): region is string => region !== null && region !== '');
+            .filter((region): region is string => region !== null && region !== '')
+            .map(region => {
+                // Убираем слова "область" и "обл" из названия региона
+                // DaData ожидает короткое название: "Белгородская", а не "Белгородская область"
+                return region
+                    .replace(/\s+область$/i, '')
+                    .replace(/\s+обл\.?$/i, '')
+                    .trim();
+            });
         const uniqueRegions = [...new Set(regions)]; // Убираем дубликаты
         console.log('AddressAutocomplete: allowedRegions =', uniqueRegions);
         return uniqueRegions;
