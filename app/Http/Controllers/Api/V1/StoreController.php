@@ -38,6 +38,7 @@ class StoreController extends Controller
                 'latitude',
                 'longitude',
                 'yandex_maps_url',
+                'working_hours',
                 'whatsapp_url',
                 'telegram_chat_url',
                 'telegram_channel_url',
@@ -63,6 +64,7 @@ class StoreController extends Controller
                     'latitude' => $store->latitude,
                     'longitude' => $store->longitude,
                     'yandex_maps_url' => $store->yandex_maps_url,
+                    'working_hours' => $store->working_hours,
                     'social_links' => [
                         'whatsapp' => $store->whatsapp_url,
                         'telegram_chat' => $store->telegram_chat_url,
@@ -110,6 +112,7 @@ class StoreController extends Controller
                 'longitude' => $store->longitude,
                 'yandex_maps_url' => $store->yandex_maps_url,
                 'yandex_maps_code' => $store->yandex_maps_code,
+                'working_hours' => $store->working_hours,
                 'social_links' => [
                     'whatsapp' => $store->whatsapp_url,
                     'telegram_chat' => $store->telegram_chat_url,

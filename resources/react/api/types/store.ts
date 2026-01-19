@@ -17,6 +17,7 @@ export interface Store extends BaseModel {
     latitude: string | null;
     longitude: string | null;
     yandex_maps_url: string | null;
+    working_hours: string | null;
     social_links: SocialLinks;
     sort_order: number;
 }

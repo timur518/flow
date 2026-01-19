@@ -101,6 +101,11 @@ class StoreForm
 
                         Tab::make('Доставка')
                             ->schema([
+                                Textarea::make('working_hours')
+                                    ->label('График работы')
+                                    ->rows(3)
+                                    ->placeholder('Пн-Пт: 9:00 - 21:00, Сб-Вс: 10:00 - 20:00')
+                                    ->columnSpanFull(),
                                 Section::make('Периоды доставки')
                                     ->schema([
                                         Repeater::make('deliveryPeriods')

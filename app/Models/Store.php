@@ -26,6 +26,7 @@ class Store extends Model
         'longitude',
         'yandex_maps_url',
         'yandex_maps_code',
+        'working_hours',
         'legal_name',
         'inn',
         'ogrn',
