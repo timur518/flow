@@ -2518,3 +2518,89 @@ body {
         display: block;
     }
 }
+
+/* ============================================
+   CATEGORY PAGE - Мобильная версия
+   ============================================ */
+@media (max-width: 768px) {
+    /* Обложка категории на мобильных */
+    .category-cover {
+        height: 200px;
+    }
+
+    .category-cover-title {
+        font-size: 24px;
+    }
+
+    /* Теги фильтров - горизонтальный скролл */
+    .category-filters {
+        margin: 0 -20px 20px -20px;
+        padding: 0 20px;
+    }
+
+    .tags-container {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+    }
+
+    .tags-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .tag-filter {
+        flex-shrink: 0;
+        padding: 8px 12px;
+        font-size: 11px;
+    }
+
+    /* Блок "Ищу подарок" - горизонтальный скролл пальцем */
+    .gift-finder {
+        margin-bottom: 30px;
+    }
+
+    .gift-finder-title {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    /* Скрываем стрелки на мобильных */
+    .tags-carousel .carousel-arrow {
+        display: none;
+    }
+
+    .tags-carousel-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .tags-carousel-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .tags-carousel-track {
+        gap: 15px;
+        transform: none !important; /* Отключаем JS-скролл на мобильных */
+    }
+
+    .tag-circle-item {
+        width: 70px;
+    }
+
+    .tag-circle {
+        width: 60px;
+        height: 60px;
+    }
+
+    .tag-circle-name {
+        font-size: 11px;
+    }
+}
