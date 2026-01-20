@@ -2545,6 +2545,8 @@ body {
         border-radius: 0 0 24px 24px;
     }
 
+    .category-cover-breadcrumb {margin-top:50px}
+
     .category-cover-title {
         font-size: 24px;
     }
