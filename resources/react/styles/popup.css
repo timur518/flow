@@ -2908,8 +2908,8 @@
         width: 100%;
         margin: 0;
         border-radius: 24px 24px 0 0;
-        height: 80vh;
-        max-height: 80vh;
+        height: 90vh;
+        max-height: 90vh;
         overflow: hidden;
     }
 
@@ -3068,6 +3068,10 @@
     /* Убираем padding у modal-body для ProductModal */
     .modal-body:has(.product-modal-wrapper) {
         padding: 0;
+        height: 100%;
+        max-height: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
     /* Кнопка закрытия (только на мобильных) */
@@ -3093,7 +3097,7 @@
         overflow-x: hidden;
         -ms-overflow-style: none;
         scrollbar-width: none;
-        padding-bottom: 0;
+        padding-bottom: 16px;
     }
 
     .product-modal-content::-webkit-scrollbar {
@@ -3187,15 +3191,16 @@
         margin-top: 0;
     }
 
-    /* Sticky футер - прижат к низу, как в checkout */
+    /* Футер - прижат к низу экрана без отступов */
     .product-modal-mobile-footer {
         display: flex;
         flex-direction: column;
-        position: sticky;
-        bottom: 0;
-        background-color: #F9F9F9;
-        padding: 16px 20px 10px 20px;
-        z-index: 10;
+        position: sticky !important;
+        bottom: 0 !important;
+        background-color: #F9F9F9 !important;
+        padding: 16px 20px 20px 20px !important;
+        margin-bottom: 0 !important;
+        z-index: 10 !important;
         gap: 0;
     }
 }
