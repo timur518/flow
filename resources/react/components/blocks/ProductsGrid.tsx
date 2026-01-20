@@ -14,6 +14,8 @@ interface ProductsGridProps {
     title?: string;
     /** ID категории для фильтрации */
     category_id?: number;
+    /** Slug категории для формирования ссылки "Смотреть все" */
+    category_slug?: string;
     /** Показывать только товары со скидкой */
     on_sale?: boolean;
     /** Случайный порядок товаров */
@@ -22,8 +24,6 @@ interface ProductsGridProps {
     limit?: number;
     /** Показывать кнопку "Смотреть все" */
     showViewAll?: boolean;
-    /** URL для кнопки "Смотреть все" */
-    viewAllUrl?: string;
     /** Обработчик клика по товару */
     onProductClick?: (product: Product) => void;
 }
@@ -31,11 +31,11 @@ interface ProductsGridProps {
 const ProductsGrid: React.FC<ProductsGridProps> = ({
     title = 'Наши товары',
     category_id,
+    category_slug,
     on_sale,
     random,
     limit = 8,
     showViewAll = false,
-    viewAllUrl,
     onProductClick
 }) => {
     const { selectedCityId } = useCity();
@@ -52,6 +52,9 @@ const ProductsGrid: React.FC<ProductsGridProps> = ({
     // Загружаем товары с заданными параметрами
     const { products, loading } = useProducts(params);
     const { addItem } = useCart();
+
+    // Формируем URL для кнопки "Смотреть все"
+    const viewAllUrl = category_slug ? `/category/${category_slug}` : undefined;
 
     const handleAddToCart = (product: Product) => {
         addItem({

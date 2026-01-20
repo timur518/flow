@@ -262,9 +262,9 @@ const HomePage: React.FC<HomePageProps> = ({
                             <ProductsGrid
                                 title="Любимым к 14 февраля"
                                 category_id={2}
+                                category_slug="14-fevralia"
                                 limit={8}
                                 showViewAll={true}
-                                viewAllUrl="/category/valentines-day"
                                 onProductClick={handleProductClick}
                             />
 
