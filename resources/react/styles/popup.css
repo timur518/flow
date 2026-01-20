@@ -2933,6 +2933,20 @@
         padding-bottom: 20px !important; /* Внутренний отступ снизу */
     }
 
+    /* Модалка категорий на мобильных */
+    .categories-modal-nav {
+        margin-top: 15px;
+    }
+
+    /* Модалка корзины на мобильных */
+    .cart-modal-content {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        flex: 1;
+    }
+
+
     .profile-section-container-tall {
         height: 100% !important;
         max-height: none !important;

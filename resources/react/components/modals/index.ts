@@ -9,4 +9,6 @@ export { default as ProfileModal } from './ProfileModal';
 export { default as AddressesModal } from './AddressesModal';
 export { default as ProductModal } from './ProductModal';
 export { default as CheckoutModal } from './CheckoutModal';
+export { default as CategoriesModal } from './CategoriesModal';
+export { default as CartModal } from './CartModal';
 

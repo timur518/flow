@@ -22,6 +22,8 @@ import {
     AddressesModal,
     ProductModal,
     CheckoutModal,
+    CategoriesModal,
+    CartModal,
 } from '@/components/modals';
 import { SEOHead } from '@/components/common';
 import { useAuth, useCart, useCity, useStores } from '@/hooks';
@@ -57,6 +59,8 @@ const HomePage: React.FC<HomePageProps> = ({
     const [productModalOpen, setProductModalOpen] = useState(initialModalOpen);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(initialProduct);
     const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
+    const [categoriesModalOpen, setCategoriesModalOpen] = useState(false);
+    const [cartModalOpen, setCartModalOpen] = useState(false);
 
     // Обновляем состояние при изменении props
     useEffect(() => {
@@ -84,8 +88,11 @@ const HomePage: React.FC<HomePageProps> = ({
     };
 
     const handleCategoriesClick = () => {
-        // TODO: Открыть модальное окно каталога на мобильных
-        console.log('Catalog clicked on mobile');
+        setCategoriesModalOpen(true);
+    };
+
+    const handleMobileCartClick = () => {
+        setCartModalOpen(true);
     };
 
     // Обработчики для профиля
@@ -359,11 +366,27 @@ const HomePage: React.FC<HomePageProps> = ({
                 onSubmit={handleCheckoutSubmit}
             />
 
+            {/* Модальное окно категорий (мобильные) */}
+            <CategoriesModal
+                isOpen={categoriesModalOpen}
+                onClose={() => setCategoriesModalOpen(false)}
+            />
+
+            {/* Модальное окно корзины (мобильные) */}
+            <CartModal
+                isOpen={cartModalOpen}
+                onClose={() => setCartModalOpen(false)}
+                onCheckout={() => {
+                    setCartModalOpen(false);
+                    setCheckoutModalOpen(true);
+                }}
+            />
+
             {/* Мобильное нижнее меню */}
             <MobileBottomMenu
                 onProfileClick={handleLoginClick}
                 onCatalogClick={handleCategoriesClick}
-                onCartClick={handleCartClick}
+                onCartClick={handleMobileCartClick}
                 cartItemsCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
                 cartTotal={cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)}
             />
