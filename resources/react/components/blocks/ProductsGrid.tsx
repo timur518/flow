@@ -66,8 +66,8 @@ const ProductsGrid: React.FC<ProductsGridProps> = ({
     if (loading) {
         return (
             <section className="block-container">
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="products-grid-title">{title}</h2>
+                <div className="products-grid-header">
+                    <h2 className="products-grid-title-inline">{title}</h2>
                     {showViewAll && viewAllUrl && (
                         <a
                             href={viewAllUrl}
@@ -95,8 +95,8 @@ const ProductsGrid: React.FC<ProductsGridProps> = ({
 
     return (
         <section className="block-container">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="products-grid-title">{title}</h2>
+            <div className="products-grid-header">
+                <h2 className="products-grid-title-inline">{title}</h2>
                 {showViewAll && viewAllUrl && products.length > 0 && (
                     <a
                         href={viewAllUrl}

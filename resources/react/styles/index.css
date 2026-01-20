@@ -711,6 +711,23 @@ body {
     margin-bottom: 20px;
 }
 
+/* Заголовок блока с кнопкой */
+.products-grid-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Заголовок без нижнего отступа (для использования в header) */
+.products-grid-title-inline {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #222222;
+    margin: 0;
+}
+
 /* Кнопка "Показать все" */
 .view-all-button {
     display: inline-flex;
