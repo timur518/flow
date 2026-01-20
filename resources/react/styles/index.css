@@ -711,6 +711,28 @@ body {
     margin-bottom: 20px;
 }
 
+/* Кнопка "Показать все" */
+.view-all-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 32px;
+    font-size: 12px;
+    font-weight: 600;
+    background-color: #FFFFFF;
+    color: #FC6C5F;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    border: none;
+    outline: none;
+}
+
+.view-all-button:hover {
+    background-color: #FC6C5F;
+    color: #FFFFFF;
+}
+
 /* Сетка товаров */
 .products-grid {
     display: grid;

@@ -71,9 +71,9 @@ const ProductsGrid: React.FC<ProductsGridProps> = ({
                     {showViewAll && viewAllUrl && (
                         <a
                             href={viewAllUrl}
-                            className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                            className="view-all-button"
                         >
-                            Смотреть все →
+                            Показать все
                         </a>
                     )}
                 </div>
@@ -100,9 +100,9 @@ const ProductsGrid: React.FC<ProductsGridProps> = ({
                 {showViewAll && viewAllUrl && products.length > 0 && (
                     <a
                         href={viewAllUrl}
-                        className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                        className="view-all-button"
                     >
-                        Смотреть все →
+                        Показать все
                     </a>
                 )}
             </div>
