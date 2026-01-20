@@ -17,7 +17,7 @@ import {
     CategoriesModal,
     CartModal,
 } from '@/components/modals';
-import { MobileBottomMenu, MobileHeader } from '@/components';
+import { MobileBottomMenu } from '@/components';
 
 interface ModalsContextType {
     // Открытие модальных окон
@@ -231,9 +231,6 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
                     setCheckoutModalOpen(true);
                 }}
             />
-
-            {/* Мобильный хедер */}
-            <MobileHeader />
 
             {/* Мобильное нижнее меню */}
             <MobileBottomMenu

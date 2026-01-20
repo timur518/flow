@@ -15,7 +15,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { useCategories, useProducts, useCity, useCart, useTags, useModals } from '@/hooks';
 import { Product, ProductTag } from '@/api/types';
-import { Header, Footer } from '@/components';
+import { Header, Footer, MobileHeader } from '@/components';
 import { CategoriesSidebar, CartSidebar, BouquetBuilder, ProductCard } from '@/components/blocks';
 import { SEOHead } from '@/components/common';
 import { SortLines, Close, ChevronRight } from '@/components/icons';
@@ -175,6 +175,9 @@ const CategoryPage: React.FC = () => {
         <div className="app-container">
             {/* SEO метатеги */}
             <SEOHead title={category?.name ? `${category.name} - Доставка цветов` : undefined} />
+
+            {/* Mobile Header */}
+            <MobileHeader />
 
             <Header />
 

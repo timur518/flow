@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Header, Footer } from '@/components';
+import { Header, Footer, MobileHeader } from '@/components';
 import {
     CategoriesSidebar,
     CartSidebar,
@@ -26,6 +26,9 @@ const HomePage: React.FC = () => {
         <div className="app-container">
             {/* SEO метатеги */}
             <SEOHead />
+
+            {/* Mobile Header */}
+            <MobileHeader />
 
             {/* Header */}
             <Header />
