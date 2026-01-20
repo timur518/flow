@@ -289,7 +289,7 @@ const HomePage: React.FC<HomePageProps> = ({
                             {/* Подарки (случайные 20 товаров) */}
                             <ProductsGrid
                                 title="Подарки"
-                                random={true}
+                                category_id={13}
                                 limit={20}
                                 showViewAll={false}
                                 onProductClick={handleProductClick}
