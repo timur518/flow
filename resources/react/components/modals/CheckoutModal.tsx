@@ -78,6 +78,31 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     const subtotal = items.reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0);
     const total = subtotal + (deliveryMode === 'delivery' ? deliveryCost : 0) - discount;
 
+    // Блокировка скролла при открытом модальном окне
+    useEffect(() => {
+        if (isOpen) {
+            // Сохраняем текущую позицию скролла
+            const scrollY = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
+        } else {
+            // Восстанавливаем скролл при закрытии
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+
+        return () => {
+            // Очистка при размонтировании
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+        };
+    }, [isOpen]);
+
     // Подтягиваем данные авторизованного пользователя
     useEffect(() => {
         if (user) {
