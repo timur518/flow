@@ -110,14 +110,27 @@ class ProductController
         $sortBy = $request->input('sort_by', 'sort_order');
         $sortOrder = $request->input('sort_order', 'asc');
 
-        if (in_array($sortBy, ['sort_order', 'price', 'name', 'created_at'])) {
+        // Случайная сортировка
+        if ($request->has('random') && $request->boolean('random')) {
+            $query->inRandomOrder();
+        } elseif (in_array($sortBy, ['sort_order', 'price', 'name', 'created_at'])) {
             $query->orderBy($sortBy, $sortOrder);
         } else {
             $query->orderBy('sort_order', 'asc');
         }
 
-        // Дополнительная сортировка по ID для стабильности
-        $query->orderBy('id', 'asc');
+        // Дополнительная сортировка по ID для стабильности (если не случайная)
+        if (!$request->has('random') || !$request->boolean('random')) {
+            $query->orderBy('id', 'asc');
+        }
+
+        // Лимит результатов
+        if ($request->has('limit')) {
+            $limit = (int) $request->input('limit');
+            if ($limit > 0) {
+                $query->limit($limit);
+            }
+        }
 
         $products = $query->get();
 

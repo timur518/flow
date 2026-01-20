@@ -56,6 +56,7 @@ export interface ProductParams extends SortParams {
     tag_id?: number;
     search?: string;
     on_sale?: boolean;
+    random?: boolean;
     limit?: number;
 }
 

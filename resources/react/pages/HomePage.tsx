@@ -258,8 +258,42 @@ const HomePage: React.FC<HomePageProps> = ({
                             {/* Баннеры */}
                             <BannerSlider />
 
-                            {/* Сетка товаров */}
-                            <ProductsGrid onProductClick={handleProductClick} />
+                            {/* Любимым к 14 февраля (category_id = 2) */}
+                            <ProductsGrid
+                                title="Любимым к 14 февраля"
+                                category_id={2}
+                                limit={8}
+                                showViewAll={true}
+                                viewAllUrl="/category/valentines-day"
+                                onProductClick={handleProductClick}
+                            />
+
+                            {/* Акции (товары со скидкой) */}
+                            <ProductsGrid
+                                title="Акции"
+                                on_sale={true}
+                                limit={8}
+                                showViewAll={false}
+                                onProductClick={handleProductClick}
+                            />
+
+                            {/* Популярные (случайные 20 товаров) */}
+                            <ProductsGrid
+                                title="Популярные"
+                                random={true}
+                                limit={20}
+                                showViewAll={false}
+                                onProductClick={handleProductClick}
+                            />
+
+                            {/* Подарки (случайные 20 товаров) */}
+                            <ProductsGrid
+                                title="Подарки"
+                                random={true}
+                                limit={20}
+                                showViewAll={false}
+                                onProductClick={handleProductClick}
+                            />
 
                             {/* Собрать букет */}
                             <BouquetBuilder />
