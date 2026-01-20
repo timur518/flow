@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useProducts, useCart, useCity } from '@/hooks';
 import { Product, ProductParams } from '@/api/types';
 import ProductCard from './ProductCard';
@@ -72,12 +73,12 @@ const ProductsGrid: React.FC<ProductsGridProps> = ({
                 <div className="products-grid-header">
                     <h2 className="products-grid-title-inline">{title}</h2>
                     {showViewAll && viewAllUrl && (
-                        <a
-                            href={viewAllUrl}
+                        <Link
+                            to={viewAllUrl}
                             className="view-all-button"
                         >
                             Показать все
-                        </a>
+                        </Link>
                     )}
                 </div>
                 <div className="products-grid">
@@ -101,12 +102,12 @@ const ProductsGrid: React.FC<ProductsGridProps> = ({
             <div className="products-grid-header">
                 <h2 className="products-grid-title-inline">{title}</h2>
                 {showViewAll && viewAllUrl && products.length > 0 && (
-                    <a
-                        href={viewAllUrl}
+                    <Link
+                        to={viewAllUrl}
                         className="view-all-button"
                     >
                         Показать все
-                    </a>
+                    </Link>
                 )}
             </div>
 
