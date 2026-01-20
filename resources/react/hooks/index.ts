@@ -16,3 +16,4 @@ export { useOrders, useOrder, usePromoCode, useDeliveryCalculation } from './use
 export { useAddresses } from './useAddresses';
 export { useDaData } from './useDaData';
 export type { DaDataSuggestion } from './useDaData';
+export { useModals } from '@/contexts';

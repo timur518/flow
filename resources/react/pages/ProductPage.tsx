@@ -4,39 +4,33 @@
  * URL: /:categorySlug/:productId
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import HomePage from './HomePage';
-import { useProductDetail } from '@/hooks';
-import { Product } from '@/api/types';
+import { useProductDetail, useModals } from '@/hooks';
 
 const ProductPage: React.FC = () => {
-    const { categorySlug, productId } = useParams<{ categorySlug: string; productId: string }>();
+    const { productId } = useParams<{ categorySlug: string; productId: string }>();
     const navigate = useNavigate();
-    const [shouldOpenModal, setShouldOpenModal] = useState(false);
-    
+    const { openProductModal } = useModals();
+    const hasOpenedModal = useRef(false);
+
     const { product, loading } = useProductDetail(productId ? parseInt(productId, 10) : null);
 
     useEffect(() => {
-        // Когда товар загружен, устанавливаем флаг для открытия модального окна
-        if (product && !loading) {
-            setShouldOpenModal(true);
+        // Когда товар загружен, открываем модальное окно через глобальный контекст
+        if (product && !loading && !hasOpenedModal.current) {
+            hasOpenedModal.current = true;
+            openProductModal(product);
         }
-    }, [product, loading]);
+    }, [product, loading, openProductModal]);
 
-    const handleCloseModal = () => {
-        // При закрытии модального окна возвращаемся на главную
-        navigate('/');
-    };
+    // Сбрасываем флаг при изменении productId
+    useEffect(() => {
+        hasOpenedModal.current = false;
+    }, [productId]);
 
-    // Передаем информацию о товаре в HomePage через props
-    return (
-        <HomePage 
-            initialProduct={product as Product | null}
-            initialModalOpen={shouldOpenModal}
-            onModalClose={handleCloseModal}
-        />
-    );
+    return <HomePage />;
 };
 
 export default ProductPage;

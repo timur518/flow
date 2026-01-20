@@ -6,17 +6,15 @@
 
 import React from 'react';
 import CartContent from './CartContent';
+import { useModals } from '@/hooks';
 
-interface CartSidebarProps {
-    onCheckout?: () => void;
-    onClose?: () => void;
-}
+const CartSidebar: React.FC = () => {
+    const { openCheckoutModal } = useModals();
 
-const CartSidebar: React.FC<CartSidebarProps> = ({ onCheckout, onClose }) => {
     return (
         <aside className="cart-sidebar" role="complementary">
             <div className="block-container cart-sidebar-container">
-                <CartContent onCheckout={onCheckout} />
+                <CartContent onCheckout={openCheckoutModal} />
             </div>
         </aside>
     );

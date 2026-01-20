@@ -2523,9 +2523,25 @@ body {
    CATEGORY PAGE - Мобильная версия
    ============================================ */
 @media (max-width: 768px) {
+    /* Первый block-container на странице категорий без обложки - добавляем отступ сверху */
+    /* Исключаем banner-carousel (главная страница) */
+    .body-container .flex-1 > .block-container:first-child:not(.banner-carousel) {
+        margin-top: 74px; /* 64px высота хедера + 10px отступ */
+    }
+
+    /* Если есть обложка категории - она идёт первой и сама имеет нужный отступ */
+    .body-container .flex-1 > .category-cover:first-child {
+        margin-top: 0; /* Обложка сама заполняет пространство под хедером */
+    }
+
+    /* Если после обложки идёт block-container - убираем дополнительный отступ */
+    .body-container .flex-1 > .category-cover + .block-container {
+        margin-top: 10px;
+    }
+
     /* Обложка категории на мобильных */
     .category-cover {
-        height: 200px;
+        height: 300px;
     }
 
     .category-cover-title {

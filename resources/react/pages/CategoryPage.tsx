@@ -13,11 +13,10 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { useCategories, useProducts, useCity, useCart, useTags } from '@/hooks';
+import { useCategories, useProducts, useCity, useCart, useTags, useModals } from '@/hooks';
 import { Product, ProductTag } from '@/api/types';
 import { Header, Footer } from '@/components';
 import { CategoriesSidebar, CartSidebar, BouquetBuilder, ProductCard } from '@/components/blocks';
-import { ProductModal } from '@/components/modals';
 import { SEOHead } from '@/components/common';
 import { SortLines, Close, ChevronRight } from '@/components/icons';
 
@@ -29,9 +28,8 @@ const CategoryPage: React.FC = () => {
     const { selectedCityId } = useCity();
     const { addItem } = useCart();
     const { tags: allTags } = useTags();
+    const { openProductModal } = useModals();
 
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-    const [productModalOpen, setProductModalOpen] = useState(false);
     const [selectedTags, setSelectedTags] = useState<number[]>([]);
     const [sortBy, setSortBy] = useState<SortOption>(null);
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
@@ -96,8 +94,7 @@ const CategoryPage: React.FC = () => {
     }, [filteredProducts, sortBy]);
 
     const handleProductClick = (product: Product) => {
-        setSelectedProduct(product);
-        setProductModalOpen(true);
+        openProductModal(product);
     };
 
     const handleAddToCart = (product: Product) => {
@@ -396,17 +393,10 @@ const CategoryPage: React.FC = () => {
                         </div>
 
                         {/* Правая колонка - Корзина */}
-                        <CartSidebar onCheckout={() => {}} />
+                        <CartSidebar />
                     </div>
                 </div>
             </main>
-
-            {/* Модальное окно товара */}
-            <ProductModal
-                isOpen={productModalOpen}
-                onClose={() => setProductModalOpen(false)}
-                product={selectedProduct}
-            />
         </div>
     );
 };

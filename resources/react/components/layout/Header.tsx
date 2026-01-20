@@ -12,24 +12,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSettings, useCities } from '@/contexts';
-import { useAuth, useCity, useStores } from '@/hooks';
+import { useAuth, useCity, useStores, useModals } from '@/hooks';
 import { productService } from '@/api/services';
 import { SearchSuggestions } from '@/components/common';
 import type { SearchSuggestion } from '@/components/common/SearchSuggestions';
 import markerIcon from '/public/images/icons/marker.svg';
 import profileIcon from '/public/images/icons/profile.svg';
 
-interface HeaderProps {
-    onLoginClick?: () => void;
-    onCartClick?: () => void;
-    cartItemsCount?: number;
-}
-
-const Header: React.FC<HeaderProps> = ({
-    onLoginClick,
-    onCartClick,
-    cartItemsCount = 0
-}) => {
+const Header: React.FC = () => {
+    const { openAuthModal, openProfileModal } = useModals();
     const { settings } = useSettings();
     const { cities, loading: citiesLoading } = useCities();
     const { user } = useAuth();
@@ -292,7 +283,7 @@ const Header: React.FC<HeaderProps> = ({
 
                         {/* Профиль - фон #F9F9F9, радиус 32px, иконка в белом кружке #FDAFC0 */}
                         <button
-                            onClick={onLoginClick}
+                            onClick={() => user ? openProfileModal() : openAuthModal()}
                             className="header-button"
                         >
                             <div className="header-button-icon">

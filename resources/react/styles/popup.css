@@ -2953,6 +2953,16 @@
     /* Модалка категорий на мобильных */
     .categories-modal-nav {
         margin-top: 15px;
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Контейнер профиля в модалке категорий - разрешаем скролл */
+    .modal-container.mobile-slide-up .profile-modal-container {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
     }
 
     /* Модалка корзины на мобильных */
