@@ -2923,14 +2923,14 @@
     .profile-modal-container {
         height: 100% !important;
         max-height: none !important;
-        padding-bottom: 0 !important; /* Убираем отступ снизу */
+        padding-bottom: 20px !important; /* Внутренний отступ снизу */
     }
 
     /* Контейнер подразделов (история заказов, детали заказа и т.д.) */
     .profile-section-container {
         height: 100% !important;
         max-height: none !important;
-        padding-bottom: 0 !important; /* Убираем отступ снизу */
+        padding-bottom: 20px !important; /* Внутренний отступ снизу */
     }
 
     .profile-section-container-tall {
