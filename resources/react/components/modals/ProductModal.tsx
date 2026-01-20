@@ -138,13 +138,22 @@ const ProductModal: React.FC<ProductModalProps> = ({
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="full">
+        <Modal isOpen={isOpen} onClose={onClose} size="full" mobileSlideUp={true}>
             {loading ? (
                 <ProductModalSkeleton />
             ) : (
-            <div className="product-modal-content">
-                {/* Колонка 1: Слайдер фотографий */}
-                <div className="product-modal-slider">
+            <div className="product-modal-wrapper">
+                {/* Кнопка закрытия (только на мобильных) */}
+                <button
+                    onClick={onClose}
+                    className="product-modal-mobile-close btn-circle-35 bg-white"
+                >
+                    <Close className="product-modal-close-icon" />
+                </button>
+
+                <div className="product-modal-content">
+                    {/* Колонка 1: Слайдер фотографий */}
+                    <div className="product-modal-slider">
                     <div className="product-modal-slider-wrapper">
                         <div
                             className="product-modal-image-container"
@@ -373,6 +382,46 @@ const ProductModal: React.FC<ProductModalProps> = ({
                             />
                         ))}
                     </div>
+                </div>
+                </div>
+
+                {/* Sticky футер с количеством и кнопкой (только на мобильных) */}
+                <div className="product-modal-mobile-footer">
+                    <div className="product-modal-quantity-price">
+                        <div className="product-modal-quantity">
+                            <button
+                                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                className="product-modal-quantity-btn"
+                            >
+                                -
+                            </button>
+                            <span className="product-modal-quantity-value">{quantity}</span>
+                            <button
+                                onClick={() => setQuantity(quantity + 1)}
+                                className="product-modal-quantity-btn"
+                            >
+                                +
+                            </button>
+                        </div>
+
+                        <div className="product-modal-prices">
+                            {hasDiscount && (
+                                <div className="product-modal-price-old">
+                                    {parseFloat(detail.price).toLocaleString('ru-RU')} ₽
+                                </div>
+                            )}
+                            <div className="product-modal-price-current">
+                                {parseFloat(detail.sale_price || detail.price).toLocaleString('ru-RU')} ₽
+                            </div>
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={handleAddToCart}
+                        className="product-modal-add-button"
+                    >
+                        Добавить в корзину
+                    </button>
                 </div>
             </div>
             )}
