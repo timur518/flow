@@ -46,47 +46,41 @@ const BannerSlider: React.FC = () => {
         scrollToIndex(newIndex);
     };
 
-    // Обработчики для drag-to-scroll
+    // Проверка мобильного устройства
+    const isMobile = () => window.innerWidth <= 768;
+
+    // Обработчики для drag-to-scroll (только для десктопа)
     const handleMouseDown = (e: React.MouseEvent) => {
-        if (!scrollContainerRef.current) return;
+        if (isMobile() || !scrollContainerRef.current) return;
         setIsDragging(true);
         setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
         setScrollLeft(scrollContainerRef.current.scrollLeft);
         scrollContainerRef.current.style.cursor = 'grabbing';
     };
 
-    const handleTouchStart = (e: React.TouchEvent) => {
-        if (!scrollContainerRef.current) return;
-        setIsDragging(true);
-        setStartX(e.touches[0].pageX - scrollContainerRef.current.offsetLeft);
-        setScrollLeft(scrollContainerRef.current.scrollLeft);
-    };
-
     const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isDragging || !scrollContainerRef.current) return;
+        if (isMobile() || !isDragging || !scrollContainerRef.current) return;
         e.preventDefault();
         const x = e.pageX - scrollContainerRef.current.offsetLeft;
         const walk = (x - startX) * 2; // Множитель для скорости прокрутки
         scrollContainerRef.current.scrollLeft = scrollLeft - walk;
     };
 
-    const handleTouchMove = (e: React.TouchEvent) => {
-        if (!isDragging || !scrollContainerRef.current) return;
-        const x = e.touches[0].pageX - scrollContainerRef.current.offsetLeft;
-        const walk = (x - startX) * 2;
-        scrollContainerRef.current.scrollLeft = scrollLeft - walk;
-    };
-
     const handleDragEnd = () => {
+        if (isMobile()) return;
         setIsDragging(false);
         if (scrollContainerRef.current) {
             scrollContainerRef.current.style.cursor = 'grab';
+        }
+    };
 
-            // Обновляем currentIndex на основе текущей позиции скролла
+    // Отслеживаем изменение позиции скролла для обновления currentIndex
+    const handleScroll = () => {
+        if (scrollContainerRef.current) {
             const container = scrollContainerRef.current;
-            const itemWidth = container.scrollWidth / banners.length;
+            const itemWidth = container.clientWidth;
             const newIndex = Math.round(container.scrollLeft / itemWidth);
-            setCurrentIndex(Math.min(Math.max(0, newIndex), maxIndex));
+            setCurrentIndex(Math.min(Math.max(0, newIndex), banners.length - 1));
         }
     };
 
@@ -139,9 +133,9 @@ const BannerSlider: React.FC = () => {
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleDragEnd}
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
+                    onMouseUp={handleDragEnd}
                     onClick={handleClick}
+                    onScroll={handleScroll}
                 >
                     {banners.map((banner) => (
                         <div
@@ -192,6 +186,22 @@ const BannerSlider: React.FC = () => {
                             </svg>
                         </button>
                     </>
+                )}
+
+                {/* Индикаторы пагинации (кружочки) - для мобильных */}
+                {banners.length > 1 && (
+                    <div className="banner-pagination">
+                        {banners.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => scrollToIndex(index)}
+                                className={`banner-pagination-dot ${
+                                    index === currentIndex ? 'active' : ''
+                                }`}
+                                aria-label={`Перейти к баннеру ${index + 1}`}
+                            />
+                        ))}
+                    </div>
                 )}
             </div>
         </div>

@@ -63,6 +63,44 @@ body {
     margin-bottom: 20px;
 }
 
+/* Мобильные стили для основного контейнера */
+@media (max-width: 768px) {
+    .body-container {
+        padding: 0;
+    }
+
+    .main-content {
+        margin-top: -64px; /* Поднимаем контент под хедер (высота мобильного хедера) */
+    }
+
+    /* Убираем отступы у body-container на мобильных */
+    .body-container.mt-5 {
+        margin-top: 0 !important;
+    }
+
+    /* Убираем gap между колонками на мобильных */
+    .body-container > .flex {
+        gap: 0;
+    }
+
+    /* Центральная колонка на всю ширину */
+    .body-container .flex-1 {
+        width: 100%;
+    }
+
+    /* Убираем вертикальные отступы между блоками на мобильных */
+    .body-container .space-y-6 > * + * {
+        margin-top: 0;
+    }
+
+    /* Блоки на мобильных */
+    .block-container {
+        border-radius: 24px;
+        padding: 20px 10px; /* Верхний и нижний 20px, левый и правый 10px */
+        margin: 10px; /* Внешний отступ 10px */
+    }
+}
+
 /* ============================================
    HEADER - Шапка сайта
    ============================================ */
@@ -458,6 +496,156 @@ body {
 }
 
 /* ============================================
+   MOBILE HEADER - Мобильная шапка сайта
+   ============================================ */
+
+.mobile-header {
+    display: none; /* По умолчанию скрыт на десктопе */
+    background: transparent; /* Убираем фон у хедера */
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 12px 16px;
+}
+
+.mobile-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+/* Кнопка выбора города (мобильная) */
+.mobile-city-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(249, 249, 249, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 32px;
+    padding: 8px 12px 8px 8px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.mobile-city-button:hover {
+    opacity: 0.8;
+}
+
+.mobile-city-icon {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1); /* Делаем иконку белой */
+}
+
+.mobile-city-text {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #FFFFFF;
+    white-space: nowrap;
+}
+
+/* Dropdown городов (мобильный) */
+.mobile-city-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    min-width: 200px;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    z-index: 100;
+    max-height: 0;
+    padding: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.mobile-city-dropdown.open {
+    max-height: 400px;
+    padding: 8px 0;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.mobile-city-dropdown-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.mobile-city-dropdown-item:hover {
+    background-color: #F9F9F9;
+}
+
+.mobile-city-dropdown-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.mobile-city-dropdown-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #737373;
+}
+
+.mobile-city-dropdown-item.active .mobile-city-dropdown-text {
+    color: #FDAFC0;
+}
+
+/* Кнопка поиска (мобильная) */
+.mobile-search-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(249, 249, 249, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+}
+
+.mobile-search-button:hover {
+    opacity: 0.8;
+}
+
+.mobile-search-icon {
+    width: 20px;
+    height: 20px;
+    color: #FFFFFF;
+}
+
+/* Показываем мобильный хедер только на мобильных устройствах */
+@media (max-width: 768px) {
+    .mobile-header {
+        display: block;
+    }
+
+    .header {
+        display: none;
+    }
+}
+
+/* ============================================
    CATEGORIES SIDEBAR - Боковая панель категорий
    ============================================ */
 .categories-sidebar {
@@ -623,7 +811,7 @@ body {
     aspect-ratio: 3/4;
     border-radius: 24px;
     overflow: hidden;
-    background-color: #F3F4F6;
+    background-color: transparent;
     cursor: pointer;
 }
 
@@ -699,6 +887,95 @@ body {
     transform: translate(-10px, -50%);
 }
 
+/* Индикаторы пагинации (кружочки) */
+.banner-pagination {
+    display: none; /* Скрыты на десктопе */
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.banner-pagination-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.banner-pagination-dot.active {
+    background-color: #FFFFFF;
+    width: 24px;
+    border-radius: 4px;
+}
+
+/* Мобильные стили для баннеров */
+@media (max-width: 768px) {
+    .banner-carousel {
+        margin: 0 0 20px 0; /* Нижний отступ 20px */
+        padding: 0; /* Убираем padding */
+        background-color: transparent;
+        border-radius: 0;
+    }
+
+    .banner-carousel-inner {
+        padding: 0; /* Убираем отступ у контейнера */
+    }
+
+    .banner-carousel-scroll {
+        gap: 0;
+        overflow-x: auto; /* Включаем горизонтальную прокрутку */
+        scroll-snap-type: x mandatory; /* Snap scrolling по горизонтали */
+        scroll-behavior: smooth; /* Плавная прокрутка */
+        -webkit-overflow-scrolling: touch; /* Плавная прокрутка на iOS */
+        scrollbar-width: none; /* Скрываем scrollbar в Firefox */
+        -ms-overflow-style: none; /* Скрываем scrollbar в IE/Edge */
+    }
+
+    .banner-carousel-scroll::-webkit-scrollbar {
+        display: none; /* Скрываем scrollbar в Chrome/Safari */
+    }
+
+    .banner-item {
+        width: 100%;
+        scroll-snap-align: start; /* Привязка к началу каждого слайда */
+        flex-shrink: 0; /* Запрещаем сжатие */
+    }
+
+    .banner-image-wrapper {
+        border-radius: 0 0 24px 24px; /* Верхнее скругление 0, нижнее 24px */
+        cursor: default;
+    }
+
+    .banner-image-wrapper:hover .banner-image {
+        transform: none; /* Убираем эффект увеличения на мобильных */
+    }
+
+    .banner-title {
+        font-size: 24px;
+        font-weight: 600;
+        bottom: 60px; /* Поднимаем выше, чтобы было место для кружочков */
+        padding: 0 20px; /* Отступ 20px внутри картинки для текста */
+    }
+
+    /* Скрываем стрелки навигации на мобильных */
+    .banner-nav-button {
+        display: none;
+    }
+
+    /* Показываем кружочки пагинации на мобильных */
+    .banner-pagination {
+        display: flex;
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        padding: 0 20px; /* Отступ 20px для кружочков */
+    }
+}
 
 /* ============================================
    PRODUCTS GRID - Сетка товаров
@@ -728,6 +1005,13 @@ body {
     margin: 0;
 }
 
+/* Мобильные стили для заголовков */
+@media (max-width: 768px) {
+    .products-grid-title-inline {
+        font-size: 18px;
+    }
+}
+
 /* Кнопка "Показать все" */
 .view-all-button {
     display: inline-flex;
@@ -753,7 +1037,7 @@ body {
 /* Сетка товаров */
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* По умолчанию 2 колонки для мобильных */
     gap: 10px;
 }
 
@@ -1346,6 +1630,14 @@ body {
     }
 }
 
+/* Скрываем боковые панели на мобильных */
+@media (max-width: 768px) {
+    .categories-sidebar,
+    .cart-sidebar {
+        display: none;
+    }
+}
+
 /* ============================================
    BOUQUET BUILDER - Конструктор букетов
    ============================================ */
@@ -1617,6 +1909,13 @@ body {
     .footer-grid {
         grid-template-columns: 1fr;
         gap: 24px;
+    }
+}
+
+/* Мобильные стили для футера */
+@media (max-width: 768px) {
+    .footer {
+        margin: 10px; /* Внешний отступ 10px */
     }
 }
 
@@ -2105,3 +2404,89 @@ body {
     transform: translate(-10px, -50%);
 }
 
+/* ============================================
+   MOBILE BOTTOM MENU - Нижнее меню для мобильных
+   ============================================ */
+
+.mobile-bottom-menu {
+    display: none; /* По умолчанию скрыто на десктопе */
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 100;
+}
+
+.mobile-bottom-menu-content {
+    background-color: #FC6C5F;
+    border-radius: 100px;
+    padding: 10px 10px 10px 20px; /* Слева 20px, остальные 10px */
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Кнопки Профиль и Каталог */
+.mobile-bottom-menu-item {
+    display: flex;
+    flex-direction: row; /* Горизонтальное расположение */
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: #F2DBE3;
+}
+
+.mobile-bottom-menu-icon {
+    width: 18px;
+    height: 18px;
+    /* Меняем цвет иконки на #F2DBE3 */
+    filter: brightness(0) saturate(100%) invert(93%) sepia(8%) saturate(1044%) hue-rotate(287deg) brightness(98%) contrast(93%);
+}
+
+.mobile-bottom-menu-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #F2DBE3;
+}
+
+/* Кнопка корзины */
+.mobile-bottom-menu-cart {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #FFFFFF;
+    border: none;
+    border-radius: 32px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.mobile-bottom-menu-cart:active {
+    opacity: 0.8;
+}
+
+.mobile-bottom-menu-cart-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.mobile-bottom-menu-cart-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FC6C5F;
+    white-space: nowrap;
+}
+
+/* Показываем меню только на мобильных */
+@media (max-width: 768px) {
+    .mobile-bottom-menu {
+        display: block;
+    }
+}

@@ -68,6 +68,28 @@
     }
 }
 
+@keyframes slideInFromBottom {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutToBottom {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
@@ -2835,6 +2857,51 @@
 
 .address-autocomplete-suggestion:last-child {
     border-radius: 0 0 12px 12px;
+}
+
+
+/* ============================================
+   MOBILE PROFILE MODAL - Мобильная версия профиля
+   ============================================ */
+
+@media (max-width: 768px) {
+    /* Модальное окно профиля с анимацией выезда снизу */
+    .modal-container.mobile-slide-up {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        border-radius: 24px 24px 0 0 !important;
+        height: 80vh !important;
+        max-height: 80vh !important;
+        overflow-y: auto;
+    }
+
+    .modal-container.mobile-slide-up.modal-container-open {
+        animation: slideInFromBottom 0.3s ease forwards;
+    }
+
+    .modal-container.mobile-slide-up.modal-container-closing {
+        animation: slideOutToBottom 0.3s ease forwards;
+    }
+
+    /* Контейнер профиля занимает всю доступную высоту */
+    .profile-modal-container {
+        height: 100% !important;
+        max-height: none !important;
+        padding-bottom: 100px !important; /* Отступ снизу, чтобы меню не перекрывало контент */
+    }
+
+    /* Контейнер подразделов (история заказов, детали заказа и т.д.) */
+    .profile-section-container {
+        height: 100% !important;
+        max-height: none !important;
+        padding-bottom: 100px !important; /* Отступ снизу, чтобы меню не перекрывало контент */
+    }
+
+    .profile-section-container-tall {
+        height: 100% !important;
+        max-height: none !important;
+    }
 }
 
 .address-autocomplete-suggestion-value {

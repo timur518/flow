@@ -5,6 +5,8 @@
 import React, { useState, useEffect } from 'react';
 import {
     Header,
+    MobileHeader,
+    MobileBottomMenu,
     Footer,
 } from '@/components';
 import {
@@ -79,6 +81,11 @@ const HomePage: React.FC<HomePageProps> = ({
         if (cartItems.length > 0) {
             setCheckoutModalOpen(true);
         }
+    };
+
+    const handleCategoriesClick = () => {
+        // TODO: Открыть модальное окно каталога на мобильных
+        console.log('Catalog clicked on mobile');
     };
 
     // Обработчики для профиля
@@ -239,11 +246,19 @@ const HomePage: React.FC<HomePageProps> = ({
             {/* SEO метатеги */}
             <SEOHead />
 
-            {/* Header на всю ширину */}
+            {/* Desktop Header */}
             <Header
                 onLoginClick={handleLoginClick}
                 onCartClick={handleCartClick}
                 cartItemsCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+            />
+
+            {/* Mobile Header */}
+            <MobileHeader
+                onSearchClick={() => {
+                    // TODO: Открыть модальное окно поиска на мобильных
+                    console.log('Search clicked on mobile');
+                }}
             />
 
             {/* Основной контент */}
@@ -342,6 +357,15 @@ const HomePage: React.FC<HomePageProps> = ({
                 onClose={() => setCheckoutModalOpen(false)}
                 items={cartItems}
                 onSubmit={handleCheckoutSubmit}
+            />
+
+            {/* Мобильное нижнее меню */}
+            <MobileBottomMenu
+                onProfileClick={handleLoginClick}
+                onCatalogClick={handleCategoriesClick}
+                onCartClick={handleCartClick}
+                cartItemsCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+                cartTotal={cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)}
             />
         </div>
     );

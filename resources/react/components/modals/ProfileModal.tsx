@@ -164,7 +164,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
     const isLoading = isRefreshing;
 
     return (
-        <Modal isOpen={isOpen} onClose={handleClose} size="sm">
+        <Modal isOpen={isOpen} onClose={handleClose} size="sm" mobileSlideUp={true}>
             <div className={`profile-modal-wrapper ${getAnimationClass()}`}>
                 {/* Основной экран профиля */}
                 {currentSection === 'main' && (

@@ -13,6 +13,7 @@ interface ModalProps {
     children: React.ReactNode;
     size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
     height?: number; // Динамическая высота в пикселях
+    mobileSlideUp?: boolean; // Анимация выезда снизу на мобильных
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -22,6 +23,7 @@ const Modal: React.FC<ModalProps> = ({
     children,
     size = 'md',
     height,
+    mobileSlideUp = false,
 }) => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [shouldRender, setShouldRender] = useState(false);
@@ -70,7 +72,7 @@ const Modal: React.FC<ModalProps> = ({
     };
 
     return (
-        <div className={`modal fixed inset-0 z-50 flex items-center justify-center p-4 ${isAnimating ? 'modal-open' : 'modal-closing'}`}>
+        <div className={`modal fixed inset-0 z-50 flex ${mobileSlideUp ? 'items-end md:items-center' : 'items-center'} justify-center ${mobileSlideUp ? 'p-0 md:p-4' : 'p-4'} ${isAnimating ? 'modal-open' : 'modal-closing'}`}>
             {/* Overlay */}
             <div
                 className={`modal-overlay ${isAnimating ? 'modal-overlay-open' : 'modal-overlay-closing'}`}
@@ -79,7 +81,7 @@ const Modal: React.FC<ModalProps> = ({
 
             {/* Modal Content */}
             <div
-                className={`modal-container ${sizeClasses[size]} ${isAnimating ? 'modal-container-open' : 'modal-container-closing'}`}
+                className={`modal-container ${mobileSlideUp ? 'mobile-slide-up' : ''} ${sizeClasses[size]} ${isAnimating ? 'modal-container-open' : 'modal-container-closing'}`}
                 style={height ? { height: `${height}px`, maxHeight: `${height}px` } : undefined}
             >
                 {/* Header */}
