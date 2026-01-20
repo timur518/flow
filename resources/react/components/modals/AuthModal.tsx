@@ -94,7 +94,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialSection =
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={handleClose} size="sm" height={getModalHeight()}>
+        <Modal isOpen={isOpen} onClose={handleClose} size="sm" height={getModalHeight()} mobileSlideUp={true}>
             <div className={`profile-modal-wrapper ${getAnimationClass()}`}>
                 {/* Форма входа */}
                 {currentSection === 'login' && (
