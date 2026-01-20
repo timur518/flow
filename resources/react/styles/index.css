@@ -773,6 +773,20 @@ body {
     position: relative;
 }
 
+/* Скелетон баннеров */
+.banner-skeleton-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.banner-skeleton-item {
+    aspect-ratio: 3/4;
+    background-color: #E5E7EB;
+    border-radius: 24px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 /* Внутренний контейнер */
 .banner-carousel-inner {
     position: relative;
@@ -963,6 +977,18 @@ body {
     /* Скрываем стрелки навигации на мобильных */
     .banner-nav-button {
         display: none;
+    }
+
+    /* Скелетон баннеров на мобильных */
+    .banner-skeleton-container {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0;
+    }
+
+    .banner-skeleton-item {
+        border-radius: 0 0 24px 24px;
+        width: 100%;
     }
 
     /* Показываем кружочки пагинации на мобильных */

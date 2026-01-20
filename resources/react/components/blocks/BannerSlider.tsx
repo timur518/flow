@@ -110,9 +110,9 @@ const BannerSlider: React.FC = () => {
     if (loading) {
         return (
             <div className="block-container banner-carousel">
-                <div className="grid grid-cols-3 gap-4">
+                <div className="banner-skeleton-container">
                     {[1, 2, 3].map((i) => (
-                        <div key={i} className="bg-gray-200 aspect-[3/4] rounded-lg animate-pulse"></div>
+                        <div key={i} className="banner-skeleton-item"></div>
                     ))}
                 </div>
             </div>
