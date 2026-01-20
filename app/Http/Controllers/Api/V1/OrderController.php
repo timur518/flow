@@ -126,6 +126,17 @@ class OrderController extends Controller
                 $promoCodeModel = $result['promo_code'];
             }
 
+            // Находим магазин по city_id
+            $store = Store::where('city_id', $request->city_id)
+                ->where('is_active', true)
+                ->first();
+
+            if (!$store) {
+                return response()->json([
+                    'message' => 'Магазин в выбранном городе не найден',
+                ], 404);
+            }
+
             // Рассчитываем стоимость доставки (только для доставки, не для самовывоза)
             $deliveryCost = 0;
             $deliveryZoneId = null;
@@ -141,17 +152,6 @@ class OrderController extends Controller
                         return response()->json([
                             'message' => 'Координаты адреса обязательны для расчета стоимости доставки',
                         ], 422);
-                    }
-
-                    // Находим магазин по city_id
-                    $store = Store::where('city_id', $request->city_id)
-                        ->where('is_active', true)
-                        ->first();
-
-                    if (!$store) {
-                        return response()->json([
-                            'message' => 'Магазин в выбранном городе не найден',
-                        ], 404);
                     }
 
                     // Рассчитываем стоимость доставки
@@ -190,6 +190,7 @@ class OrderController extends Controller
                 'recipient_phone' => $request->recipient_phone,
                 'recipient_social' => $request->recipient_social,
                 'city_id' => $request->city_id,
+                'store_id' => $store->id,
                 'delivery_type' => $request->delivery_type,
                 'delivery_address' => $request->delivery_address,
                 'delivery_date' => $request->delivery_date,

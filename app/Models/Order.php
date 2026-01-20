@@ -24,6 +24,7 @@ class Order extends Model
         'recipient_phone',
         'recipient_social',
         'city_id',
+        'store_id',
         'delivery_type',
         'delivery_address',
         'delivery_date',
