@@ -6,11 +6,12 @@
 import React from 'react';
 import { useOrder } from '@/hooks';
 import { Order } from '@/api/types';
-import { Telegram, WhatsApp } from '@/components/icons';
+import { Telegram } from '@/components/icons';
 import ProfileSectionSkeleton from './ProfileSectionSkeleton';
 import inprocessIcon from '/public/images/icons/inprocess.svg';
 import completedIcon from '/public/images/icons/completed.svg';
 import cancelledIcon from '/public/images/icons/cancelled.svg';
+import waIcon from '/public/images/icons/wa.svg';
 
 interface OrderDetailProps {
     orderId: number;
@@ -223,16 +224,32 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId, onBack }) => {
                         <div className="order-detail-support">
                             <h3 className="order-detail-support-title">Вопросы по заказу</h3>
                             <div className="order-detail-support-buttons">
-                                <a href="#" className="order-detail-support-button">
-                                    <div className="order-detail-support-icon">
-                                        <WhatsApp />
-                                    </div>
-                                </a>
-                                <a href="#" className="order-detail-support-button">
-                                    <div className="order-detail-support-icon">
-                                        <Telegram />
-                                    </div>
-                                </a>
+                                {order.store?.social_links?.whatsapp && (
+                                    <a
+                                        href={order.store.social_links.whatsapp}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="order-detail-support-button"
+                                        title="WhatsApp"
+                                    >
+                                        <div className="order-detail-support-icon">
+                                            <img src={waIcon} alt="WhatsApp" />
+                                        </div>
+                                    </a>
+                                )}
+                                {order.store?.social_links?.telegram_chat && (
+                                    <a
+                                        href={order.store.social_links.telegram_chat}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="order-detail-support-button"
+                                        title="Telegram"
+                                    >
+                                        <div className="order-detail-support-icon">
+                                            <Telegram />
+                                        </div>
+                                    </a>
+                                )}
                             </div>
                         </div>
                     </div>

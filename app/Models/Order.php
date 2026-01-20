@@ -66,7 +66,7 @@ class Order extends Model
 
     public function store(): BelongsTo
     {
-        return $this->belongsTo(Store::class, 'city_id', 'city_id');
+        return $this->belongsTo(Store::class, 'store_id');
     }
 
     public static function generateOrderNumber(): string

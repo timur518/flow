@@ -33,7 +33,7 @@ class OrderController extends Controller
     {
         $orders = $request->user()
             ->orders()
-            ->with(['items.product.images', 'city', 'user'])
+            ->with(['items.product.images', 'city', 'user', 'store'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -54,7 +54,7 @@ class OrderController extends Controller
             ], 403);
         }
 
-        $order->load(['items.product.images', 'city', 'user']);
+        $order->load(['items.product.images', 'city', 'user', 'store']);
 
         return response()->json([
             'order' => new OrderResource($order),
@@ -214,7 +214,7 @@ class OrderController extends Controller
             DB::commit();
 
             // Загружаем связи для ответа
-            $order->load(['items.product.images', 'city', 'user']);
+            $order->load(['items.product.images', 'city', 'user', 'store']);
 
             $response = [
                 'message' => 'Заказ создан успешно',
@@ -267,7 +267,7 @@ class OrderController extends Controller
                 $order->update(['status' => 'cancelled']);
             }
 
-            $order->load(['items.product.images', 'city', 'user']);
+            $order->load(['items.product.images', 'city', 'user', 'store']);
 
             //TODO: Email-уведомление клиенту о созданном и оплаченном заказе
 

@@ -40,6 +40,14 @@ export interface Order extends BaseModel, Timestamps {
         id: number;
         name: string;
     };
+    store?: {
+        id: number;
+        phone: string | null;
+        social_links: {
+            whatsapp: string | null;
+            telegram_chat: string | null;
+        };
+    };
 }
 
 export interface OrderItem extends BaseModel {

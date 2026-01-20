@@ -52,10 +52,21 @@ class OrderResource extends JsonResource
 
             // Информация о доставке
             'city_id' => $this->city_id,
+            'store_id' => $this->store_id,
             'city' => $this->when($this->city, function () {
                 return [
                     'id' => $this->city->id,
                     'name' => $this->city->name,
+                ];
+            }),
+            'store' => $this->when($this->store, function () {
+                return [
+                    'id' => $this->store->id,
+                    'phone' => $this->store->phone,
+                    'social_links' => [
+                        'whatsapp' => $this->store->whatsapp_url,
+                        'telegram_chat' => $this->store->telegram_chat_url,
+                    ],
                 ];
             }),
             'delivery_type' => $this->delivery_type,
