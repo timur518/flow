@@ -3194,6 +3194,19 @@
         gap: 10px !important;
     }
 
+    /* Уменьшаем отступ между названием и кнопкой в карточках рекомендаций */
+    .product-modal-recommendations .product-info {
+        flex: 0 !important;
+    }
+
+    .product-modal-recommendations .product-name {
+        margin-bottom: 8px !important;
+    }
+
+    .product-modal-recommendations .product-add-button {
+        margin-top: 0 !important;
+    }
+
     /* Sticky футер (только на мобильных) */
     .product-modal-mobile-footer {
         display: flex !important;
