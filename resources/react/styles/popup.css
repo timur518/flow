@@ -2902,6 +2902,19 @@
         height: 100% !important;
         max-height: none !important;
     }
+
+    /* Фиксируем высоту карточек заказов на мобильных */
+    .profile-modal-order-card {
+        height: 100px !important;
+        min-height: 100px !important;
+        max-height: 100px !important;
+    }
+
+    .profile-modal-all-orders {
+        height: 100px !important;
+        min-height: 100px !important;
+        max-height: 100px !important;
+    }
 }
 
 .address-autocomplete-suggestion-value {
