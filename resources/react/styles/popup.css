@@ -3155,7 +3155,7 @@
         background-color: transparent !important;
         border-radius: 0 !important;
         padding: 20px !important;
-        padding-bottom: 200px !important;
+        padding-bottom: 20px !important;
         height: auto !important;
         max-height: none !important;
         overflow-y: visible !important;
@@ -3175,6 +3175,7 @@
     /* Рекомендации */
     .product-modal-recommendations {
         padding: 0 20px 20px 20px !important;
+        padding-bottom: 200px !important;
         height: auto !important;
         max-height: none !important;
         overflow-y: visible !important;
