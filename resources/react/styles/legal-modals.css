@@ -1,0 +1,68 @@
+/* ============================================
+   LEGAL MODALS - Модальные окна юридической информации
+   ============================================ */
+
+/* Контейнер модального окна */
+.legal-modal-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 600px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* Скрываем полоску прокрутки */
+.legal-modal-container::-webkit-scrollbar {
+    display: none;
+}
+
+.legal-modal-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Текстовый блок */
+.legal-modal-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #222222;
+    line-height: 1.6;
+}
+
+/* Подзаголовок (описание документа) */
+.legal-modal-text .legal-modal-subtitle {
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+    margin-bottom: 10px;
+}
+
+/* Редакция документа */
+.legal-modal-text .legal-modal-revision {
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+    margin-bottom: 20px;
+}
+
+/* Параграфы */
+.legal-modal-text p {
+    margin: 0 0 10px 0;
+}
+
+/* Заголовки разделов */
+.legal-modal-text h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+    margin: 20px 0 10px 0;
+}
+
+/* Первый заголовок без верхнего отступа */
+.legal-modal-text h3:first-of-type {
+    margin-top: 10px;
+}

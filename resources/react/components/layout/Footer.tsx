@@ -8,14 +8,22 @@
  * - Связь с поддержкой
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useCity, useStores, useStore } from '@/hooks';
 import { Apple, Android, Telegram } from '@/components/icons';
+import { PublicOfferModal, PrivacyPolicyModal, CookiePolicyModal, DataProcessingConsentModal, DeliveryPaymentModal } from '@/components/modals';
 import waIcon from '/public/images/icons/wa.svg';
 
 const Footer: React.FC = () => {
     const { selectedCityId } = useCity();
     const { stores } = useStores({ city_id: selectedCityId || undefined });
+
+    // Состояние для модальных окон юридической информации
+    const [isPublicOfferOpen, setIsPublicOfferOpen] = useState(false);
+    const [isPrivacyPolicyOpen, setIsPrivacyPolicyOpen] = useState(false);
+    const [isCookiePolicyOpen, setIsCookiePolicyOpen] = useState(false);
+    const [isDataProcessingConsentOpen, setIsDataProcessingConsentOpen] = useState(false);
+    const [isDeliveryPaymentOpen, setIsDeliveryPaymentOpen] = useState(false);
 
     // Получаем ID магазина выбранного города (в каждом городе по одному магазину)
     const storeId = stores.length > 0 ? stores[0].id : null;
@@ -87,24 +95,44 @@ const Footer: React.FC = () => {
                         <h3 className="footer-heading">Юридическая информация</h3>
                         <ul className="footer-links">
                             <li>
-                                <a href="#privacy" className="footer-link">
+                                <button
+                                    onClick={() => setIsPrivacyPolicyOpen(true)}
+                                    className="footer-link footer-link-button"
+                                >
                                     Политика конфиденциальности
-                                </a>
+                                </button>
                             </li>
                             <li>
-                                <a href="#personal-data" className="footer-link">
-                                    Политика обработки персональных данных
-                                </a>
+                                <button
+                                    onClick={() => setIsCookiePolicyOpen(true)}
+                                    className="footer-link footer-link-button"
+                                >
+                                    Политика Cookies
+                                </button>
                             </li>
                             <li>
-                                <a href="#cookies" className="footer-link">
-                                    Политика обработки Cookies
-                                </a>
+                                <button
+                                    onClick={() => setIsDataProcessingConsentOpen(true)}
+                                    className="footer-link footer-link-button"
+                                >
+                                    Согласие на обработку
+                                </button>
                             </li>
                             <li>
-                                <a href="#offer" className="footer-link">
+                                <button
+                                    onClick={() => setIsPublicOfferOpen(true)}
+                                    className="footer-link footer-link-button"
+                                >
                                     Публичная оферта
-                                </a>
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    onClick={() => setIsDeliveryPaymentOpen(true)}
+                                    className="footer-link footer-link-button"
+                                >
+                                    Доставка и оплата
+                                </button>
                             </li>
                         </ul>
 
@@ -168,6 +196,36 @@ const Footer: React.FC = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Модальное окно публичной оферты */}
+            <PublicOfferModal
+                isOpen={isPublicOfferOpen}
+                onClose={() => setIsPublicOfferOpen(false)}
+            />
+
+            {/* Модальное окно политики конфиденциальности */}
+            <PrivacyPolicyModal
+                isOpen={isPrivacyPolicyOpen}
+                onClose={() => setIsPrivacyPolicyOpen(false)}
+            />
+
+            {/* Модальное окно политики Cookies */}
+            <CookiePolicyModal
+                isOpen={isCookiePolicyOpen}
+                onClose={() => setIsCookiePolicyOpen(false)}
+            />
+
+            {/* Модальное окно согласия на обработку */}
+            <DataProcessingConsentModal
+                isOpen={isDataProcessingConsentOpen}
+                onClose={() => setIsDataProcessingConsentOpen(false)}
+            />
+
+            {/* Модальное окно доставки и оплаты */}
+            <DeliveryPaymentModal
+                isOpen={isDeliveryPaymentOpen}
+                onClose={() => setIsDeliveryPaymentOpen(false)}
+            />
         </footer>
     );
 };

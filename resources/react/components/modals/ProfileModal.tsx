@@ -8,6 +8,7 @@ import Modal from './Modal';
 import { useAuth, useOrders, useAddresses } from '@/hooks';
 import { Telegram } from '@/components/icons';
 import { ProfileSectionSkeleton } from './profile-sections';
+import { PublicOfferModal, PrivacyPolicyModal, CookiePolicyModal, DataProcessingConsentModal, DeliveryPaymentModal } from './legal-modals';
 import waIcon from '/public/images/icons/wa.svg';
 
 // Ленивая загрузка подразделов
@@ -36,6 +37,13 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
     const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+
+    // Состояние для модальных окон юридической информации
+    const [isPublicOfferOpen, setIsPublicOfferOpen] = useState(false);
+    const [isPrivacyPolicyOpen, setIsPrivacyPolicyOpen] = useState(false);
+    const [isCookiePolicyOpen, setIsCookiePolicyOpen] = useState(false);
+    const [isDataProcessingConsentOpen, setIsDataProcessingConsentOpen] = useState(false);
+    const [isDeliveryPaymentOpen, setIsDeliveryPaymentOpen] = useState(false);
 
     // Функция для перевода статуса заказа
     const getStatusText = (status: string) => {
@@ -312,10 +320,36 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
                                 <h3 className="profile-modal-section-title">Юридическая информация</h3>
 
                                 <div className="profile-modal-legal">
-                                    <a href="#" className="profile-modal-legal-link">Политика конфиденциальности</a>
-                                    <a href="#" className="profile-modal-legal-link">Политика обработки перс данных</a>
-                                    <a href="#" className="profile-modal-legal-link">Политика обработки cookies</a>
-                                    <a href="#" className="profile-modal-legal-link">Публичная оферта</a>
+                                    <button
+                                        onClick={() => setIsPrivacyPolicyOpen(true)}
+                                        className="profile-modal-legal-link"
+                                    >
+                                        Политика конфиденциальности
+                                    </button>
+                                    <button
+                                        onClick={() => setIsCookiePolicyOpen(true)}
+                                        className="profile-modal-legal-link"
+                                    >
+                                        Политика Cookies
+                                    </button>
+                                    <button
+                                        onClick={() => setIsDataProcessingConsentOpen(true)}
+                                        className="profile-modal-legal-link"
+                                    >
+                                        Согласие на обработку
+                                    </button>
+                                    <button
+                                        onClick={() => setIsPublicOfferOpen(true)}
+                                        className="profile-modal-legal-link"
+                                    >
+                                        Публичная оферта
+                                    </button>
+                                    <button
+                                        onClick={() => setIsDeliveryPaymentOpen(true)}
+                                        className="profile-modal-legal-link"
+                                    >
+                                        Доставка и оплата
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -380,6 +414,28 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
                     </Suspense>
                 )}
             </div>
+
+            {/* Модальные окна юридической информации */}
+            <PublicOfferModal
+                isOpen={isPublicOfferOpen}
+                onClose={() => setIsPublicOfferOpen(false)}
+            />
+            <PrivacyPolicyModal
+                isOpen={isPrivacyPolicyOpen}
+                onClose={() => setIsPrivacyPolicyOpen(false)}
+            />
+            <CookiePolicyModal
+                isOpen={isCookiePolicyOpen}
+                onClose={() => setIsCookiePolicyOpen(false)}
+            />
+            <DataProcessingConsentModal
+                isOpen={isDataProcessingConsentOpen}
+                onClose={() => setIsDataProcessingConsentOpen(false)}
+            />
+            <DeliveryPaymentModal
+                isOpen={isDeliveryPaymentOpen}
+                onClose={() => setIsDeliveryPaymentOpen(false)}
+            />
         </Modal>
     );
 };

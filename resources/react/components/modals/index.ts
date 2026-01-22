@@ -12,3 +12,6 @@ export { default as CheckoutModal } from './CheckoutModal';
 export { default as CategoriesModal } from './CategoriesModal';
 export { default as CartModal } from './CartModal';
 
+// Legal Modals - Модальные окна юридической информации
+export { PublicOfferModal, PrivacyPolicyModal, CookiePolicyModal, DataProcessingConsentModal, DeliveryPaymentModal } from './legal-modals';
+
