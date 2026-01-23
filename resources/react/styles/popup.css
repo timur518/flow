@@ -2227,6 +2227,7 @@
     .checkout-modal-overlay {
         padding-right: 0;
     }
+
 }
 
 /* Контейнер модального окна - прижат к правой части */
@@ -2903,21 +2904,116 @@
     border-radius: 0 0 12px 12px;
 }
 
+/* ============================================
+   Планшетная версия профиля
+   ============================================ */
+   @media (max-width: 1250px) {
+	 /* Модалка корзины на мобильных */
+    .cart-modal-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .cart-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        flex-shrink: 0;
+    }
+
+    .cart-modal-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin: 0;
+    }
+
+    .cart-modal-content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 0 20px;
+        min-height: 0;
+    }
+	.cart-modal-content .cart-item-bottom {
+		flex-direction: row;
+		align-items: center;
+	}
+
+    .cart-modal-content::-webkit-scrollbar {
+        display: none;
+    }
+
+    .cart-modal-content {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .cart-modal-empty {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 20px;
+        justify-content: space-between;
+		gap: 20px
+    }
+
+    .cart-modal-footer {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px 20px 20px 20px;
+        background-color: #F9F9F9;
+        flex-shrink: 0;
+    }
+
+    .cart-modal-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .cart-modal-total-label {
+        font-size: 16px;
+        font-weight: 500;
+        color: #737373;
+    }
+
+    .cart-modal-total-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+
+
+    .profile-section-container-tall {
+        height: 100% !important;
+        max-height: none !important;
+    }
+
+
+   }
 
 /* ============================================
    MOBILE PROFILE MODAL - Мобильная версия профиля
    ============================================ */
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     /* Модальное окно с анимацией выезда снизу */
     .modal-container.mobile-slide-up {
         max-width: 100%;
         width: 100%;
         margin: 0;
         border-radius: 24px 24px 0 0;
-        height: 80vh;
-        max-height: 80vh;
+        height: fit-content; /*лучше сделать автоматическкую высоту. когда товар 1 в корзине, она занимает слишком много места */
+        max-height: 90vh;
         overflow: hidden;
+		margin-top: auto; /* попап внизу */
     }
 
     .modal-container.mobile-slide-up.modal-container-open {
@@ -2943,6 +3039,12 @@
         z-index: 201 !important; /* Выше оверлея */
     }
 
+	/*ограничиваем высоту профиля и делаем прокрутку*/
+	.profile-modal-wrapper {
+		overflow: auto;
+    	max-height: calc(90vh - 100px);
+	}
+
     /* Контейнер профиля занимает всю доступную высоту */
     .profile-modal-container {
         height: 100% !important;
@@ -2965,19 +3067,11 @@
         -webkit-overflow-scrolling: touch;
     }
 
-    /* Wrapper профиля на мобильных */
-    .modal-container.mobile-slide-up .profile-modal-wrapper {
-        height: 100%;
-        overflow: hidden;
-    }
-
-    /* Контейнер профиля в модалке - разрешаем скролл */
+    /* Контейнер профиля в модалке категорий - разрешаем скролл */
     .modal-container.mobile-slide-up .profile-modal-container {
         display: flex;
         flex-direction: column;
-        height: 100%;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+        overflow: hidden;
     }
 
     /* Модалка корзины на мобильных */
@@ -3177,16 +3271,6 @@
         flex-direction: column;
     }
 
-    /* Убираем padding у modal-body для ProfileModal */
-    .modal-body:has(.profile-modal-wrapper) {
-        padding: 0;
-        height: 100%;
-        max-height: 100%;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-    }
-
     /* Кнопка закрытия (только на мобильных) */
     .product-modal-mobile-close {
         display: flex;
@@ -3204,13 +3288,15 @@
     /* Контент модалки - скроллится */
     .product-modal-content {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+		flex-wrap: wrap;
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
         -ms-overflow-style: none;
         scrollbar-width: none;
         padding-bottom: 0;
+		max-height: 80vh;  /* высота сонтента, чтобы всегда было видно футер окна */
     }
 
     .product-modal-content::-webkit-scrollbar {
@@ -3262,6 +3348,7 @@
         height: auto;
         overflow-y: visible;
         flex-shrink: 0;
+		width: 55%;
     }
 
     /* Скрываем десктопную кнопку закрытия */
@@ -3276,10 +3363,11 @@
 
     /* Рекомендации */
     .product-modal-recommendations {
-        padding: 0 20px 16px 20px;
+        padding: 20px;
         height: auto;
         overflow-y: visible;
         flex-shrink: 0;
+		width: 45%;
     }
 
     .product-modal-recommendations-title {
@@ -3314,6 +3402,30 @@
         gap: 0;
         border-radius: 24px 24px 0 0;
     }
+}
+@media (max-width: 768px) {
+	 .modal-container.mobile-slide-up {
+        /* height: 80vh; */
+        max-height: 80vh;
+
+    }
+	.product-modal-wrapper {
+		max-height: 80vh;
+	}
+	 /* Контент модалки - скроллится */
+    .product-modal-content {
+       flex-wrap: unset;
+        flex-direction: column;
+    }
+	.product-modal-info {
+		width: 100%;
+	}
+	.product-modal-recommendations {
+        padding: 0 20px 16px 20px;
+        width: 100%;
+
+    }
+
 }
 
 .address-autocomplete-suggestion-value {

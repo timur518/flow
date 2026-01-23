@@ -21,7 +21,7 @@
    ============================================ */
 
 * {
-    margin: 0;
+    margin: 0px;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif !important;
@@ -61,6 +61,18 @@ body {
     border-radius: 24px;
     padding: 20px;
     margin-bottom: 20px;
+}
+
+@media (max-width: 1440px) {
+    .body-container {
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 1250px) {
+	.main-content {
+		margin-bottom: 80px; /* отступ снизу, чтобы мобильное меню не перекрывало футер */
+	}
 }
 
 /* Мобильные стили для основного контейнера */
@@ -644,6 +656,11 @@ body {
         display: none;
     }
 }
+@media (max-width: 1440px) {
+    .header-container {
+        padding: 0 20px;
+    }
+}
 
 /* ============================================
    CATEGORIES SIDEBAR - Боковая панель категорий
@@ -764,6 +781,14 @@ body {
     50% {
         opacity: 0.5;
     }
+}
+@media (max-width: 1440px) {
+
+	.categories-sidebar {
+		width: auto;
+		top: 82px
+
+	}
 }
 
 /* ============================================
@@ -1055,6 +1080,7 @@ body {
     text-decoration: none;
     border: none;
     outline: none;
+	white-space: nowrap;
 }
 
 .view-all-button:hover {
@@ -1075,13 +1101,20 @@ body {
     }
 }
 
-@media (min-width: 1024px) {
+
+@media (min-width: 820px) {
     .products-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 900px) and (max-width: 1200px) {
+    .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1440px) {
     .products-grid {
         grid-template-columns: repeat(4, 1fr);
     }
@@ -1658,12 +1691,46 @@ body {
     }
 }
 
-/* Скрываем боковые панели на мобильных */
+@media (max-width: 1440px) {
+	.cart-sidebar {
+		width: 360px;
+		top: 82px;
+	}
+
+
+}
+@media (max-width: 1320px) {
+	.cart-item-bottom {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+	}
+	.cart-sidebar {
+        width: 300px;
+	}
+
+
+}
+
+
+/* Скрываем боковые панели на планшетах */
+@media (max-width: 1250px){
+	.categories-sidebar,
+	.cart-sidebar
+    {
+        display: none;
+    }
+}
+
 @media (max-width: 768px) {
     .categories-sidebar,
     .cart-sidebar {
-        display: none;
+        display: none; /* Скрываем боковые панели на мобильных */
     }
+
+	.product-add-button {
+		padding: 8px;  /* уменьшить отступ на кнопке в корзину для мобильных*/
+	}
 }
 
 /* ============================================
@@ -1869,20 +1936,12 @@ body {
     transition: opacity 0.2s ease;
     line-height: 1;
     display: block;
+    cursor: pointer;
+    text-align: left;
 }
 
 .footer-link:hover {
     opacity: 0.8;
-}
-
-/* Кнопки-ссылки в футере (сброс стилей кнопки) */
-.footer-link-button {
-    background: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    text-align: left;
 }
 
 /* Информационный блок */
@@ -2521,13 +2580,19 @@ body {
     color: #FC6C5F;
     white-space: nowrap;
 }
+/* Показываем меню на планшетах */
+@media (max-width: 1250px){
+	.mobile-bottom-menu {
+		display: block;
+	}
+}
 
 /* Показываем меню только на мобильных */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .mobile-bottom-menu {
         display: block;
     }
-}
+} */
 
 /* ============================================
    CATEGORY PAGE - Мобильная версия
