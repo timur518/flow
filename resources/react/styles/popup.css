@@ -2366,6 +2366,7 @@
     cursor: pointer;
     padding: 0;
     margin-bottom: 0;
+    transition: margin-bottom 0.3s ease;
 }
 
 .collapsible-block-header.open {

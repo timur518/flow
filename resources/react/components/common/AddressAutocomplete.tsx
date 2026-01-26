@@ -86,8 +86,8 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     // Получение подсказок при изменении значения (только если поле было в фокусе)
     useEffect(() => {
         const fetchSuggestions = async () => {
-            // Если значение было выбрано из подсказки, не загружаем новые подсказки
-            if (isValueFromSuggestion) {
+            // Если поле отключено или значение было выбрано из подсказки, не загружаем новые подсказки
+            if (disabled || isValueFromSuggestion) {
                 setIsWaitingForInput(false);
                 return;
             }
@@ -105,15 +105,15 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             }
         };
 
-        // Устанавливаем флаг ожидания, если пользователь вводит текст
-        if (hasFocused && value.length >= 3 && !isValueFromSuggestion) {
+        // Устанавливаем флаг ожидания, если пользователь вводит текст (и поле не отключено)
+        if (hasFocused && value.length >= 3 && !isValueFromSuggestion && !disabled) {
             setIsWaitingForInput(true);
         }
 
         // Debounce: ждем 2 секунды после окончания ввода
         const timeoutId = setTimeout(fetchSuggestions, 2000);
         return () => clearTimeout(timeoutId);
-    }, [value, getSuggestions, hasFocused, isValueFromSuggestion]);
+    }, [value, getSuggestions, hasFocused, isValueFromSuggestion, disabled]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
@@ -219,7 +219,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                 </div>
             )}
 
-            {(loading || isWaitingForInput) && hasFocused && value.length >= 3 && !showSuggestions && (
+            {(loading || isWaitingForInput) && hasFocused && value.length >= 3 && !showSuggestions && !disabled && (
                 <div className="address-autocomplete-loading">
                     {isWaitingForInput ? 'Ожидание ввода...' : 'Загрузка...'}
                 </div>

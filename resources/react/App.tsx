@@ -6,6 +6,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider, CartProvider, CityProvider, SettingsProvider, CitiesProvider, ModalsProvider } from '@/contexts';
 import { AppLoader } from '@/components';
+import { ScrollToTop } from '@/components/common';
 import HomePage from '@/pages/HomePage';
 import CategoryPage from '@/pages/CategoryPage';
 import ProductPage from '@/pages/ProductPage';
@@ -14,6 +15,7 @@ import NotFoundPage from '@/pages/NotFoundPage';
 function App() {
     return (
         <BrowserRouter>
+            <ScrollToTop />
             <SettingsProvider>
                 <AuthProvider>
                     <CitiesProvider>

@@ -618,6 +618,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                                     name="delivery_date"
                                                     value={recipientData.delivery_date}
                                                     onChange={handleRecipientChange}
+                                                    onFocus={(e) => e.target.setSelectionRange(0, 0)}
                                                     className={`checkout-form-input ${validationErrors['recipient_delivery_date'] ? 'error' : ''}`}
                                                     required
                                                 />
@@ -700,6 +701,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                                     name="pickup_date"
                                                     value={recipientData.delivery_date}
                                                     onChange={(e) => setRecipientData({ ...recipientData, delivery_date: e.target.value })}
+                                                    onFocus={(e) => e.target.setSelectionRange(0, 0)}
                                                     className={`checkout-form-input ${validationErrors['pickup_date'] ? 'error' : ''}`}
                                                     required
                                                 />

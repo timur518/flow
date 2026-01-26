@@ -34,7 +34,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
     const [startY, setStartY] = useState(0);
 
     const { product: productDetail, loading } = useProductDetail(product?.id || null);
-    const { products: recommendations } = useProducts({ limit: 4, category_id: 13 });
+    const { products: recommendations } = useProducts({ limit: 12, category_id: 13, sort_by: 'price', sort_order: 'asc' });
     const { addItem } = useCart();
 
     // Сброс состояния при смене товара
