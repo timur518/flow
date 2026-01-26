@@ -109,6 +109,10 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
         comment?: string;
         paymentType: 'online' | 'on_delivery';
         isAnonymous: boolean;
+        latitude?: number | null;
+        longitude?: number | null;
+        promoCode?: string;
+        cityId?: number | null;
     }) => {
         try {
             if (!user) {
@@ -125,16 +129,20 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
 
             const orderData = {
                 store_id: stores[0].id,
+                city_id: data.cityId || selectedCityId,
                 delivery_type: data.deliveryType,
                 delivery_address: data.deliveryType === 'delivery' ? data.address : undefined,
+                delivery_latitude: data.deliveryType === 'delivery' && data.latitude ? data.latitude.toString() : undefined,
+                delivery_longitude: data.deliveryType === 'delivery' && data.longitude ? data.longitude.toString() : undefined,
                 recipient_name: data.recipientName,
                 recipient_phone: data.recipientPhone,
                 delivery_date: data.deliveryDate,
                 delivery_time: data.deliveryTime,
                 card_text: data.cardMessage || undefined,
                 comment: data.comment || undefined,
-                payment_type: data.paymentType === 'online' ? 'online' : 'on_delivery',
+                payment_type: data.paymentType,
                 is_anonymous: data.isAnonymous,
+                promo_code: data.promoCode || undefined,
                 items: cartItems.map(item => ({
                     product_id: item.id,
                     quantity: item.quantity,
@@ -144,21 +152,29 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
 
             const response = await orderService.createOrder(orderData);
 
-            yandexMetrikaService.purchase(
-                response.order.order_number,
-                cartItems.map(item => ({
-                    id: item.id,
-                    name: item.name,
-                    price: item.price,
-                    categories: item.category ? [{ id: 0, name: item.category, slug: '' }] : [],
-                    sale_price: '',
-                    image: '',
-                    width: 0,
-                    height: 0,
-                    tags: []
-                })),
-                cartItems.map(item => item.quantity)
-            );
+            const validCartItems = cartItems.filter(item => item && item.id);
+            if (validCartItems.length > 0) {
+                const totalPrice = validCartItems.reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0);
+                yandexMetrikaService.purchase(
+                    response.order.order_number,
+                    validCartItems.map(item => ({
+                        product: {
+                            id: item.id,
+                            name: item.name,
+                            price: item.price,
+                            categories: item.category ? [{ id: 0, name: item.category, slug: '' }] : [],
+                            sale_price: '',
+                            image: '',
+                            width: 0,
+                            height: 0,
+                            tags: []
+                        },
+                        quantity: item.quantity,
+                        category: item.category
+                    })),
+                    totalPrice
+                );
+            }
 
             clearCart();
             setCheckoutModalOpen(false);

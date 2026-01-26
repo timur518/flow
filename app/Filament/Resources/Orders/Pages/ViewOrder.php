@@ -191,7 +191,7 @@ class ViewOrder extends ViewRecord
                 // Итого — всегда видно, выделено
                 Section::make()
                     ->schema([
-                        Grid::make(['default' => 1, 'md' => 3])
+                        Grid::make(['default' => 1, 'md' => 4])
                             ->schema([
                                 TextEntry::make('subtotal')
                                     ->label('Сумма товаров')
@@ -203,6 +203,11 @@ class ViewOrder extends ViewRecord
                                     ->size(TextSize::Medium)
                                     ->color('danger')
                                     ->formatStateUsing(fn ($state) => $state > 0 ? "-{$state}" : '0'),
+                                TextEntry::make('delivery_cost')
+                                    ->label('Доставка')
+                                    ->money('RUB')
+                                    ->size(TextSize::Medium)
+                                    ->color('info'),
                                 TextEntry::make('total')
                                     ->label('Итого к оплате')
                                     ->money('RUB')
@@ -210,8 +215,7 @@ class ViewOrder extends ViewRecord
                                     ->weight(FontWeight::Bold)
                                     ->color('success'),
                             ]),
-                    ])
-                    ->compact(),
+                    ])->columnSpanFull(),
             ]);
     }
 }

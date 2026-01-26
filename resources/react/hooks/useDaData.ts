@@ -141,8 +141,6 @@ export const useDaData = (allowedRegions?: string[]) => {
                 }));
             }
 
-            console.log('DaData request body:', requestBody);
-
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
@@ -158,8 +156,6 @@ export const useDaData = (allowedRegions?: string[]) => {
             }
 
             const data: DaDataResponse = await response.json();
-            console.log('DaData response:', data);
-            console.log('DaData suggestions count:', data.suggestions.length);
             return data.suggestions;
         } catch (err: any) {
             setError(err.message || 'Error fetching suggestions');

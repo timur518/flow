@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useDaData, DaDataSuggestion } from '@/hooks';
 import { useCities } from '@/contexts';
+import { Address } from '@/api/types';
 
 interface AddressData {
     address: string;
@@ -20,6 +21,7 @@ interface AddressAutocompleteProps {
     onChange: (value: string) => void;
     onCoordinatesChange?: (latitude: number | null, longitude: number | null) => void;
     onSelect?: (data: AddressData) => void; // Новый колбэк для выбора адреса с координатами
+    savedAddresses?: Address[]; // Сохранённые адреса из профиля
     placeholder?: string;
     className?: string;
     required?: boolean;
@@ -32,6 +34,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     value,
     onChange,
     onCoordinatesChange,
+    savedAddresses = [],
     placeholder = 'Город, улица, дом',
     className = '',
     required = false,
@@ -57,13 +60,13 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                     .trim();
             });
         const uniqueRegions = [...new Set(regions)]; // Убираем дубликаты
-        console.log('AddressAutocomplete: allowedRegions =', uniqueRegions);
         return uniqueRegions;
     }, [cities]);
 
     const { getSuggestions, loading } = useDaData(allowedRegions);
     const [suggestions, setSuggestions] = useState<DaDataSuggestion[]>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [showSavedAddresses, setShowSavedAddresses] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [hasFocused, setHasFocused] = useState(false);
     const [isValueFromSuggestion, setIsValueFromSuggestion] = useState(false);
@@ -71,11 +74,21 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     const wrapperRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
+    // Сортируем сохранённые адреса: дефолтный адрес первым
+    const sortedSavedAddresses = useMemo(() => {
+        return [...savedAddresses].sort((a, b) => {
+            if (a.is_default && !b.is_default) return -1;
+            if (!a.is_default && b.is_default) return 1;
+            return 0;
+        });
+    }, [savedAddresses]);
+
     // Закрытие списка при клике вне компонента
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
                 setShowSuggestions(false);
+                setShowSavedAddresses(false);
             }
         };
 
@@ -119,6 +132,8 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         onChange(e.target.value);
         setSelectedIndex(-1);
         setIsValueFromSuggestion(false); // Пользователь вводит вручную
+        // Скрываем сохранённые адреса, когда пользователь начинает печатать
+        setShowSavedAddresses(false);
     };
 
     const handleSuggestionClick = (suggestion: DaDataSuggestion) => {
@@ -141,6 +156,30 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         setSuggestions([]); // Очищаем список подсказок
 
         // Убираем фокус с поля, чтобы не открывались подсказки снова
+        if (inputRef.current) {
+            inputRef.current.blur();
+        }
+    };
+
+    const handleSavedAddressClick = (address: Address) => {
+        // Устанавливаем флаг, что значение выбрано из подсказки
+        setIsValueFromSuggestion(true);
+
+        // Передаем координаты из сохранённого адреса
+        if (onCoordinatesChange) {
+            const lat = address.latitude ? parseFloat(address.latitude) : null;
+            const lon = address.longitude ? parseFloat(address.longitude) : null;
+            onCoordinatesChange(lat, lon);
+        }
+
+        // Обновляем значение адреса
+        onChange(address.address);
+
+        // Скрываем сохранённые адреса
+        setShowSavedAddresses(false);
+        setSelectedIndex(-1);
+
+        // Убираем фокус с поля
         if (inputRef.current) {
             inputRef.current.blur();
         }
@@ -185,7 +224,11 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                 onKeyDown={handleKeyDown}
                 onFocus={() => {
                     setHasFocused(true);
-                    // Показываем подсказки только если они есть и значение не было выбрано из подсказки
+                    // Показываем сохранённые адреса при фокусе, если поле пустое или короткое
+                    if (sortedSavedAddresses.length > 0 && value.length < 3 && !isValueFromSuggestion) {
+                        setShowSavedAddresses(true);
+                    }
+                    // Показываем подсказки DaData только если они есть и значение не было выбрано из подсказки
                     if (suggestions.length > 0 && !isValueFromSuggestion) {
                         setShowSuggestions(true);
                     }
@@ -213,6 +256,26 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                         >
                             <div className="address-autocomplete-suggestion-value">
                                 {suggestion.value}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {showSavedAddresses && sortedSavedAddresses.length > 0 && !showSuggestions && (
+                <div className="address-autocomplete-suggestions">
+                    {sortedSavedAddresses.map((address, index) => (
+                        <div
+                            key={address.id || index}
+                            className="address-autocomplete-suggestion"
+                            onMouseDown={(e) => {
+                                e.preventDefault();
+                                handleSavedAddressClick(address);
+                            }}
+                        >
+                            <div className="address-autocomplete-suggestion-value">
+                                {address.address}
+                                {address.is_default && <span className="address-default-badge"> (по умолчанию)</span>}
                             </div>
                         </div>
                     ))}

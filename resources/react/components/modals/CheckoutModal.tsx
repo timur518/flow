@@ -337,16 +337,19 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
         if (onSubmit) {
             onSubmit({
-                delivery_mode: deliveryMode,
-                customer: customerData,
-                recipient: recipientData,
-                comment,
-                promo_code: promoCode,
-                discount,
-                delivery_cost: deliveryCost,
-                is_anonymous: isAnonymous,
-                items,
-                total,
+                deliveryType: deliveryMode,
+                address: clarifyWithRecipient ? 'Уточнить у получателя' : recipientData.address,
+                recipientName: recipientData.name,
+                recipientPhone: recipientData.phone,
+                deliveryDate: recipientData.delivery_date,
+                deliveryTime: recipientData.delivery_time,
+                paymentType: 'on_delivery',
+                isAnonymous: isAnonymous,
+                comment: comment,
+                latitude: clarifyWithRecipient ? null : recipientData.latitude,
+                longitude: clarifyWithRecipient ? null : recipientData.longitude,
+                promoCode: promoCode,
+                cityId: selectedCityId,
             });
         }
     };
@@ -576,14 +579,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                             />
                                         </div>
                                         <div className="checkout-form-group checkout-address-group">
-                                            <div className="checkout-address-label-row">
-                                                <label className="checkout-form-label">Адрес <span className="required-asterisk">*</span></label>
-                                                {addresses.length > 0 && !clarifyWithRecipient && (
-                                                    <button type="button" className="checkout-saved-addresses-link">
-                                                        Выбрать из сохраненных
-                                                    </button>
-                                                )}
-                                            </div>
+                                            <label className="checkout-form-label">Адрес <span className="required-asterisk">*</span></label>
                                             <AddressAutocomplete
                                                 value={recipientData.address}
                                                 onChange={(value) => {
@@ -595,6 +591,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                                 onCoordinatesChange={(latitude, longitude) => {
                                                     setRecipientData(prev => ({ ...prev, latitude, longitude }));
                                                 }}
+                                                savedAddresses={addresses}
                                                 className={`checkout-form-input ${validationErrors['recipient_address'] ? 'error' : ''}`}
                                                 placeholder="Начните вводить..."
                                                 required
@@ -619,7 +616,6 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                                     name="delivery_date"
                                                     value={recipientData.delivery_date}
                                                     onChange={handleRecipientChange}
-                                                    onFocus={(e) => e.target.setSelectionRange(0, 0)}
                                                     className={`checkout-form-input ${validationErrors['recipient_delivery_date'] ? 'error' : ''}`}
                                                     required
                                                 />
