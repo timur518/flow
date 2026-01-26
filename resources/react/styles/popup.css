@@ -3066,6 +3066,7 @@
         flex: 1;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        min-height: 0; /* Важно для работы flex + overflow */
     }
 
     /* Контейнер профиля в модалке категорий - разрешаем скролл */
@@ -3073,6 +3074,8 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        min-height: 0; /* Важно для работы flex + overflow */
+        max-height: calc(80vh - 40px); /* Ограничиваем высоту для скролла */
     }
 
     /* Модалка корзины на мобильных */
