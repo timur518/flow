@@ -2749,7 +2749,7 @@
     display: flex;
     align-items: center;
     background-color: #F9F9F9;
-    border-radius: 16px;
+    border-radius: 32px;
     overflow: hidden;
 }
 
@@ -2784,7 +2784,7 @@
     padding: 8px 16px;
     background-color: #FDAFC0;
     border: none;
-    border-radius: 12px;
+    border-radius: 32px;
     font-family: 'Montserrat', sans-serif;
     font-size: 14px;
     font-weight: 600;
