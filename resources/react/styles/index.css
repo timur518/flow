@@ -82,7 +82,7 @@ body {
     }
 
     .main-content {
-        margin-top: -64px; /* Поднимаем контент под хедер (высота мобильного хедера) */
+        margin-top: -71px; /* Поднимаем контент под хедер (высота мобильного хедера) */
     }
 
     /* Убираем отступы у body-container на мобильных */
@@ -129,7 +129,7 @@ body {
 .header-container {
     max-width: 1440px;
     margin: 0 auto;
-    padding: 15px 0;
+    padding: 15px;
 }
 
 .header-content {
@@ -644,6 +644,154 @@ body {
     width: 20px;
     height: 20px;
     color: #FFFFFF;
+}
+
+/* Обёртка для поиска и подсказок */
+.mobile-search-wrapper {
+    position: relative;
+    flex: 1; /* Позволяем поиску занимать всю доступную ширину при раскрытии */
+    margin-left: auto; /* Прижимаем блок поиска к правому краю */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* Контейнер расширяемого поиска */
+.mobile-search-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 40px; /* В свернутом состоянии — только круглая кнопка поиска */
+    max-width: 100%;
+    /* Небольшой вертикальный паддинг, одинаковый в открытом и закрытом состоянии,
+       чтобы высота хедера не "скакала" при открытии поиска */
+    padding: 3px 0;
+    transition:
+        width 0.25s ease-out,
+        background 0.25s ease-out,
+        padding 0.25s ease-out,
+        box-shadow 0.25s ease-out;
+}
+
+/* Скрываем инпут когда поиск не раскрыт */
+.mobile-search-container:not(.expanded) .mobile-search-input {
+    display: none;
+}
+
+/* Раскрытый контейнер поиска — занимает всю доступную ширину справа налево */
+.mobile-search-container.expanded {
+    width: 100%;
+    /* Делаем равномерный вертикальный паддинг 3px, как просили, при этом
+       сохраняем горизонтальные отступы для комфортного текста и иконок */
+    padding: 3px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 32px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    z-index: 20; /* Выше чем подсказки */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mobile-search-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(252, 108, 95, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    flex-shrink: 0;
+    /* Убираем внешние отступы, как просили, расстояние регулируется gap внутри контейнера */
+    margin: 0;
+    /* Анимация появления */
+    animation: searchCloseAppear 0.25s ease forwards;
+}
+
+@keyframes searchCloseAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.5) rotate(-90deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.mobile-search-close svg {
+    width: 18px;
+    height: 18px;
+    color: #fc6c5f;
+}
+
+.mobile-search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    outline: none;
+    padding: 10px 0;
+    /* Анимация появления */
+    animation: searchInputAppear 0.3s ease forwards;
+}
+
+@keyframes searchInputAppear {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.mobile-search-input::placeholder {
+    color: #999;
+}
+
+/* Кнопка поиска внутри раскрытого контейнера */
+.mobile-search-container.expanded .mobile-search-button {
+    background: rgba(252, 108, 95, 0.2);
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.mobile-search-container.expanded .mobile-search-button .mobile-search-icon {
+    color: #fc6c5f;
+}
+
+/* Скрываем кнопку города когда поиск открыт */
+.mobile-city-wrapper.hidden {
+    display: none;
+}
+
+/* Подсказки поиска для мобильной версии - теперь в wrapper */
+.mobile-search-wrapper .search-suggestions {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: calc(100vw - 32px); /* Та же ширина что и у раскрытого поиска */
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-height: 60vh;
+    overflow-y: auto;
+    z-index: 10; /* Ниже чем фон поисковой строки (z-index: 20) */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.mobile-search-wrapper .search-suggestions::-webkit-scrollbar {
+    display: none;
 }
 
 /* Показываем мобильный хедер только на мобильных устройствах */
