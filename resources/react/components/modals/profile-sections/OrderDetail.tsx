@@ -142,14 +142,18 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId, onBack }) => {
                                     <label className="order-detail-info-label">Тип доставки</label>
                                     <div className="order-detail-info-value">{getDeliveryTypeText(order.delivery_type)}</div>
                                 </div>
-                                <div className="order-detail-info-row">
-                                    <label className="order-detail-info-label">Получатель</label>
-                                    <div className="order-detail-info-value">{order.recipient_name}</div>
-                                </div>
-                                <div className="order-detail-info-row">
-                                    <label className="order-detail-info-label">Телефон получателя</label>
-                                    <div className="order-detail-info-value">{order.recipient_phone}</div>
-                                </div>
+                                {order.recipient_name && (
+                                    <div className="order-detail-info-row">
+                                        <label className="order-detail-info-label">Получатель</label>
+                                        <div className="order-detail-info-value">{order.recipient_name}</div>
+                                    </div>
+                                )}
+                                {order.recipient_phone && (
+                                    <div className="order-detail-info-row">
+                                        <label className="order-detail-info-label">Телефон получателя</label>
+                                        <div className="order-detail-info-value">{order.recipient_phone}</div>
+                                    </div>
+                                )}
                                 {order.delivery_address && (
                                     <div className="order-detail-info-row">
                                         <label className="order-detail-info-label">Адрес доставки</label>
