@@ -23,9 +23,10 @@ type ProfileSection = 'main' | 'edit-profile' | 'orders-history' | 'order-detail
 interface ProfileModalProps {
     isOpen: boolean;
     onClose: () => void;
+    initialOrderId?: number | null;
 }
 
-const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
+const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, initialOrderId }) => {
     const { user, logout, getProfile, loading: authLoading } = useAuth();
     const { orders, refetch: refetchOrders, loading: ordersLoading } = useOrders();
     const { addresses, refetch: refetchAddresses, loading: addressesLoading } = useAddresses();
@@ -95,6 +96,14 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) => {
             import('./profile-sections/EditAddress');
         }
     }, [isOpen]);
+
+    // Автоматический переход к заказу при открытии с initialOrderId
+    useEffect(() => {
+        if (isOpen && initialOrderId) {
+            setSelectedOrderId(initialOrderId);
+            setCurrentSection('order-detail');
+        }
+    }, [isOpen, initialOrderId]);
 
     const handleLogout = async () => {
         await logout();

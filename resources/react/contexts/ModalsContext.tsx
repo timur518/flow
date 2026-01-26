@@ -23,6 +23,7 @@ interface ModalsContextType {
     // Открытие модальных окон
     openAuthModal: () => void;
     openProfileModal: () => void;
+    openProfileModalWithOrder: (orderId: number) => void;
     openAddressesModal: () => void;
     openProductModal: (product: Product) => void;
     openCheckoutModal: () => void;
@@ -56,6 +57,7 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
     // Состояния модальных окон
     const [authModalOpen, setAuthModalOpen] = useState(false);
     const [profileModalOpen, setProfileModalOpen] = useState(false);
+    const [profileInitialOrderId, setProfileInitialOrderId] = useState<number | null>(null);
     const [addressesModalOpen, setAddressesModalOpen] = useState(false);
     const [productModalOpen, setProductModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -65,7 +67,14 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
 
     // Функции открытия модальных окон
     const openAuthModal = useCallback(() => setAuthModalOpen(true), []);
-    const openProfileModal = useCallback(() => setProfileModalOpen(true), []);
+    const openProfileModal = useCallback(() => {
+        setProfileInitialOrderId(null);
+        setProfileModalOpen(true);
+    }, []);
+    const openProfileModalWithOrder = useCallback((orderId: number) => {
+        setProfileInitialOrderId(orderId);
+        setProfileModalOpen(true);
+    }, []);
     const openAddressesModal = useCallback(() => setAddressesModalOpen(true), []);
     const openProductModal = useCallback((product: Product) => {
         setSelectedProduct(product);
@@ -179,10 +188,14 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
             clearCart();
             setCheckoutModalOpen(false);
 
-            alert(`Заказ №${response.order.order_number} успешно оформлен!`);
-
+            // Открываем профиль с детальной информацией о созданном заказе
             if (response.payment_url) {
+                // Если есть ссылка на оплату — переходим на неё
                 window.location.href = response.payment_url;
+            } else {
+                // Иначе показываем детали заказа в профиле
+                setProfileInitialOrderId(response.order.id);
+                setProfileModalOpen(true);
             }
         } catch (error: any) {
             console.error('Ошибка при создании заказа:', error);
@@ -193,6 +206,7 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
     const contextValue: ModalsContextType = {
         openAuthModal,
         openProfileModal,
+        openProfileModalWithOrder,
         openAddressesModal,
         openProductModal,
         openCheckoutModal,
@@ -213,7 +227,11 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
 
             <ProfileModal
                 isOpen={profileModalOpen}
-                onClose={() => setProfileModalOpen(false)}
+                onClose={() => {
+                    setProfileModalOpen(false);
+                    setProfileInitialOrderId(null);
+                }}
+                initialOrderId={profileInitialOrderId}
             />
 
             <AddressesModal
