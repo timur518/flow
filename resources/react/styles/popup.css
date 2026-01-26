@@ -3064,18 +3064,26 @@
     .categories-modal-nav {
         margin-top: 15px;
         flex: 1;
-        overflow-y: auto;
+        overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
         min-height: 0; /* Важно для работы flex + overflow */
+        max-height: calc(80vh - 120px); /* Ограничиваем высоту для скролла (80vh минус шапка и отступы) */
+        overscroll-behavior: contain; /* Предотвращаем проброс скролла */
     }
 
-    /* Контейнер профиля в модалке категорий - разрешаем скролл */
+    /* Контейнер профиля в модалке категорий - настройки для скролла */
     .modal-container.mobile-slide-up .profile-modal-container {
         display: flex;
         flex-direction: column;
         overflow: hidden;
         min-height: 0; /* Важно для работы flex + overflow */
-        max-height: calc(80vh - 40px); /* Ограничиваем высоту для скролла */
+        height: 80vh;
+        max-height: 80vh;
+    }
+
+    /* Список категорий внутри навигации */
+    .categories-modal-nav .categories-list {
+        padding-bottom: 20px; /* Отступ снизу для последнего элемента */
     }
 
     /* Модалка корзины на мобильных */
