@@ -3044,6 +3044,12 @@
 	.profile-modal-wrapper {
 		overflow: auto;
     	max-height: calc(90vh - 100px);
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+
+	.profile-modal-wrapper::-webkit-scrollbar {
+		display: none;
 	}
 
     /* Контейнер профиля занимает всю доступную высоту */
@@ -3069,6 +3075,12 @@
         min-height: 0; /* Важно для работы flex + overflow */
         max-height: calc(80vh - 120px); /* Ограничиваем высоту для скролла (80vh минус шапка и отступы) */
         overscroll-behavior: contain; /* Предотвращаем проброс скролла */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .categories-modal-nav::-webkit-scrollbar {
+        display: none;
     }
 
     /* Контейнер профиля в модалке категорий - настройки для скролла */
@@ -3086,11 +3098,18 @@
         padding-bottom: 20px; /* Отступ снизу для последнего элемента */
     }
 
+    /* Контейнер корзины в модалке - настройки для скролла */
+    .modal-container.mobile-slide-up:has(.cart-modal-wrapper) {
+        height: 80vh;
+        max-height: 80vh;
+    }
+
     /* Модалка корзины на мобильных */
     .cart-modal-wrapper {
         display: flex;
         flex-direction: column;
         height: 100%;
+        overflow: hidden;
     }
 
     .cart-modal-header {
