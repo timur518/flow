@@ -1,0 +1,3337 @@
+/* ============================================
+   ОБЩИЕ ПЕРЕМЕННЫЕ И АНИМАЦИИ
+   ============================================ */
+
+/* Анимации */
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes modalSlideOut {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.95) translateY(-20px);
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0.8;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutToRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0.8;
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0.8;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInFromBottom {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutToBottom {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes skeleton-loading {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+}
+
+
+/* ============================================
+   ОБЩИЕ КОМПОНЕНТЫ
+   ============================================ */
+
+/* Типография Montserrat */
+.text-montserrat {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Круглая кнопка 35px */
+.btn-circle-35 {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.2s;
+}
+
+.btn-circle-35.bg-white {
+    background-color: #FFFFFF;
+}
+
+.btn-circle-35.bg-gray {
+    background-color: #F9F9F9;
+}
+
+.btn-circle-35:hover {
+    background-color: #F0F0F0;
+}
+
+/* Основная кнопка действия */
+.btn-primary {
+    width: 100%;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FC6C5F;
+    border: none;
+    border-radius: 100px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #F2DBE3;
+    letter-spacing: -0.28px;
+    line-height: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.btn-primary:active {
+    opacity: 0.8;
+}
+
+.btn-primary:disabled {
+    background-color: #CCCCCC;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Белый блок с закруглением */
+.white-block {
+    background-color: #FFFFFF;
+    border-radius: 24px;
+    padding: 16px;
+}
+
+/* Серый блок с закруглением */
+.gray-block {
+    background-color: #F9F9F9;
+    border-radius: 16px;
+    padding: 10px;
+}
+
+/* Поле ввода */
+.input-field {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 16px;
+    background-color: #F9F9F9;
+    color: #222222;
+    transition: background-color 0.2s;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.input-field:focus {
+    outline: none;
+    background-color: #F0F0F0;
+}
+
+.input-field::placeholder {
+    color: #CCCCCC;
+}
+
+/* Лейбл формы */
+.form-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #737373;
+}
+
+/* Текст ошибки */
+.error-message {
+    background-color: #FEE;
+    color: #C33;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: pre-line;
+}
+
+/* Текст успеха */
+.success-message {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Скрыть скроллбар */
+.hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Статусы заказов */
+.status-new {
+    background-color: #E1F5FE;
+    color: #0277BD;
+}
+
+.status-processing,
+.status-assembling {
+    background-color: #FFF3E0;
+    color: #F57C00;
+}
+
+.status-awaiting-delivery {
+    background-color: #F5F5F5;
+    color: #616161;
+}
+
+.status-delivering {
+    background-color: #E3F2FD;
+    color: #1976D2;
+}
+
+.status-completed {
+    background-color: #E8F5E9;
+    color: #388E3C;
+}
+
+.status-cancelled {
+    background-color: #FFEBEE;
+    color: #D32F2F;
+}
+
+
+/* ============================================
+   MODAL - Модальные окна
+   ============================================ */
+
+/* Overlay - затемнение фона */
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay-open {
+    animation: modalFadeIn 0.3s ease forwards;
+}
+
+.modal-overlay-closing {
+    animation: modalFadeOut 0.3s ease forwards;
+}
+
+/* Контейнер модального окна */
+.modal-container {
+    position: relative;
+    background-color: #FFFFFF;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    transition: height 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), max-height 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.modal-container-open {
+    animation: modalSlideIn 0.3s ease forwards;
+}
+
+.modal-container-closing {
+    animation: modalSlideOut 0.3s ease forwards;
+}
+
+/* Размер для ProductModal */
+.modal-container.max-w-7xl {
+    width: 1024px;
+    height: 550px;
+    max-height: 550px;
+}
+
+/* Размер для ProfileModal */
+.modal-container.max-w-md {
+    width: 380px;
+    height: 600px;
+    max-height: 600px;
+    background-color: #F9F9F9;
+    overflow: hidden;
+}
+
+/* Заголовок модального окна */
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px;
+    border-bottom: 1px solid #EDEDED;
+}
+
+.modal-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #222222;
+}
+
+.modal-close-button {
+    color: #737373;
+    transition: opacity 0.2s ease;
+}
+
+.modal-close-button:hover {
+    opacity: 0.7;
+}
+
+/* Тело модального окна */
+.modal-body {
+    padding: 0;
+    max-height: calc(90vh - 80px);
+}
+
+
+/* ============================================
+   PRODUCT MODAL - Модальное окно товара
+   ============================================ */
+
+/* Обёртка модалки товара */
+.product-modal-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+/* Кнопка закрытия на мобильных (скрыта на десктопе) */
+.product-modal-mobile-close {
+    display: none;
+}
+
+/* Sticky футер (скрыт на десктопе) */
+.product-modal-mobile-footer {
+    display: none;
+}
+
+/* Основной контейнер с 3 колонками */
+.product-modal-content {
+    display: grid;
+    grid-template-columns: 350px 324px 350px;
+    gap: 0;
+    height: 550px;
+    max-height: 550px;
+}
+
+/* Колонка 1: Слайдер фотографий */
+.product-modal-slider {
+    background-color: #F9F9F9;
+    border-radius: 24px 0 0 24px;
+    padding: 20px 0 20px 20px;
+    display: flex;
+    flex-direction: column;
+    height: 550px;
+}
+
+.product-modal-slider-wrapper {
+    height: 100%;
+}
+
+.product-modal-image-container {
+    position: relative;
+    height: 100%;
+    border-radius: 24px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #FFF5F7 0%, #F3E8FF 100%);
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.product-modal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.product-modal-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 120px;
+}
+
+/* Бейджи сверху слайдера */
+.product-modal-badges {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.product-modal-tag {
+    padding: 4px 5px;
+    border-radius: 32px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+.product-modal-discount {
+    padding: 4px 5px;
+    border-radius: 32px;
+    background-color: #222222;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+/* Размеры внизу слева */
+.product-modal-dimensions {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    display: flex;
+    gap: 8px;
+}
+
+.product-modal-dimension-item {
+    padding: 5px 8px;
+    background-color: #FFFFFF;
+    border-radius: 32px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FC6C5F;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.product-modal-dimension-icon {
+    width: 12px;
+    height: 12px;
+    color: #FC6C5F;
+    flex-shrink: 0;
+}
+
+/* Переключатели слайдера внизу справа */
+.product-modal-slider-dots {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    gap: 8px;
+}
+
+.product-modal-slider-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.product-modal-slider-dot.active {
+    background-color: #FFFFFF;
+    width: 24px;
+    border-radius: 5px;
+}
+
+.product-modal-slider-dot:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Кнопки навигации слайдера */
+.product-modal-slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 35px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.product-modal-slider-nav svg {
+    width: 18px;
+    height: 18px;
+    color: #737373;
+}
+
+.product-modal-slider-nav.disabled {
+    opacity: 0.0;
+    cursor: not-allowed;
+}
+
+.product-modal-slider-nav:not(.disabled):hover {
+    opacity: 0.8;
+}
+
+.product-modal-slider-nav-prev {
+    left: 15px;
+}
+
+.product-modal-slider-nav-next {
+    right: 15px;
+}
+
+/* Колонка 2: Информация */
+.product-modal-info {
+    background-color: #F9F9F9;
+    border-radius: 0 24px 24px 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 550px;
+    max-height: 550px;
+}
+
+/* Заголовок и кнопка закрыть */
+.product-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 0;
+}
+
+.product-modal-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #222222;
+    line-height: 1.3;
+}
+
+/* Кнопка закрытия - использует .btn-circle-35.bg-white */
+.product-modal-close {
+    flex-shrink: 0;
+    transition: opacity 0.2s ease;
+}
+
+.product-modal-close:hover {
+    opacity: 0.8;
+}
+
+
+.product-modal-close-icon {
+    width: 8px;
+    height: 8px;
+    color: #737373;
+}
+
+/* Секции информации */
+.product-modal-section {
+    margin-bottom: 15px;
+}
+
+.product-modal-section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+    margin-bottom: 8px;
+}
+
+/* Состав */
+.product-modal-ingredients {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.product-modal-ingredient {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+}
+
+/* Разделитель */
+.product-modal-divider {
+    height: 1px;
+    background-color: #EDEDED;
+    margin: 0 0 15px 0;
+}
+
+/* Описание */
+.product-modal-description {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+    line-height: 1.5;
+}
+
+/* Размеры */
+.product-modal-sizes {
+    display: flex;
+    gap: 20px;
+}
+
+.product-modal-size-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.product-modal-size-value {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #222222;
+    line-height: 1.2;
+}
+
+.product-modal-size-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #222222;
+    line-height: 1.2;
+}
+
+/* Футер с количеством и кнопкой */
+.product-modal-footer {
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+.product-modal-quantity-price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+/* Количество */
+.product-modal-quantity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.product-modal-quantity-btn {
+    width: 12px;
+    height: 12px;
+    background-color: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FC6C5F;
+    transition: opacity 0.2s ease;
+    padding: 0;
+}
+
+.product-modal-quantity-btn:hover {
+    opacity: 0.8;
+}
+
+.product-modal-quantity-value {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FC6C5F;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Цены */
+.product-modal-prices {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.product-modal-price-old {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #737373;
+    text-decoration: line-through;
+}
+
+.product-modal-price-current {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #222222;
+}
+
+/* Кнопка добавить в корзину */
+.product-modal-add-button {
+    width: 100%;
+    padding: 16px;
+    border-radius: 32px;
+    background-color: #FC6C5F;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #F2DBE3;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.product-modal-add-button:hover {
+    opacity: 0.9;
+}
+
+.product-modal-add-button:active {
+    opacity: 0.8;
+}
+
+
+/* Колонка 3: Рекомендации */
+.product-modal-recommendations {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 550px;
+    max-height: 550px;
+}
+
+.product-modal-recommendations-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #222222;
+    margin-bottom: 16px;
+}
+
+.product-modal-recommendations-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* ============================================
+   PROFILE MODAL - Модальное окно профиля
+   ============================================ */
+
+/* Анимации для переходов между подразделами */
+.profile-modal-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Базовое состояние - без анимации */
+.profile-modal-wrapper > * {
+    width: 100%;
+    height: 100%;
+    transition: none;
+}
+
+/* Анимация вперед (переход в подраздел) */
+.profile-modal-wrapper.slide-left > * {
+    animation: slideInFromRight 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Анимация назад (возврат в главное меню) */
+.profile-modal-wrapper.slide-right > * {
+    animation: slideInFromLeft 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.profile-modal-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 600px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* Скрываем полоску прокрутки для контейнера профиля */
+.profile-modal-container::-webkit-scrollbar {
+    display: none;
+}
+
+.profile-modal-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* 1. Шапка */
+.profile-modal-header {
+    display: grid;
+    grid-template-columns: 35px 1fr 35px;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Шапка профиля - имя слева */
+.profile-modal-header-profile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-modal-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #222222;
+}
+
+/* Заголовок по центру для экрана заказа */
+.profile-modal-header:not(.profile-modal-header-profile) .profile-modal-title {
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Кнопка закрытия - использует .btn-circle-35.bg-white */
+
+/* 2. Телефон и редактирование */
+.profile-modal-phone-section {
+    margin-top: -10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-modal-phone {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.profile-modal-edit-link {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* 3. Секции */
+.profile-modal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-modal-section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+}
+
+/* История заказов - использует .white-block */
+.profile-modal-orders-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-modal-orders {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 12px;
+}
+
+.profile-modal-order-card {
+    display: flex;
+    gap: 0;
+    background-color: #F9F9F9;
+    border-radius: 16px;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s;
+    width: 100%;
+    overflow: hidden;
+}
+
+.profile-modal-order-card:hover {
+    background-color: #F0F0F0;
+}
+
+.profile-modal-order-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 16px;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+}
+
+.profile-modal-order-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    padding: 10px 10px 10px 10px;
+}
+
+.profile-modal-order-number {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.profile-modal-order-status {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+}
+
+.profile-modal-all-orders {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-color: #F9F9F9;
+    border-radius: 16px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    height: 100%;
+}
+
+.profile-modal-all-orders:hover {
+    background-color: #F0F0F0;
+}
+
+.profile-modal-all-orders-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+    text-align: left;
+}
+
+.profile-modal-all-orders-arrow {
+    width: 35px;
+    height: 35px;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end;
+}
+
+/* Мои адреса - использует .white-block */
+.profile-modal-addresses-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-modal-addresses {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-modal-addresses-empty {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #737373;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.profile-modal-address-card {
+    background-color: #F9F9F9;
+    border-radius: 24px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.profile-modal-address-card:hover {
+    background-color: #F0F0F0;
+}
+
+.profile-modal-address-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Кнопка добавления адреса - использует .btn-primary */
+
+/* Служба поддержки - использует .white-block */
+.profile-modal-support-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-modal-support {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-modal-support-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.profile-modal-support-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background-color: #F9F9F9;
+    transition: background-color 0.2s;
+    position: relative;
+}
+
+.profile-modal-support-item:hover .profile-modal-support-icon {
+    background-color: #F0F0F0;
+}
+
+/* Белый круг внутри серого */
+.profile-modal-support-icon::before {
+    content: '';
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+}
+
+.profile-modal-support-icon svg,
+.profile-modal-support-icon img {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    z-index: 1;
+    color: #FDAFC0;
+}
+
+.profile-modal-support-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+}
+
+/* Юридическая информация - использует .white-block */
+.profile-modal-legal-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-modal-legal {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-modal-legal-link {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+    text-decoration: none;
+    transition: color 0.2s;
+    /* Сброс стилей кнопки */
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    text-align: left;
+}
+
+.profile-modal-legal-link:hover {
+    color: #FC6C5F;
+}
+
+/* Выход */
+.profile-modal-logout {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #737373;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 0;
+    text-align: center;
+    transition: color 0.2s;
+}
+
+.profile-modal-logout:hover {
+    color: #FC6C5F;
+}
+
+/* Кнопка назад - использует .btn-circle-35.bg-gray */
+
+/* Загрузка */
+.profile-modal-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 16px;
+}
+
+.profile-modal-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #F9F9F9;
+    border-top-color: #FC6C5F;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.profile-modal-loading p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #737373;
+}
+
+
+
+/* Информация о заказе - использует .white-block */
+.profile-modal-order-info-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-modal-order-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-modal-order-info-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #737373;
+}
+
+.profile-modal-order-info-value {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+}
+
+/* Товары в заказе - использует .white-block */
+.profile-modal-order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-modal-order-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background-color: #F9F9F9;
+    border-radius: 16px;
+    padding: 10px;
+}
+
+.profile-modal-order-item-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.profile-modal-order-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.profile-modal-order-item-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.profile-modal-order-item-quantity {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+}
+
+.profile-modal-order-item-price {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+}
+
+/* Итого - использует .white-block */
+.profile-modal-order-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-modal-order-total-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.profile-modal-order-total-value {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #FC6C5F;
+}
+
+
+/* ============================================
+   PROFILE SECTIONS - Подразделы профиля
+   ============================================ */
+
+
+
+/* Контейнер подраздела */
+.profile-section-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 600px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* Скрываем полоску прокрутки для контейнера подраздела */
+.profile-section-container::-webkit-scrollbar {
+    display: none;
+}
+
+.profile-section-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Увеличенная высота для формы регистрации */
+.profile-section-container-tall {
+    height: 750px;
+}
+
+/* Контент подраздела */
+.profile-section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+}
+
+/* Кнопка отправки формы в подразделах */
+.profile-section-submit {
+    margin-top: auto;
+}
+
+/* Сообщения об ошибках и успехе - используют общие классы .error-message и .success-message */
+
+/* Состояние загрузки */
+.profile-section-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: #737373;
+}
+
+/* Пустое состояние */
+.profile-section-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 16px;
+}
+
+.profile-section-empty-icon {
+    opacity: 0.5;
+}
+
+.profile-section-empty-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: #737373;
+    text-align: center;
+}
+
+/* Формы - используют общие классы */
+.profile-section-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.profile-section-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.profile-section-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+}
+
+.profile-section-form-row-narrow {
+    display: flex;
+    gap: 12px;
+}
+
+.profile-section-form-row-narrow .profile-section-form-group {
+    width: 144px;
+    flex-shrink: 0;
+}
+
+.profile-section-form-row-narrow .profile-section-input {
+    width: 144px;
+    max-width: 144px;
+}
+
+.profile-section-required {
+    color: #FC6C5F;
+}
+
+/* Алиасы для обратной совместимости */
+.profile-section-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #737373;
+}
+
+.profile-section-input {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    padding: 12px 10px;
+    border: none;
+    border-radius: 16px;
+    background-color: #F9F9F9;
+    color: #222222;
+    transition: background-color 0.2s;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+}
+
+.profile-section-input:focus {
+    outline: none;
+    background-color: #F0F0F0;
+}
+
+.profile-section-input::placeholder {
+    color: #CCCCCC;
+}
+
+.profile-section-textarea {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 16px;
+    background-color: #F9F9F9;
+    color: #222222;
+    transition: background-color 0.2s;
+    resize: vertical;
+    min-height: 60px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.profile-section-textarea:focus {
+    outline: none;
+    background-color: #F0F0F0;
+}
+
+.profile-section-textarea::placeholder {
+    color: #CCCCCC;
+}
+
+/* Чекбокс */
+.profile-section-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.profile-section-checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #E5E5E5;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.profile-section-checkbox:checked {
+    background-color: #FC6C5F;
+    border-color: #FC6C5F;
+}
+
+.profile-section-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -60%) rotate(45deg);
+}
+
+.profile-section-checkbox:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(252, 108, 95, 0.1);
+}
+
+.profile-section-checkbox-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+}
+
+/* История заказов */
+.orders-history-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.orders-history-white-block {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.orders-history-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+    margin: 0;
+}
+
+.orders-history-month-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.orders-history-month-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #737373;
+    margin: 0;
+}
+
+.orders-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.orders-history-card {
+    position: relative;
+    background-color: #F9F9F9;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s;
+    display: flex;
+    gap: 12px;
+    overflow: hidden;
+    padding: 0;
+}
+
+.orders-history-card:hover {
+    background-color: #F0F0F0;
+}
+
+.orders-history-card-image {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.orders-history-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.orders-history-card-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #E5E5E5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.orders-history-card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 0;
+    min-width: 0;
+}
+
+.orders-history-card-header {
+    display: flex;
+    align-items: flex-start;
+}
+
+.orders-history-card-number {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.orders-history-card-date {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+    margin-top: 2px;
+}
+
+.orders-history-card-total {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+    margin-top: 2px;
+}
+
+.orders-history-card-status {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+    margin-top: auto;
+}
+
+.orders-history-card-status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Детали заказа */
+.order-detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Кружочек статуса */
+.order-detail-status-badge-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.order-detail-status-badge {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Статус заказа */
+.order-detail-status-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+    text-align: center;
+    margin-top: 0;
+}
+
+/* Информация о доставке */
+.order-detail-delivery-info {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: #737373;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+/* Секция деталей - использует .white-block */
+.order-detail-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.order-detail-section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+    margin: 0;
+}
+
+/* Список информации */
+.order-detail-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.order-detail-info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.order-detail-info-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #737373;
+}
+
+.order-detail-info-value {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #222222;
+    padding: 12px 10px;
+    border: none;
+    border-radius: 16px;
+    background-color: #F9F9F9;
+}
+
+/* Чекбокс */
+.order-detail-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: not-allowed;
+}
+
+.order-detail-checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #E5E5E5;
+    border-radius: 6px;
+    cursor: not-allowed;
+    position: relative;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.order-detail-checkbox:checked {
+    background-color: #FC6C5F;
+    border-color: #FC6C5F;
+}
+
+.order-detail-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -60%) rotate(45deg);
+}
+
+.order-detail-checkbox-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #222222;
+}
+
+/* Товары */
+.order-detail-items {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-detail-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 0;
+}
+
+.order-detail-item-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.order-detail-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 60px;
+}
+
+.order-detail-item-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.order-detail-item-quantity {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FC6C5F;
+    margin-top: auto;
+}
+
+.order-detail-item-price {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+    align-self: flex-end;
+    margin-top: auto;
+}
+
+.order-detail-item-divider {
+    height: 1px;
+    background-color: #EDEDED;
+}
+
+/* Итого */
+.order-detail-totals {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #EDEDED;
+}
+
+.order-detail-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.order-detail-total-row.order-detail-total-final {
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+/* Вопросы по заказу */
+.order-detail-support {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.order-detail-support-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+    margin: 0;
+}
+
+.order-detail-support-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.order-detail-support-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    text-decoration: none;
+}
+
+.order-detail-support-button:hover {
+    background-color: #F9F9F9;
+}
+
+.order-detail-support-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.order-detail-support-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.order-detail-support-icon path {
+    fill: #FDAFC0;
+}
+
+/* Скелетон для загрузки подразделов */
+.profile-section-skeleton-back {
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(90deg, #F5F5F5 25%, #E8E8E8 50%, #F5F5F5 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 50%;
+}
+
+.profile-section-skeleton-title {
+    height: 24px;
+    background: linear-gradient(90deg, #F5F5F5 25%, #E8E8E8 50%, #F5F5F5 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 8px;
+}
+
+.profile-section-skeleton-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 20px;
+}
+
+.profile-section-skeleton-block {
+    height: 80px;
+    background: linear-gradient(90deg, #FFFFFF 25%, #F5F5F5 50%, #FFFFFF 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 16px;
+    border: 1px solid #F0F0F0;
+}
+
+.profile-section-skeleton-block-small {
+    height: 50px;
+}
+
+
+/* ============================================
+   AUTH FORMS - Формы авторизации
+   ============================================ */
+
+/* Контейнер формы авторизации */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    flex: 1;
+}
+
+/* Форма восстановления пароля */
+.auth-form-forgot {
+    gap: 20px;
+}
+
+/* Описание */
+.auth-form-description {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+    text-align: center;
+    margin: 0;
+}
+
+/* Белый блок с полями - использует .white-block */
+.auth-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Поле формы */
+.auth-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Лейбл - использует .form-label */
+
+/* Строка с лейблом и ссылкой "Забыли пароль?" */
+.auth-form-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Ссылка "Забыли пароль?" */
+.auth-form-forgot-link {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #FDAFC0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: opacity 0.2s;
+}
+
+.auth-form-forgot-link:hover {
+    opacity: 0.8;
+}
+
+/* Поле ввода - использует .input-field */
+.auth-form-input {
+    font-weight: 400;
+}
+
+/* Ошибка - использует .error-message */
+.auth-form-error {
+    text-align: center;
+}
+
+/* Переключение между формами */
+.auth-form-switch {
+    text-align: center;
+}
+
+.auth-form-switch-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #737373;
+    line-height: 1;
+}
+
+.auth-form-switch-link {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.auth-form-switch-link:hover {
+    color: #FC6C5F;
+}
+
+/* Кнопка отправки формы - использует .btn-primary */
+.auth-form-submit {
+    margin-top: auto;
+}
+
+/* Юридическая информация */
+.auth-form-legal {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #737373;
+    text-align: center;
+    line-height: 1;
+    margin: 0;
+}
+
+/* Уведомление об успешной отправке */
+.auth-success-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.auth-success-notification {
+    background-color: #FFFFFF;
+    border-radius: 24px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 300px;
+    width: 100%;
+}
+
+.auth-success-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+    text-align: center;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.auth-success-button {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FC6C5F;
+    border: none;
+    border-radius: 100px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #F2DBE3;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.auth-success-button:hover {
+    opacity: 0.9;
+}
+
+.auth-success-button:active {
+    opacity: 0.8;
+}
+
+
+/* ============================================
+   CHECKOUT MODAL - Модальное окно оформления заказа
+   ============================================ */
+
+/* Оверлей */
+.checkout-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding-right: calc((100vw - 1440px) / 2);
+    padding-top: 120px;
+    z-index: 1000;
+    animation: modalFadeIn 0.3s ease;
+}
+
+.checkout-modal-overlay.closing {
+    animation: modalFadeOut 0.3s ease;
+}
+
+@media (max-width: 1440px) {
+    .checkout-modal-overlay {
+        padding-right: 0;
+    }
+}
+
+/* Контейнер модального окна - прижат к правой части */
+.checkout-modal-container {
+    width: 755px;
+    height: 650px;
+    background-color: #F9F9F9;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideInFromRight 0.3s ease;
+}
+
+.checkout-modal-container.closing {
+    animation: slideOutToRight 0.3s ease;
+}
+
+/* Заголовок */
+.checkout-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px 10px 20px;
+    background-color: #F9F9F9;
+}
+
+.checkout-modal-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #222222;
+}
+
+/* Контент */
+.checkout-modal-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Переключатель режима доставки */
+.checkout-delivery-toggle {
+    display: flex;
+    background-color: #FFFFFF;
+    border-radius: 32px;
+    margin-bottom: 10px;
+}
+
+.checkout-delivery-toggle-btn {
+    flex: 1;
+    border: none;
+    background-color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #737373;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 15px 0;
+}
+
+.checkout-delivery-toggle-btn:first-child {
+    border-radius: 32px 0 0 32px;
+}
+
+.checkout-delivery-toggle-btn:last-child {
+    border-radius: 0 32px 32px 0;
+}
+
+.checkout-delivery-toggle-btn.active {
+    background-color: #FDAFC0;
+    color: #FFFFFF;
+}
+
+/* Две колонки */
+.checkout-modal-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.checkout-modal-column-left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Скрываем полоску прокрутки для левой колонки */
+.checkout-modal-column-left::-webkit-scrollbar {
+    display: none;
+}
+
+.checkout-modal-column-left {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.checkout-modal-column-right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+}
+
+/* Блок подытогов прижат к низу */
+.checkout-summary-bottom {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Раскрывающийся блок */
+.collapsible-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.collapsible-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.collapsible-block-header.open {
+    margin-bottom: 12px;
+}
+
+.collapsible-block-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.collapsible-block-icon {
+    transition: transform 0.3s ease;
+}
+
+.collapsible-block-icon.open {
+    transform: rotate(180deg);
+}
+
+.collapsible-block-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.collapsible-block-content.open {
+    max-height: 2000px;
+}
+
+/* Поля формы */
+.checkout-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.checkout-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.checkout-form-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #737373;
+}
+
+.required-asterisk {
+    color: #FF5255;
+    margin-left: 2px;
+}
+
+.checkout-form-input {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background-color: #F9F9F9;
+    color: #222222;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.checkout-form-input:focus {
+    outline: none;
+    background-color: #F0F0F0;
+}
+
+.checkout-form-input.error {
+    border-color: #FF5255;
+}
+
+.checkout-form-input::placeholder {
+    color: #CCCCCC;
+}
+
+/* Уменьшенная ширина для поля времени доставки */
+.checkout-delivery-time-input {
+    max-width: 95%;
+}
+
+.checkout-form-textarea {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 12px;
+    background-color: #F9F9F9;
+    color: #222222;
+    resize: vertical;
+    min-height: 60px;
+    width: 100%;
+}
+
+.checkout-form-textarea:focus {
+    outline: none;
+    background-color: #F0F0F0;
+}
+
+.checkout-form-textarea::placeholder {
+    color: #CCCCCC;
+}
+
+.checkout-comment-full {
+    grid-column: 1 / -1;
+}
+
+.checkout-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* Поле адреса с ссылкой рядом с лейблом */
+.checkout-address-group {
+    grid-column: 1 / -1;
+}
+
+.checkout-address-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.checkout-saved-addresses-link {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    white-space: nowrap;
+}
+
+.checkout-saved-addresses-link:hover {
+    text-decoration: underline;
+}
+
+/* Toggle поле */
+.checkout-toggle-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background-color: #F9F9F9;
+    border-radius: 12px;
+}
+
+.checkout-toggle-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.checkout-toggle {
+    position: relative;
+    width: 35px;
+    height: 20px;
+    background-color: #D9D9D9;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 0;
+}
+
+.checkout-toggle.active {
+    background-color: #FC6C5F;
+}
+
+.checkout-toggle-circle {
+    position: absolute;
+    top: 50%;
+    left: 2.5px;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    transition: left 0.3s ease;
+}
+
+.checkout-toggle.active .checkout-toggle-circle {
+    left: calc(100% - 17.5px);
+}
+
+/* Блок адреса магазина для самовывоза */
+.checkout-store-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.checkout-store-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.checkout-store-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.checkout-show-map-link {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #737373;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: none;
+}
+
+.checkout-show-map-link:hover {
+    color: #222222;
+}
+
+.checkout-store-info {
+    padding: 0;
+}
+
+.checkout-store-address {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.checkout-store-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.checkout-store-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.checkout-store-city {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.checkout-store-street,
+.checkout-store-hours {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222222;
+}
+
+/* Чекбокс */
+.checkout-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: #222222;
+}
+
+.checkout-checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #E5E5E5;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.checkout-checkbox:checked {
+    background-color: #FC6C5F;
+    border-color: #FC6C5F;
+}
+
+.checkout-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -60%) rotate(45deg);
+}
+
+.checkout-checkbox:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(252, 108, 95, 0.1);
+}
+
+.checkout-checkbox-hint {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    color: #737373;
+    margin: 0;
+    padding-left: 28px;
+}
+
+/* Мини-корзина */
+.checkout-cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.checkout-cart-item {
+    display: flex;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #EDEDED;
+}
+
+.checkout-cart-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.checkout-cart-item-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.checkout-cart-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.checkout-cart-item-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.checkout-cart-item-quantity {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    color: #737373;
+}
+
+.checkout-cart-item-price {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+    align-self: flex-start;
+}
+
+/* Блок промокода */
+.checkout-promo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #F9F9F9;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.checkout-promo-input {
+    flex: 1;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    padding: 12px 110px 12px 16px;
+    border: none;
+    background-color: transparent;
+    color: #222222;
+}
+
+.checkout-promo-input:focus {
+    outline: none;
+}
+
+.checkout-promo-input::placeholder {
+    color: #CCCCCC;
+}
+
+.checkout-promo-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.checkout-promo-button {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 16px;
+    background-color: #FDAFC0;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+}
+
+.checkout-promo-button:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.checkout-promo-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.checkout-promo-button-remove {
+    background-color: #FF5255;
+}
+
+.checkout-promo-error {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #FF5255;
+    margin-top: 8px;
+    padding: 0 4px;
+}
+
+.checkout-promo-success {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4CAF50;
+    margin-top: 8px;
+    padding: 0 4px;
+}
+
+.checkout-totals {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkout-total-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.checkout-total-final {
+    font-size: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #EDEDED;
+}
+
+/* Плейсхолдер для самовывоза */
+.checkout-pickup-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    color: #737373;
+}
+
+/* Автозаполнение адреса */
+.address-autocomplete-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.address-autocomplete-wrapper input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.address-autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.address-autocomplete-suggestion {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    color: #222222;
+    transition: background-color 0.2s;
+}
+
+.address-autocomplete-suggestion:hover,
+.address-autocomplete-suggestion.selected {
+    background-color: #F9F9F9;
+}
+
+.address-autocomplete-suggestion:first-child {
+    border-radius: 12px 12px 0 0;
+}
+
+.address-autocomplete-suggestion:last-child {
+    border-radius: 0 0 12px 12px;
+}
+
+
+/* ============================================
+   MOBILE PROFILE MODAL - Мобильная версия профиля
+   ============================================ */
+
+@media (max-width: 768px) {
+    /* Модальное окно с анимацией выезда снизу */
+    .modal-container.mobile-slide-up {
+        max-width: 100%;
+        width: 100%;
+        margin: 0;
+        border-radius: 24px 24px 0 0;
+        height: 80vh;
+        max-height: 80vh;
+        overflow: hidden;
+    }
+
+    .modal-container.mobile-slide-up.modal-container-open {
+        animation: slideInFromBottom 0.3s ease forwards;
+    }
+
+    .modal-container.mobile-slide-up.modal-container-closing {
+        animation: slideOutToBottom 0.3s ease forwards;
+    }
+
+    /* Модальное окно профиля поверх меню */
+    .modal {
+        z-index: 200 !important; /* Выше мобильного меню (z-index: 100) */
+    }
+
+    .modal-overlay {
+        position: fixed !important;
+        z-index: 200 !important;
+    }
+
+    .modal-container {
+        position: relative !important;
+        z-index: 201 !important; /* Выше оверлея */
+    }
+
+    /* Контейнер профиля занимает всю доступную высоту */
+    .profile-modal-container {
+        height: 100% !important;
+        max-height: none !important;
+        padding-bottom: 20px !important; /* Внутренний отступ снизу */
+    }
+
+    /* Контейнер подразделов (история заказов, детали заказа и т.д.) */
+    .profile-section-container {
+        height: 100% !important;
+        max-height: none !important;
+        padding-bottom: 20px !important; /* Внутренний отступ снизу */
+    }
+
+    /* Модалка категорий на мобильных */
+    .categories-modal-nav {
+        margin-top: 15px;
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Wrapper профиля на мобильных */
+    .modal-container.mobile-slide-up .profile-modal-wrapper {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* Контейнер профиля в модалке - разрешаем скролл */
+    .modal-container.mobile-slide-up .profile-modal-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Модалка корзины на мобильных */
+    .cart-modal-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .cart-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        flex-shrink: 0;
+    }
+
+    .cart-modal-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin: 0;
+    }
+
+    .cart-modal-content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 0 20px;
+        min-height: 0;
+    }
+
+    .cart-modal-content::-webkit-scrollbar {
+        display: none;
+    }
+
+    .cart-modal-content {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .cart-modal-empty {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 20px;
+        justify-content: space-between;
+    }
+
+    .cart-modal-footer {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px 20px 20px 20px;
+        background-color: #F9F9F9;
+        flex-shrink: 0;
+    }
+
+    .cart-modal-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .cart-modal-total-label {
+        font-size: 16px;
+        font-weight: 500;
+        color: #737373;
+    }
+
+    .cart-modal-total-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+
+
+    .profile-section-container-tall {
+        height: 100% !important;
+        max-height: none !important;
+    }
+
+    /* Фиксируем высоту карточек заказов на мобильных */
+    .profile-modal-order-card {
+        height: 100px !important;
+        min-height: 100px !important;
+        max-height: 100px !important;
+    }
+
+    .profile-modal-all-orders {
+        height: 100px !important;
+        min-height: 100px !important;
+        max-height: 100px !important;
+    }
+
+    /* ============================================
+       CHECKOUT MODAL - Мобильная версия
+       ============================================ */
+
+    /* Оверлей - выравнивание по низу */
+    .checkout-modal-overlay {
+        justify-content: center !important;
+        align-items: flex-end !important;
+        padding: 0 !important;
+    }
+
+    /* Контейнер - выезжает снизу */
+    .checkout-modal-container {
+        width: 100% !important;
+        height: 80vh !important;
+        max-height: 80vh !important;
+        border-radius: 24px 24px 0 0 !important;
+        animation: slideInFromBottom 0.3s ease !important;
+    }
+
+    .checkout-modal-container.closing {
+        animation: slideOutToBottom 0.3s ease !important;
+    }
+
+    /* Контент - одна колонка */
+    .checkout-modal-columns {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+        overflow-y: auto !important;
+        -ms-overflow-style: none !important;
+        scrollbar-width: none !important;
+    }
+
+    .checkout-modal-columns::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .checkout-modal-column-left {
+        overflow-y: visible !important;
+        padding-right: 0 !important;
+    }
+
+    .checkout-modal-column-right {
+        overflow-y: visible !important;
+    }
+
+    /* Убираем отступ снизу для контента, так как будет sticky блок */
+    .checkout-modal-content {
+        padding-bottom: 0 !important;
+    }
+
+    /* Sticky блок подытогов и кнопки */
+    .checkout-summary-bottom {
+        position: sticky !important;
+        bottom: 0 !important;
+        background-color: #F9F9F9 !important;
+        padding: 16px 20px 20px 20px !important;
+        margin: 0 -20px -20px -20px !important;
+        z-index: 10 !important;
+        gap: 12px !important;
+    }
+
+    /* Левая колонка должна иметь отступ снизу для sticky блока */
+    .checkout-modal-column-left {
+        padding-bottom: 16px !important;
+    }
+
+    /* Уменьшаем отступы между строчками в подытогах */
+    .checkout-totals {
+        gap: 6px !important;
+    }
+
+    /* ============================================
+       PRODUCT MODAL - Мобильная версия (80vh)
+       ============================================ */
+
+    /* Обёртка модалки товара */
+    .product-modal-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    /* Убираем padding у modal-body для ProductModal */
+    .modal-body:has(.product-modal-wrapper) {
+        padding: 0;
+        height: 100%;
+        max-height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Убираем padding у modal-body для CartModal */
+    .modal-body:has(.cart-modal-wrapper) {
+        padding: 0;
+        height: 100%;
+        max-height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Убираем padding у modal-body для ProfileModal */
+    .modal-body:has(.profile-modal-wrapper) {
+        padding: 0;
+        height: 100%;
+        max-height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    /* Кнопка закрытия (только на мобильных) */
+    .product-modal-mobile-close {
+        display: flex;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 20;
+        transition: opacity 0.2s ease;
+    }
+
+    .product-modal-mobile-close:hover {
+        opacity: 0.8;
+    }
+
+    /* Контент модалки - скроллится */
+    .product-modal-content {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        padding-bottom: 0;
+    }
+
+    .product-modal-content::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Слайдер фотографий */
+    .product-modal-slider {
+        background-color: transparent;
+        border-radius: 0 0 24px 24px;
+        padding: 0;
+        height: auto;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+
+    .product-modal-slider-wrapper {
+        height: 100%;
+    }
+
+    .product-modal-image-container {
+        border-radius: 0 0 24px 24px;
+    }
+
+    /* Бейджи на мобильных */
+    .product-modal-badges {
+        top: 20px;
+        left: 15px;
+    }
+
+    .product-modal-tag {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
+
+    .product-modal-discount {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
+
+    /* Информация о товаре */
+    .product-modal-info {
+        background-color: transparent;
+        border-radius: 0;
+        padding: 20px;
+        padding-bottom: 16px;
+        height: auto;
+        overflow-y: visible;
+        flex-shrink: 0;
+    }
+
+    /* Скрываем десктопную кнопку закрытия */
+    .product-modal-header .btn-circle-35 {
+        display: none;
+    }
+
+    /* Скрываем десктопный футер */
+    .product-modal-footer {
+        display: none;
+    }
+
+    /* Рекомендации */
+    .product-modal-recommendations {
+        padding: 0 20px 16px 20px;
+        height: auto;
+        overflow-y: visible;
+        flex-shrink: 0;
+    }
+
+    .product-modal-recommendations-title {
+        margin-bottom: 12px;
+    }
+
+    .product-modal-recommendations-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    /* Уменьшаем отступ между названием и кнопкой в карточках рекомендаций */
+    .product-modal-recommendations .product-info {
+        flex: 0;
+    }
+
+    .product-modal-recommendations .product-name {
+        margin-bottom: 8px;
+    }
+
+    .product-modal-recommendations .product-add-button {
+        margin-top: 0;
+    }
+
+    /* Футер - прижат к низу модального окна */
+    .product-modal-mobile-footer {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        background-color: #F9F9F9;
+        padding: 16px 20px 20px 20px;
+        gap: 0;
+        border-radius: 24px 24px 0 0;
+    }
+}
+
+.address-autocomplete-suggestion-value {
+    font-weight: 500;
+}
+
+.address-autocomplete-loading {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 4px;
+    padding: 10px 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    color: #737373;
+    text-align: center;
+}

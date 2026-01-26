@@ -33,6 +33,9 @@ class ProductsTable
                 TextColumn::make('categories.name')
                     ->label('Категории')
                     ->badge()
+                    ->listWithLineBreaks()
+                    ->limitList(3)
+                    ->expandableLimitedList()
                     ->searchable(),
                 TextColumn::make('price')
                     ->label('Цена')
@@ -54,6 +57,9 @@ class ProductsTable
                     ->label('Теги')
                     ->badge()
                     ->color('gray')
+                    ->listWithLineBreaks()
+                    ->limitList(3)
+                    ->expandableLimitedList()
                     ->toggleable(),
                 IconColumn::make('is_active')
                     ->label('Статус')
