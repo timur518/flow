@@ -71,8 +71,7 @@ class OrderForm
                             ->searchable()
                             ->preload(),
                         TextInput::make('customer_phone')
-                            ->label('Телефон')
-                            ->tel(),
+                            ->label('Телефон'),
                         Toggle::make('is_anonymous')
                             ->label('Анонимный заказ')
                             ->default(false),
