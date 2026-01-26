@@ -367,7 +367,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 <div className="product-modal-recommendations">
                     <h3 className="product-modal-recommendations-title">Добавить к заказу?</h3>
                     <div className="product-modal-recommendations-grid">
-                        {recommendations.slice(0, 4).map((rec) => (
+                        {recommendations.map((rec) => (
                             <ProductCard
                                 key={rec.id}
                                 product={rec}
