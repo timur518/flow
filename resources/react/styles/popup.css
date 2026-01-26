@@ -2601,6 +2601,23 @@
     padding: 0;
 }
 
+.checkout-store-map {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+}
+
+.checkout-store-map.expanded {
+    max-height: 450px;
+}
+
+.checkout-store-map iframe {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
 .checkout-store-address {
     display: flex;
     gap: 12px;

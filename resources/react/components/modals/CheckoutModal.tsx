@@ -37,6 +37,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     const { addresses } = useAddresses();
     const { selectedCityId } = useCity();
     const { stores, loading: storesLoading } = useStores({ city_id: selectedCityId || undefined });
+    const [showMap, setShowMap] = useState(false);
     const [deliveryMode, setDeliveryMode] = useState<DeliveryMode>('delivery');
     const [promoCode, setPromoCode] = useState('');
     const [discount, setDiscount] = useState(0);
@@ -669,11 +670,20 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                 <div className="white-block checkout-store-block">
                                     <div className="checkout-store-header">
                                         <span className="checkout-store-title">Адрес магазина</span>
-                                        <button type="button" className="checkout-show-map-link">
-                                            Показать на карте
+                                        <button
+                                            type="button"
+                                            className="checkout-show-map-link"
+                                            onClick={() => setShowMap(!showMap)}
+                                        >
+                                            {showMap ? 'Скрыть карту' : 'Показать на карте'}
                                         </button>
                                     </div>
                                     <div className="checkout-store-info">
+                                        <div className={`checkout-store-map ${showMap ? 'expanded' : ''}`}>
+                                            {stores.length > 0 && stores[0].yandex_maps_code && (
+                                                <div dangerouslySetInnerHTML={{ __html: stores[0].yandex_maps_code }} />
+                                            )}
+                                        </div>
                                         <div className="checkout-store-address">
                                             <svg className="checkout-store-icon" width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M2.65795 2.61188C3.88387 1.41048 5.53439 0.741414 7.25084 0.750083C8.96729 0.758752 10.611 1.44445 11.8247 2.65818C13.0384 3.87191 13.7241 5.51559 13.7328 7.23204C13.7415 8.94849 13.0724 10.599 11.871 11.8249L8.42762 15.2683C8.1191 15.5767 7.70072 15.75 7.26447 15.75C6.82823 15.75 6.40984 15.5767 6.10133 15.2683L2.65795 11.8249C1.4363 10.6032 0.75 8.94616 0.75 7.21841C0.75 5.49065 1.4363 3.83365 2.65795 2.61188Z" stroke="#222222" strokeWidth="1.5" strokeLinejoin="round"/>
