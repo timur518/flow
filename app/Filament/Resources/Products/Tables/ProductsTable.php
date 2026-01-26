@@ -54,7 +54,6 @@ class ProductsTable
                     ->color('info')
                     ->listWithLineBreaks()
                     ->limitList(1)
-                    ->expandableLimitedList()
                     ->searchable(),
                 TextColumn::make('tags.name')
                     ->label('Теги')
