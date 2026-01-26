@@ -37,6 +37,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
     const { products: recommendations } = useProducts({ limit: 12, category_id: 13, sort_by: 'price', sort_order: 'asc' });
     const { addItem } = useCart();
 
+    // Проверяем, есть ли у product массив images (если он передан как ProductDetail из ProductPage)
+    const productImages = (product as any)?.images as Array<{ id: number; image: string; sort_order: number }> | undefined;
+
     // Сброс состояния при смене товара
     useEffect(() => {
         if (product) {
@@ -60,7 +63,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
         ? Math.round(((parseFloat(detail.price) - parseFloat(detail.sale_price!)) / parseFloat(detail.price)) * 100)
         : 0;
 
-    const images = productDetail?.images || (product.image ? [{ id: 0, image: product.image, sort_order: 0 }] : []);
+    const images = productDetail?.images || productImages || (product.image ? [{ id: 0, image: product.image, sort_order: 0 }] : []);
     const firstTag = detail.tags?.length > 0 ? detail.tags[0] : null;
 
     const handleAddToCart = () => {
@@ -80,7 +83,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 name: product.name,
                 price: product.sale_price || product.price,
                 quantity,
-                image: product.image,
+                image: images[0]?.image || product.image,
                 category: category,
             });
         }
