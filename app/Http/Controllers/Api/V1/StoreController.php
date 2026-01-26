@@ -38,6 +38,7 @@ class StoreController extends Controller
                 'latitude',
                 'longitude',
                 'yandex_maps_url',
+                'yandex_maps_code',
                 'working_hours',
                 'whatsapp_url',
                 'telegram_chat_url',
