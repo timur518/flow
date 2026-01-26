@@ -196,7 +196,7 @@ const CategoryPage: React.FC = () => {
                                     style={{ backgroundImage: `url(${category.image})` }}
                                 >
                                     <Link to="/" className="category-cover-breadcrumb">
-                                        Назад на Главную
+                                        ❮ Назад на Главную
                                     </Link>
                                     <h1 className="category-cover-title">{category.name}</h1>
                                 </div>
@@ -209,7 +209,7 @@ const CategoryPage: React.FC = () => {
                                     <>
                                         <nav className="breadcrumbs">
                                             <Link to="/" className="breadcrumb-link">
-                                                Назад на Главную
+                                                ❮  Назад на Главную
                                             </Link>
                                         </nav>
 
