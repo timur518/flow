@@ -40,7 +40,7 @@ class BannerController
         $banners = $query
             ->orderBy('sort_order')
             ->orderBy('id')
-            ->get(['id', 'image', 'city_id', 'name', 'sort_order']);
+            ->get(['id', 'image', 'link_url', 'city_id', 'name', 'sort_order']);
 
         return response()->json([
             'success' => true,
@@ -48,6 +48,7 @@ class BannerController
                 return [
                     'id' => $banner->id,
                     'image' => url(Storage::disk('public')->url($banner->image)),
+                    'link_url' => $banner->link_url,
                     'name' => $banner->name,
                     'city_id' => $banner->city_id,
                     'sort_order' => $banner->sort_order,

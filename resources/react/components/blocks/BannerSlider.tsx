@@ -4,12 +4,16 @@
  * Отображает 3 баннера горизонтально с возможностью прокрутки
  * Формат баннеров: 3:4 (вертикальные)
  * Фильтруется по выбранному городу
+ * Поддерживает кликабельные ссылки с плавным переходом
  */
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useBanners, useCity } from '@/hooks';
+import { Banner } from '@/api/types';
 
 const BannerSlider: React.FC = () => {
+    const navigate = useNavigate();
     const { selectedCityId } = useCity();
     const { banners, loading, error } = useBanners({ city_id: selectedCityId || undefined });
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -17,6 +21,7 @@ const BannerSlider: React.FC = () => {
 
     // Состояние для drag-to-scroll
     const [isDragging, setIsDragging] = useState(false);
+    const [hasDragged, setHasDragged] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
 
@@ -53,6 +58,7 @@ const BannerSlider: React.FC = () => {
     const handleMouseDown = (e: React.MouseEvent) => {
         if (isMobile() || !scrollContainerRef.current) return;
         setIsDragging(true);
+        setHasDragged(false);
         setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
         setScrollLeft(scrollContainerRef.current.scrollLeft);
         scrollContainerRef.current.style.cursor = 'grabbing';
@@ -63,6 +69,9 @@ const BannerSlider: React.FC = () => {
         e.preventDefault();
         const x = e.pageX - scrollContainerRef.current.offsetLeft;
         const walk = (x - startX) * 2; // Множитель для скорости прокрутки
+        if (Math.abs(walk) > 5) {
+            setHasDragged(true);
+        }
         scrollContainerRef.current.scrollLeft = scrollLeft - walk;
     };
 
@@ -84,9 +93,23 @@ const BannerSlider: React.FC = () => {
         }
     };
 
+    // Обработчик клика на баннер с плавным переходом
+    const handleBannerClick = (banner: Banner) => {
+        // Не переходим если был драг
+        if (hasDragged) {
+            setHasDragged(false);
+            return;
+        }
+
+        // Если есть ссылка, переходим по ней
+        if (banner.link_url) {
+            navigate(banner.link_url);
+        }
+    };
+
     // Предотвращаем клик при драге
     const handleClick = (e: React.MouseEvent) => {
-        if (isDragging) {
+        if (isDragging || hasDragged) {
             e.preventDefault();
         }
     };
@@ -140,13 +163,23 @@ const BannerSlider: React.FC = () => {
                     {banners.map((banner) => (
                         <div
                             key={banner.id}
-                            className="banner-item"
+                            className={`banner-item ${banner.link_url ? 'banner-item-clickable' : ''}`}
+                            onClick={() => handleBannerClick(banner)}
+                            role={banner.link_url ? 'link' : undefined}
+                            tabIndex={banner.link_url ? 0 : undefined}
+                            onKeyDown={(e) => {
+                                if (banner.link_url && (e.key === 'Enter' || e.key === ' ')) {
+                                    e.preventDefault();
+                                    handleBannerClick(banner);
+                                }
+                            }}
                         >
                             <div className="banner-image-wrapper">
                                 <img
                                     src={banner.image}
                                     alt={banner.name}
                                     className="banner-image"
+                                    draggable={false}
                                 />
                                 {/* Название баннера */}
                                 <div className="banner-title">

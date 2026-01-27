@@ -114,6 +114,7 @@ curl http://127.0.0.1:8000/api/v1/banners?city_id=1
     {
       "id": 1,
       "image": "http://127.0.0.1:8000/storage/banners/01KCXPR5Z8SXMNKEQDKYRNQS9D.JPG",
+      "link_url": "/products/123",
       "name": "Тестовый баннер",
       "city_id": 1,
       "sort_order": 1
@@ -127,6 +128,7 @@ curl http://127.0.0.1:8000/api/v1/banners?city_id=1
 - `data` (array) - массив баннеров
   - `id` (integer) - ID баннера
   - `image` (string) - полный URL изображения баннера
+  - `link_url` (string|null) - внутренняя ссылка для перехода при клике на баннер (например: `/products/123`, `/categories/roses`)
   - `name` (string) - название баннера (для идентификации)
   - `city_id` (integer|null) - ID города (null = для всех городов)
   - `sort_order` (integer) - порядок сортировки

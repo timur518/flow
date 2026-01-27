@@ -30,6 +30,11 @@ class BannerForm
                             ->validationMessages([
                                 'required' => 'Загрузите изображение баннера',
                             ]),
+                        TextInput::make('link_url')
+                            ->label('Ссылка на баннере')
+                            ->placeholder('/products/123 или /categories/roses')
+                            ->helperText('Внутренняя ссылка для перехода при клике на баннер (например: /products/123, /categories/roses)')
+                            ->maxLength(500),
                     ]),
 
                 Section::make('Настройки')
