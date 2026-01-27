@@ -9,6 +9,7 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\TelegramService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,7 @@ class AuthController extends Controller
     /**
      * Регистрация нового пользователя
      */
-    public function register(RegisterRequest $request): JsonResponse
+    public function register(RegisterRequest $request, TelegramService $telegramService): JsonResponse
     {
         $user = User::create([
             'name' => $request->name,
@@ -30,6 +31,9 @@ class AuthController extends Controller
 
         // Назначаем роль customer по умолчанию
         $user->assignRole('customer');
+
+        // Отправляем уведомление в Telegram о новой регистрации
+        $telegramService->sendNewUserRegistrationNotification($user);
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
