@@ -53,14 +53,14 @@ const AppLoader: React.FC<AppLoaderProps> = ({ children }) => {
 
                             {/* Текст загрузки */}
                             <div className="text-sm text-gray-600">
-                                {settingsLoading && <p>Загрузка настроек...</p>}
-                                {authLoading && <p>Проверка авторизации...</p>}
-                                {citiesLoading && <p>Загрузка городов...</p>}
+                                {settingsLoading && <p>Загружаем семена...</p>}
+                                {authLoading && <p>Поливаем ростки...</p>}
+                                {citiesLoading && <p>Проверяем грядки...</p>}
                                 {!settingsLoading && !authLoading && !citiesLoading && !cityInitialized && (
-                                    <p>Определение города...</p>
+                                    <p>Ищем ваш город...</p>
                                 )}
                                 {!settingsLoading && !authLoading && !citiesLoading && cityInitialized && (
-                                    <p>Подготовка...</p>
+                                    <p>Запускаемся...</p>
                                 )}
                             </div>
                         </div>
