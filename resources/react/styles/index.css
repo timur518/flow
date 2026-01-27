@@ -356,6 +356,31 @@ body {
     padding-top: 32px; /* Компенсируем отрицательный margin */
 }
 
+/* Контейнер списка подсказок со скроллом */
+.search-suggestions-list {
+    max-height: 280px; /* Высота для 5 элементов (56px * 5) */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Скрываем скроллбар для webkit браузеров */
+.search-suggestions-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.search-suggestions-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.search-suggestions-list::-webkit-scrollbar-thumb {
+    background-color: #E5E5E5;
+    border-radius: 4px;
+}
+
+.search-suggestions-list::-webkit-scrollbar-thumb:hover {
+    background-color: #CCCCCC;
+}
+
 .search-suggestion-item {
     display: flex;
     align-items: center;
@@ -804,11 +829,7 @@ body {
         display: none;
     }
 }
-@media (max-width: 1440px) {
-    .header-container {
-        padding: 0 20px;
-    }
-}
+
 
 /* ============================================
    CATEGORIES SIDEBAR - Боковая панель категорий

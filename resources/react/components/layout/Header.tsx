@@ -99,8 +99,8 @@ const Header: React.FC = () => {
                     city_id: selectedCityId || undefined,
                 });
 
-                // Ограничиваем количество подсказок до 5
-                const suggestions: SearchSuggestion[] = products.slice(0, 5).map(product => ({
+                // Ограничиваем количество подсказок до 20
+                const suggestions: SearchSuggestion[] = products.slice(0, 20).map(product => ({
                     id: product.id,
                     name: product.name,
                     price: product.price,
