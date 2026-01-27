@@ -193,6 +193,11 @@ class OrderForm
                             ->suffix('₽')
                             ->disabled()
                             ->dehydrated(),
+                        TextInput::make('delivery_cost')
+                            ->label('Стоимость доставки')
+                            ->numeric()
+                            ->suffix('₽')
+                            ->default(0),
                         TextInput::make('discount')
                             ->label('Скидка по промокоду')
                             ->numeric()

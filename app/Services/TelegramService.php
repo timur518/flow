@@ -116,8 +116,9 @@ class TelegramService
             return false;
         }
 
-        // Получаем chat_id магазина
-        $chatId = $order->store_id;
+        // Получаем chat_id магазина через город
+        $storeId = $order->store_id;
+        $chatId = Store::find($storeId)->telegram_chat_id;
 
         if (!$chatId) {
             Log::warning('Telegram chat_id не найден для отменённого заказа', ['order_id' => $order->id]);
