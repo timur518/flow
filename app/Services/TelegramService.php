@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
 use App\Models\Order;
+use App\Models\Store;
 use App\Models\OrderSetting;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -78,7 +79,8 @@ class TelegramService
         }
 
         // Получаем chat_id магазина через город
-        $chatId = $order->store_id;;
+        $storeId = $order->store_id;
+        $chatId = Store::find($storeId)->telegram_chat_id;
 
         if (!$chatId) {
             Log::warning('Telegram chat_id не найден для заказа', ['order_id' => $order->id]);
