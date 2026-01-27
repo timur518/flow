@@ -75,6 +75,5 @@ export const API_ENDPOINTS = {
     // Заказы
     ORDERS: '/orders',
     ORDER_DETAIL: (id: number) => `/orders/${id}`,
-    ORDER_UPDATE_STATUS: (id: number) => `/orders/${id}/update-status`,
 } as const;
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\StoreOrderRequest;
-use App\Http\Requests\Order\UpdateOrderStatusRequest;
+
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Models\Product;
@@ -273,42 +273,6 @@ class OrderController extends Controller
     }
 
     /**
-     * Обновить статус оплаты заказа (для webhook YooKassa)
-     */
-    public function updateStatus(UpdateOrderStatusRequest $request, Order $order): JsonResponse
-    {
-        try {
-            $order->update([
-                'payment_status' => $request->payment_status,
-                'payment_id' => $request->payment_id,
-            ]);
-
-            // Если оплата успешна, меняем статус заказа на "в обработке"
-            if ($request->payment_status === 'succeeded') {
-                $order->update(['status' => 'processing']);
-            }
-
-            // Если оплата отменена, меняем статус заказа на "отменен"
-            if ($request->payment_status === 'cancelled') {
-                $order->update(['status' => 'cancelled']);
-            }
-
-            $order->load(['items.product.images', 'city', 'user', 'store']);
-
-            return response()->json([
-                'message' => 'Статус оплаты обновлен',
-                'order' => new OrderResource($order),
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Ошибка при обновлении статуса',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
-
-    /**
      * Webhook для обработки уведомлений от YooKassa
      *
      * URL webhook: POST /api/v1/orders/yookassa-webhook
@@ -411,6 +375,9 @@ class OrderController extends Controller
                         'payment_status' => 'cancelled',
                         'status' => 'cancelled',
                     ]);
+
+                    // Отправляем Telegram уведомление магазину об отмене заказа
+                    $this->telegramService->sendOrderCancelledNotification($order);
 
                     // TODO: Email-уведомление клиенту об отмене заказа
 

@@ -78,7 +78,7 @@ class TelegramService
         }
 
         // Получаем chat_id магазина через город
-        $chatId = $this->getStoreChatId($order);
+        $chatId = $order->store_id;;
 
         if (!$chatId) {
             Log::warning('Telegram chat_id не найден для заказа', ['order_id' => $order->id]);
@@ -87,6 +87,43 @@ class TelegramService
 
         // Формируем сообщение
         $message = $this->formatNewOrderMessage($order);
+
+        // Формируем кнопку для просмотра заказа в админке
+        $keyboard = [
+            [
+                [
+                    'text' => '📋 Просмотреть заказ',
+                    'url' => $this->getAdminOrderUrl($order),
+                ],
+            ],
+        ];
+
+        return $this->sendMessage($chatId, $message, $keyboard);
+    }
+
+    /**
+     * Отправить уведомление об отмене заказа (истёк срок оплаты)
+     *
+     * @param Order $order
+     * @return bool
+     */
+    public function sendOrderCancelledNotification(Order $order): bool
+    {
+        // Проверяем, включены ли уведомления
+        if (!$this->isNotificationsEnabled()) {
+            return false;
+        }
+
+        // Получаем chat_id магазина
+        $chatId = $order->store_id;
+
+        if (!$chatId) {
+            Log::warning('Telegram chat_id не найден для отменённого заказа', ['order_id' => $order->id]);
+            return false;
+        }
+
+        // Формируем сообщение
+        $message = $this->formatCancelledOrderMessage($order);
 
         // Формируем кнопку для просмотра заказа в админке
         $keyboard = [
@@ -124,19 +161,6 @@ class TelegramService
     }
 
     /**
-     * Получить chat_id магазина из заказа
-     *
-     * @param Order $order
-     * @return string|null
-     */
-    private function getStoreChatId(Order $order): ?string
-    {
-        // Получаем первый активный магазин в городе заказа
-        $store = $order->city?->stores()->where('is_active', true)->first();
-        return $store?->telegram_chat_id;
-    }
-
-    /**
      * Форматировать сообщение о новом заказе
      *
      * @param Order $order
@@ -148,7 +172,7 @@ class TelegramService
         $paymentStatus = match ($order->payment_type) {
             PaymentType::ONLINE->value => match ($order->payment_status) {
                 PaymentStatus::SUCCEEDED->value => '✅ Оплачен онлайн',
-                PaymentStatus::CANCELLED->value => '❌ Оплата отменена',
+                PaymentStatus::CANCELLED->value => '❌ Оплата не проведена',
                 default => '⏳ Ожидает оплаты онлайн',
             },
             default => '💵 Оплата при получении',
@@ -170,6 +194,29 @@ class TelegramService
             $order->delivery_date?->format('d.m.Y') ?? 'Не указана',
             $order->delivery_time ?? 'Не указано',
             $paymentStatus,
+            number_format($order->total, 2, '.', ' ')
+        );
+    }
+
+    /**
+     * Форматировать сообщение об отмене заказа
+     *
+     * @param Order $order
+     * @return string
+     */
+    private function formatCancelledOrderMessage(Order $order): string
+    {
+        return sprintf(
+            "❌ <b>Заказ #%s отменён</b>\n\n" .
+            "⚠️ <b>Причина:</b> Истёк срок оплаты\n\n" .
+            "👤 <b>Заказчик:</b> %s\n" .
+            "📞 <b>Телефон:</b> %s\n" .
+            "🏙 <b>Город:</b> %s\n" .
+            "💰 <b>Сумма:</b> %s ₽",
+            $order->order_number,
+            $order->user?->name ?? 'Гость',
+            $order->user?->phone ?? 'Не указан',
+            $order->city?->name ?? 'Не указан',
             number_format($order->total, 2, '.', ' ')
         );
     }

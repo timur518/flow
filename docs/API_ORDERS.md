@@ -10,8 +10,7 @@
   - [2. Получить детальную информацию о заказе](#2-получить-детальную-информацию-о-заказе)
   - [3. Рассчитать стоимость доставки](#3-рассчитать-стоимость-доставки)
   - [4. Создать заказ](#4-создать-заказ)
-  - [5. Обновить статус оплаты заказа](#5-обновить-статус-оплаты-заказа)
-  - [6. Webhook для YooKassa](#6-webhook-для-yookassa-заготовка)
+  - [5. Webhook для YooKassa](#5-webhook-для-yookassa)
 - [Endpoints для промокодов](#endpoints-для-промокодов)
   - [7. Валидация промокода](#7-валидация-промокода)
 - [Справочная информация](#справочная-информация)
@@ -518,50 +517,7 @@ Authorization: Bearer {token}
 
 ---
 
-### 5. Обновить статус оплаты заказа
-
-**POST** `/orders/{id}/update-status`
-
-Обновить статус оплаты заказа. Этот endpoint используется для webhook YooKassa.
-
-**Заголовки:**
-```
-Authorization: Bearer {token}
-```
-
-**Тело запроса:**
-```json
-{
-  "payment_status": "succeeded",
-  "payment_id": "2d8f5e7a-0001-5000-8000-1b2c3d4e5f6a"
-}
-```
-
-**Параметры:**
-- `payment_status` - статус оплаты (`pending`, `succeeded`, `cancelled`)
-- `payment_id` - ID платежа в YooKassa (опционально)
-
-**Ответ (200):**
-```json
-{
-  "message": "Статус оплаты обновлен",
-  "order": {
-    "id": 1,
-    "order_number": "12345",
-    "status": "processing",
-    "payment_status": "succeeded",
-    "payment_id": "2d8f5e7a-0001-5000-8000-1b2c3d4e5f6a"
-  }
-}
-```
-
-**Примечание:**
-- При статусе `succeeded` заказ автоматически переходит в статус `processing`
-- При статусе `cancelled` заказ автоматически переходит в статус `cancelled`
-
----
-
-### 6. Webhook для YooKassa (заготовка)
+### 5. Webhook для YooKassa
 
 **POST** `/webhook/yookassa`
 
@@ -588,7 +544,7 @@ Authorization: Bearer {token}
 
 ## Endpoints для промокодов
 
-### 7. Валидация промокода
+### 6. Валидация промокода
 
 **POST** `/promo-codes/validate`
 

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Order;
+use App\Services\TelegramService;
 use App\Services\YooKassaService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +25,8 @@ class CancelExpiredPayments extends Command
     protected $description = 'Отмена неоплаченных заказов с онлайн-оплатой после истечения срока';
 
     public function __construct(
-        private readonly YooKassaService $yooKassaService
+        private readonly YooKassaService $yooKassaService,
+        private readonly TelegramService $telegramService
     ) {
         parent::__construct();
     }
@@ -93,11 +95,14 @@ class CancelExpiredPayments extends Command
             'payment_status' => 'cancelled',
         ]);
 
-        Log::info('Order cancelled due to expired payment', [
+        Log::info('Заказ отменен из-за истечения срока оплаты', [
             'order_id' => $order->id,
             'order_number' => $order->order_number,
             'payment_id' => $order->payment_id,
         ]);
+
+        // Отправляем Telegram уведомление магазину об отмене заказа
+        $this->telegramService->sendOrderCancelledNotification($order);
 
         // TODO: Отправить email уведомление клиенту об отмене заказа из-за неоплаты
         // Пример:
