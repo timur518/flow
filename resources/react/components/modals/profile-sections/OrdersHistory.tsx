@@ -10,6 +10,7 @@ import ProfileSectionSkeleton from './ProfileSectionSkeleton';
 import inprocessIcon from '/public/images/icons/inprocess.svg';
 import completedIcon from '/public/images/icons/completed.svg';
 import cancelledIcon from '/public/images/icons/cancelled.svg';
+import hourglassIcon from '/public/images/icons/hourglass.svg';
 
 interface OrdersHistoryProps {
     onBack: () => void;
@@ -55,7 +56,9 @@ const OrdersHistory: React.FC<OrdersHistoryProps> = ({ onBack, onViewOrder }) =>
     };
 
     const getStatusIcon = (status: Order['status']) => {
-        if (status === 'completed') {
+        if (status === 'new') {
+            return hourglassIcon;
+        } else if (status === 'completed') {
             return completedIcon;
         } else if (status === 'cancelled') {
             return cancelledIcon;
