@@ -28,11 +28,11 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId, onBack }) => {
 
     const getStatusText = (status: Order['status']) => {
         const statusMap = {
-            new: 'Идет обработка',
-            processing: 'Принят',
-            assembling: 'В процессе',
-            awaiting_delivery: 'Собран. Ожидает доставку',
-            delivering: 'Передан на доставку',
+            new: 'На подтверждении',
+            processing: 'В обработке',
+            assembling: 'Собирается',
+            awaiting_delivery: 'Ожидает доставку',
+            delivering: 'Доставляется',
             completed: 'Завершен',
             cancelled: 'Отменен',
         };
@@ -41,7 +41,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId, onBack }) => {
 
     const getStatusColor = (status: Order['status']) => {
         const colorMap = {
-            new: '#FDAFC0',
+            new: '#87CEEB',
             processing: '#FDAFC0',
             assembling: '#FDAFC0',
             awaiting_delivery: '#FDAFC0',
@@ -63,7 +63,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId, onBack }) => {
     };
 
     const isInProgress = (status: Order['status']) => {
-        return ['processing', 'assembling', 'awaiting_delivery', 'delivering'].includes(status);
+        return ['new', 'processing', 'assembling', 'awaiting_delivery', 'delivering'].includes(status);
     };
 
     const getDeliveryTypeText = (deliveryType: Order['delivery_type']) => {

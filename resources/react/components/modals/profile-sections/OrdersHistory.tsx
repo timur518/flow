@@ -30,11 +30,11 @@ const OrdersHistory: React.FC<OrdersHistoryProps> = ({ onBack, onViewOrder }) =>
 
     const getStatusText = (status: Order['status']) => {
         const statusMap = {
-            new: 'В процессе',
-            processing: 'В процессе',
-            assembling: 'В процессе',
-            awaiting_delivery: 'В процессе',
-            delivering: 'В процессе',
+            new: 'На подтверждении',
+            processing: 'В обработке',
+            assembling: 'Собирается',
+            awaiting_delivery: 'Ожидает доставку',
+            delivering: 'Доставляется',
             completed: 'Завершен',
             cancelled: 'Отменен',
         };
@@ -43,7 +43,7 @@ const OrdersHistory: React.FC<OrdersHistoryProps> = ({ onBack, onViewOrder }) =>
 
     const getStatusColor = (status: Order['status']) => {
         const colorMap = {
-            new: '#FDAFC0',
+            new: '#87CEEB',
             processing: '#FDAFC0',
             assembling: '#FDAFC0',
             awaiting_delivery: '#FDAFC0',

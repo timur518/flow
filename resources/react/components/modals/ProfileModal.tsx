@@ -49,7 +49,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, initialOrd
     // Функция для перевода статуса заказа
     const getStatusText = (status: string) => {
         const statusMap: Record<string, string> = {
-            new: 'Новый',
+            new: 'На подтверждении',
             processing: 'В обработке',
             assembling: 'Собирается',
             awaiting_delivery: 'Ожидает доставку',
