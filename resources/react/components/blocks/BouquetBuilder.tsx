@@ -7,6 +7,7 @@ import React from 'react';
 import { useCity, useStores } from '@/hooks';
 import { Telegram } from '@/components/icons';
 import waIcon from '/public/images/icons/wa.svg';
+import maxIcon from '/public/images/icons/max.svg';
 
 const BouquetBuilder: React.FC = () => {
     const { selectedCityId } = useCity();
@@ -15,6 +16,7 @@ const BouquetBuilder: React.FC = () => {
     const currentStore = stores.length > 0 ? stores[0] : null;
     const telegramUrl = currentStore?.social_links?.telegram_chat;
     const whatsappUrl = currentStore?.social_links?.whatsapp;
+    const maxUrl = currentStore?.social_links?.max_chat;
 
     return (
         <section className="block-container bouquet-builder">
@@ -50,6 +52,18 @@ const BouquetBuilder: React.FC = () => {
                             title="WhatsApp"
                         >
                             <img src={waIcon} alt="WhatsApp" className="bouquet-builder-icon" />
+                        </a>
+                    )}
+
+                    {maxUrl && (
+                        <a
+                            href={maxUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bouquet-builder-button"
+                            title="Max"
+                        >
+                            <img src={maxIcon} alt="Max" className="bouquet-builder-icon" />
                         </a>
                     )}
                 </div>
