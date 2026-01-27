@@ -216,7 +216,7 @@ class OrderForm
                             ->disabled()
                             ->dehydrated(),
                     ])
-                    ->columns(3),
+                    ->columns(4),
             ]);
     }
 }
