@@ -188,7 +188,7 @@ const CategoryPage: React.FC = () => {
                         <CategoriesSidebar selectedCategoryId={category?.id} />
 
                         {/* Центральная колонка - Основной контент */}
-                        <div className="flex-1 space-y-6" style={{ maxWidth: '755px' }}>
+                        <div className="flex-1 space-y-6">
                             {/* Опциональная обложка категории */}
                             {category?.image && (
                                 <div
