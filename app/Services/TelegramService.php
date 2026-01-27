@@ -192,7 +192,7 @@ class TelegramService
             $order->order_number,
             $order->user?->name ?? 'Гость',
             $order->city?->name ?? 'Не указан',
-            $order->recipient_name ?? 'Не указан',
+            $order->delivery_address ?? 'Не указан',
             $order->delivery_date?->format('d.m.Y') ?? 'Не указана',
             $order->delivery_time ?? 'Не указано',
             $paymentStatus,

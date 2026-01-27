@@ -28,11 +28,11 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId, onBack }) => {
 
     const getStatusText = (status: Order['status']) => {
         const statusMap = {
-            new: 'В процессе',
-            processing: 'В процессе',
+            new: 'Идет обработка',
+            processing: 'Принят',
             assembling: 'В процессе',
-            awaiting_delivery: 'В процессе',
-            delivering: 'В процессе',
+            awaiting_delivery: 'Собран. Ожидает доставку',
+            delivering: 'Передан на доставку',
             completed: 'Завершен',
             cancelled: 'Отменен',
         };
@@ -128,7 +128,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId, onBack }) => {
                                 Будет доставлен {formatDeliveryDate(order.delivery_date)}
                                 {order.delivery_time && (
                                     <>
-                                        <br />в {order.delivery_time}
+                                        <br />{order.delivery_time}
                                     </>
                                 )}
                             </div>
