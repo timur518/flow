@@ -41,7 +41,7 @@ const HomePage: React.FC = () => {
                         <CategoriesSidebar />
 
                         {/* Центральная колонка - Основной контент */}
-                        <div className="flex-1 space-y-6">
+                        <div className="flex-1 min-w-0 space-y-6">
                             {/* Баннеры */}
                             <BannerSlider />
 
