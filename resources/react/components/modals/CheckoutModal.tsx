@@ -343,7 +343,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 recipientPhone: recipientData.phone,
                 deliveryDate: recipientData.delivery_date,
                 deliveryTime: recipientData.delivery_time,
-                paymentType: 'on_delivery',
+                paymentType: 'online',
                 isAnonymous: isAnonymous,
                 comment: comment,
                 latitude: clarifyWithRecipient ? null : recipientData.latitude,
