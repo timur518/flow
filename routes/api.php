@@ -64,6 +64,6 @@ Route::prefix('v1')->group(function () {
     });
 
     // Webhook для YooKassa (без аутентификации)
-    Route::post('/orders/yookassa-webhook', [OrderController::class, 'yookassaWebhook']);
+    Route::post('/yookassa/webhook', [OrderController::class, 'yookassaWebhook']);
 });
 
