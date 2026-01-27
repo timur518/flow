@@ -13,6 +13,7 @@ import { useCity, useStores, useStore } from '@/hooks';
 import { Apple, Android, Telegram } from '@/components/icons';
 import { PublicOfferModal, PrivacyPolicyModal, CookiePolicyModal, DataProcessingConsentModal, DeliveryPaymentModal } from '@/components/modals';
 import waIcon from '/public/images/icons/wa.svg';
+import maxIcon from '/public/images/icons/max.svg';
 
 const Footer: React.FC = () => {
     const { selectedCityId } = useCity();
@@ -190,6 +191,18 @@ const Footer: React.FC = () => {
                                     title="WhatsApp"
                                 >
                                     <img src={waIcon} alt="WhatsApp" className="footer-social-icon" />
+                                </a>
+                            )}
+
+                            {currentStore?.social_links?.max_chat && (
+                                <a
+                                    href={currentStore.social_links.max_chat}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="footer-social-button"
+                                    title="Max"
+                                >
+                                    <img src={maxIcon} alt="Max" className="footer-social-icon" />
                                 </a>
                             )}
                         </div>
