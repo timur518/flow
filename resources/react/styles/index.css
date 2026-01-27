@@ -997,18 +997,6 @@ body {
     cursor: pointer;
 }
 
-.banner-item-clickable:focus {
-    outline: 2px solid #E91E63;
-    outline-offset: 2px;
-    border-radius: 24px;
-}
-
-.banner-item-clickable:focus-visible {
-    outline: 2px solid #E91E63;
-    outline-offset: 2px;
-    border-radius: 24px;
-}
-
 /* Обертка изображения баннера */
 .banner-image-wrapper {
     position: relative;
