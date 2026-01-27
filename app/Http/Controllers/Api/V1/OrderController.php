@@ -13,9 +13,11 @@ use App\Services\DeliveryService;
 use App\Services\PriceModifierService;
 use App\Services\PromoCodeService;
 use App\Services\TelegramService;
+use App\Services\YooKassaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -23,7 +25,8 @@ class OrderController extends Controller
         private PromoCodeService $promoCodeService,
         private TelegramService $telegramService,
         private DeliveryService $deliveryService,
-        private PriceModifierService $priceModifier
+        private PriceModifierService $priceModifier,
+        private YooKassaService $yooKassaService
     ) {}
 
     /**
@@ -224,16 +227,38 @@ class OrderController extends Controller
 
             // Если оплата онлайн, создаем платеж в YooKassa
             if ($request->payment_type === 'online') {
-                // TODO: Интеграция с YooKassa
-                // $paymentUrl = $this->createYooKassaPayment($order);
-                // $response['payment_url'] = $paymentUrl;
+                try {
+                    $paymentResult = $this->yooKassaService->createPayment($order, $store);
 
-                $response['payment_url'] = null; // Заглушка для YooKassa
-                $response['message'] = 'Заказ создан. Ожидается интеграция с YooKassa для получения ссылки на оплату.';
+                    // Сохраняем данные платежа в заказ
+                    $order->update([
+                        'payment_id' => $paymentResult['payment_id'],
+                        'payment_url' => $paymentResult['payment_url'],
+                    ]);
+
+                    $response['payment_url'] = $paymentResult['payment_url'];
+                    $response['message'] = 'Заказ создан. Перейдите по ссылке для оплаты.';
+
+                } catch (\Exception $e) {
+                    Log::error('YooKassa payment creation failed', [
+                        'order_id' => $order->id,
+                        'error' => $e->getMessage(),
+                    ]);
+
+                    // Если не удалось создать платёж, отменяем заказ
+                    $order->update(['status' => 'cancelled', 'payment_status' => 'cancelled']);
+
+                    return response()->json([
+                        'message' => 'Ошибка при создании платежа. Попробуйте позже.',
+                        'error' => $e->getMessage(),
+                    ], 500);
+                }
+            } else {
+                // Для наличной оплаты отправляем Telegram уведомление сразу
+                $this->telegramService->sendNewOrderNotification($order);
+
+                // TODO: Email-уведомление клиенту о созданном заказе
             }
-
-            // Отправляем уведомление в Telegram
-            $this->telegramService->sendNewOrderNotification($order);
 
             return response()->json($response, 201);
 
@@ -270,8 +295,6 @@ class OrderController extends Controller
 
             $order->load(['items.product.images', 'city', 'user', 'store']);
 
-            //TODO: Email-уведомление клиенту о созданном и оплаченном заказе
-
             return response()->json([
                 'message' => 'Статус оплаты обновлен',
                 'order' => new OrderResource($order),
@@ -286,102 +309,167 @@ class OrderController extends Controller
     }
 
     /**
-     * Создать платеж в YooKassa (заготовка для интеграции)
+     * Webhook для обработки уведомлений от YooKassa
      *
-     * @param Order $order
-     * @return string|null URL для оплаты
-     */
-    private function createYooKassaPayment(Order $order): ?string
-    {
-        // TODO: Интеграция с YooKassa SDK
-        //
-        // Пример кода для интеграции:
-        //
-        // use YooKassa\Client;
-        //
-        // $client = new Client();
-        // $client->setAuth($shopId, $secretKey);
-        //
-        // $payment = $client->createPayment([
-        //     'amount' => [
-        //         'value' => $order->total,
-        //         'currency' => 'RUB',
-        //     ],
-        //     'confirmation' => [
-        //         'type' => 'redirect',
-        //         'return_url' => route('payment.success', ['order' => $order->id]),
-        //     ],
-        //     'capture' => true,
-        //     'description' => 'Заказ №' . $order->order_number,
-        //     'metadata' => [
-        //         'order_id' => $order->id,
-        //         'order_number' => $order->order_number,
-        //     ],
-        // ], uniqid('', true));
-        //
-        // // Сохраняем ID платежа и URL для оплаты
-        // $order->update([
-        //     'payment_id' => $payment->getId(),
-        //     'payment_url' => $payment->getConfirmation()->getConfirmationUrl(),
-        // ]);
-        //
-        // return $payment->getConfirmation()->getConfirmationUrl();
-
-        return null;
-    }
-
-    /**
-     * Webhook для обработки уведомлений от YooKassa (заготовка)
-     *
-     * Этот метод должен быть вызван YooKassa при изменении статуса платежа
-     * URL webhook: /api/v1/orders/yookassa-webhook
+     * URL webhook: POST /api/v1/orders/yookassa-webhook
+     * Документация: https://yookassa.ru/developers/using-api/webhooks
      */
     public function yookassaWebhook(Request $request): JsonResponse
     {
-        // TODO: Интеграция с YooKassa SDK
-        //
-        // Пример кода для обработки webhook:
-        //
-        // use YooKassa\Model\Notification\NotificationSucceeded;
-        // use YooKassa\Model\Notification\NotificationWaitingForCapture;
-        // use YooKassa\Model\Notification\NotificationCanceled;
-        //
-        // try {
-        //     $notification = $request->getContent();
-        //     $notificationObject = json_decode($notification, true);
-        //
-        //     $paymentId = $notificationObject['object']['id'];
-        //     $paymentStatus = $notificationObject['object']['status'];
-        //
-        //     // Находим заказ по payment_id
-        //     $order = Order::where('payment_id', $paymentId)->firstOrFail();
-        //
-        //     // Обновляем статус оплаты
-        //     switch ($paymentStatus) {
-        //         case 'succeeded':
-        //             $order->update([
-        //                 'payment_status' => 'succeeded',
-        //                 'status' => 'processing',
-        //             ]);
-        //             break;
-        //
-        //         case 'canceled':
-        //             $order->update([
-        //                 'payment_status' => 'cancelled',
-        //                 'status' => 'cancelled',
-        //             ]);
-        //             break;
-        //     }
-        //
-        //     return response()->json(['status' => 'success']);
-        //
-        // } catch (\Exception $e) {
-        //     return response()->json(['error' => $e->getMessage()], 500);
-        // }
+        // Валидация IP-адресов YooKassa
+        // https://yookassa.ru/developers/using-api/webhooks#ip
+        $allowedIps = [
+            '185.71.76.0/27',
+            '185.71.77.0/27',
+            '77.75.153.0/25',
+            '77.75.156.11',
+            '77.75.156.35',
+            '77.75.154.128/25',
+            '2a02:5180::/32',
+        ];
 
-        return response()->json([
-            'message' => 'Webhook для YooKassa (заготовка)',
-            'status' => 'pending_integration',
-        ]);
+        $clientIp = $request->ip();
+        $isAllowedIp = false;
+
+        foreach ($allowedIps as $allowedIp) {
+            if ($this->ipInRange($clientIp, $allowedIp)) {
+                $isAllowedIp = true;
+                break;
+            }
+        }
+
+        if (!$isAllowedIp) {
+            Log::warning('YooKassa webhook: запрос с неразрешённого IP', [
+                'ip' => $clientIp,
+            ]);
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
+        try {
+            $requestBody = $request->getContent();
+
+            Log::info('YooKassa webhook: получено уведомление', [
+                'body' => $requestBody,
+            ]);
+
+            // Парсим уведомление через сервис
+            $notification = $this->yooKassaService->parseWebhookNotification($requestBody);
+
+            if (!$notification) {
+                Log::error('YooKassa webhook: не удалось распарсить уведомление');
+                return response()->json(['error' => 'Invalid notification'], 400);
+            }
+
+            $event = $notification['event'];
+            $paymentId = $notification['payment_id'];
+            $orderId = $notification['order_id'];
+            $status = $notification['status'];
+
+            Log::info('YooKassa webhook: обработка события', [
+                'event' => $event,
+                'payment_id' => $paymentId,
+                'order_id' => $orderId,
+                'status' => $status,
+            ]);
+
+            // Находим заказ
+            $order = Order::where('payment_id', $paymentId)->first();
+
+            if (!$order && $orderId) {
+                $order = Order::find($orderId);
+            }
+
+            if (!$order) {
+                Log::error('YooKassa webhook: заказ не найден', [
+                    'payment_id' => $paymentId,
+                    'order_id' => $orderId,
+                ]);
+                return response()->json(['error' => 'Order not found'], 404);
+            }
+
+            // Обрабатываем события от Юкассы
+            switch ($event) {
+                case 'payment.succeeded':
+                    $order->update([
+                        'payment_status' => 'succeeded',
+                        'status' => 'processing',
+                    ]);
+
+                    // Отправляем Telegram уведомление магазину
+                    $this->telegramService->sendNewOrderNotification($order);
+
+                    // TODO: Email-уведомление клиенту об успешной оплате заказа
+
+                    Log::info('YooKassa webhook: платёж успешен', [
+                        'order_id' => $order->id,
+                        'order_number' => $order->order_number,
+                    ]);
+                    break;
+
+                case 'payment.canceled':
+                    $order->update([
+                        'payment_status' => 'cancelled',
+                        'status' => 'cancelled',
+                    ]);
+
+                    // TODO: Email-уведомление клиенту об отмене заказа
+
+                    Log::info('YooKassa webhook: платёж отменён', [
+                        'order_id' => $order->id,
+                        'order_number' => $order->order_number,
+                    ]);
+                    break;
+
+                default:
+                    Log::info('YooKassa webhook: неизвестное событие', [
+                        'event' => $event,
+                    ]);
+            }
+
+            return response()->json(['status' => 'success']);
+
+        } catch (\Exception $e) {
+            Log::error('YooKassa webhook: ошибка обработки', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Проверка, входит ли IP-адрес в диапазон CIDR
+     *
+     * @param string $ip
+     * @param string $range
+     * @return bool
+     */
+    private function ipInRange(string $ip, string $range): bool
+    {
+        // Если это не диапазон, а конкретный IP
+        if (strpos($range, '/') === false) {
+            return $ip === $range;
+        }
+
+        // IPv6
+        if (strpos($range, ':') !== false) {
+            // Упрощённая проверка для IPv6 — проверяем префикс
+            [$subnet, $bits] = explode('/', $range);
+            // Для IPv6 нужна более сложная логика, пока пропускаем IPv6 адреса
+            if (strpos($ip, ':') !== false) {
+                return strpos($ip, rtrim($subnet, ':')) === 0;
+            }
+            return false;
+        }
+
+        // IPv4
+        [$subnet, $bits] = explode('/', $range);
+        $ip = ip2long($ip);
+        $subnet = ip2long($subnet);
+        $mask = -1 << (32 - (int)$bits);
+        $subnet &= $mask;
+
+        return ($ip & $mask) === $subnet;
     }
 }

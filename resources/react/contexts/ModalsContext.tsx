@@ -4,7 +4,7 @@
  * Позволяет открывать/закрывать модальные окна из любого места приложения
  */
 
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { Product } from '@/api/types';
 import { useAuth, useCart, useCity, useStores } from '@/hooks';
 import { orderService, yandexMetrikaService } from '@/api/services';
@@ -64,6 +64,40 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
     const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
     const [categoriesModalOpen, setCategoriesModalOpen] = useState(false);
     const [cartModalOpen, setCartModalOpen] = useState(false);
+
+    // Обработка URL параметров при возврате из YooKassa
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderSuccess = urlParams.get('order_success');
+        const orderPending = urlParams.get('order_pending');
+        const orderCancelled = urlParams.get('order_cancelled');
+
+        // Очищаем URL от параметров
+        const cleanUrl = () => {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('order_success');
+            url.searchParams.delete('order_pending');
+            url.searchParams.delete('order_cancelled');
+            window.history.replaceState({}, '', url.toString());
+        };
+
+        if (orderSuccess) {
+            const orderId = parseInt(orderSuccess, 10);
+            if (!isNaN(orderId)) {
+                setProfileInitialOrderId(orderId);
+                setProfileModalOpen(true);
+            }
+            cleanUrl();
+        } else if (orderPending) {
+            // Платёж ещё обрабатывается
+            alert('Ваш платёж обрабатывается. Статус заказа будет обновлён автоматически.');
+            cleanUrl();
+        } else if (orderCancelled) {
+            // Заказ отменён или оплата не прошла
+            alert('Оплата не была завершена. Заказ будет отменён.');
+            cleanUrl();
+        }
+    }, []);
 
     // Функции открытия модальных окон
     const openAuthModal = useCallback(() => setAuthModalOpen(true), []);
