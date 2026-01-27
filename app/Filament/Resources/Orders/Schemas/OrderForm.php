@@ -191,7 +191,6 @@ class OrderForm
                             ->label('Сумма заказа')
                             ->numeric()
                             ->suffix('₽')
-                            ->disabled()
                             ->dehydrated(),
                         TextInput::make('delivery_cost')
                             ->label('Стоимость доставки')
@@ -213,7 +212,6 @@ class OrderForm
                             ->label('Итого')
                             ->numeric()
                             ->suffix('₽')
-                            ->disabled()
                             ->dehydrated(),
                     ])
                     ->columnSpanFull()
