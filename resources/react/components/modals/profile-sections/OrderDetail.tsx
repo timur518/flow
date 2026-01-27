@@ -63,7 +63,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId, onBack }) => {
     };
 
     const isInProgress = (status: Order['status']) => {
-        return ['new', 'processing', 'assembling', 'awaiting_delivery', 'delivering'].includes(status);
+        return ['processing', 'assembling', 'awaiting_delivery', 'delivering'].includes(status);
     };
 
     const getDeliveryTypeText = (deliveryType: Order['delivery_type']) => {
