@@ -1027,6 +1027,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     font-size: 16px;
     font-weight: 600;
+    line-height: 1.2;
     color: #FFFFFF;
     text-align: left;
     pointer-events: none;
