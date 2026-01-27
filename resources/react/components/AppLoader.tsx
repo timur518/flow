@@ -47,8 +47,8 @@ const AppLoader: React.FC<AppLoaderProps> = ({ children }) => {
                         <div className="flex flex-col items-center gap-4">
                             {/* Спиннер */}
                             <div className="relative w-16 h-16">
-                                <div className="absolute inset-0 border-4 border-pink-200 rounded-full"></div>
-                                <div className="absolute inset-0 border-4 border-pink-500 rounded-full border-t-transparent animate-spin"></div>
+                                <div className="absolute inset-0 border-4 border-pink-100 rounded-full"></div>
+                                <div className="absolute inset-0 border-4 border-pink-300 rounded-full border-t-transparent animate-spin"></div>
                             </div>
 
                             {/* Текст загрузки */}
