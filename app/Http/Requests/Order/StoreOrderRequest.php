@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Order;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class StoreOrderRequest extends FormRequest
 {
@@ -16,10 +18,27 @@ class StoreOrderRequest extends FormRequest
 
     /**
      * Проверяем, авторизован ли пользователь
+     * Поскольку маршрут без auth:sanctum middleware, нужно вручную проверить токен
      */
     protected function isGuest(): bool
     {
-        return !$this->user();
+        // Сначала проверяем стандартный способ
+        if ($this->user()) {
+            return false;
+        }
+
+        // Пробуем аутентифицировать по Bearer токену вручную
+        $bearerToken = $this->bearerToken();
+        if ($bearerToken) {
+            $accessToken = PersonalAccessToken::findToken($bearerToken);
+            if ($accessToken && $accessToken->tokenable) {
+                // Устанавливаем пользователя для текущего запроса
+                Auth::setUser($accessToken->tokenable);
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
