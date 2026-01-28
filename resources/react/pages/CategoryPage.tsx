@@ -110,8 +110,8 @@ const CategoryPage: React.FC = () => {
     const handleTagToggle = (tagId: number) => {
         setSelectedTags(prev =>
             prev.includes(tagId)
-                ? prev.filter(id => id !== tagId)
-                : [...prev, tagId]
+                ? [] // Если тег уже выбран - снимаем его
+                : [tagId] // Иначе выбираем только этот тег (заменяем предыдущий)
         );
     };
 
