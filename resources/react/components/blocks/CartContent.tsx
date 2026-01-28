@@ -17,14 +17,18 @@ interface CartContentProps {
 const CartContent: React.FC<CartContentProps> = ({ onCheckout, showHeader = true }) => {
     const { items, removeItem, updateQuantity, total } = useCart();
     const { user } = useAuth();
-    const { selectedCityId } = useCity();
-    const { stores } = useStores({ city_id: selectedCityId || undefined });
+    const { selectedCityId, isInitialized: cityInitialized } = useCity();
+    const { stores, loading: storesLoading } = useStores({ city_id: selectedCityId || undefined });
     const [removingItems, setRemovingItems] = useState<Set<number>>(new Set());
     const [addingItems, setAddingItems] = useState<Set<number>>(new Set());
     const [previousItemIds, setPreviousItemIds] = useState<Set<number>>(() => {
         return new Set(items.map(item => item.id));
     });
     const [isInitialized, setIsInitialized] = useState(false);
+
+    // Проверяем, заблокированы ли заказы в магазине выбранного города
+    // Пока город или магазины не загружены, не блокируем кнопку
+    const isOrdersBlocked = cityInitialized && !storesLoading && stores.length > 0 && stores[0].orders_blocked;
 
     useEffect(() => {
         setIsInitialized(true);
@@ -208,21 +212,24 @@ const CartContent: React.FC<CartContentProps> = ({ onCheckout, showHeader = true
 
                     {/* Кнопка оформления */}
                     <button
-                        onClick={onCheckout}
-                        className="cart-checkout-button"
+                        onClick={isOrdersBlocked ? undefined : onCheckout}
+                        className={`cart-checkout-button ${isOrdersBlocked ? 'disabled' : ''}`}
+                        disabled={isOrdersBlocked}
                     >
                         <div className="cart-checkout-button-text">
-                            Оформить заказ
+                            {isOrdersBlocked ? 'Временно не принимаем заказы' : 'Оформить заказ'}
                         </div>
-                        {!user ? (
-                            <div className="cart-checkout-button-subtext">
-                                и зарегистрироваться
-                            </div>
-                        ) : stores.length > 0 && stores[0].working_hours ? (
-                            <div className="cart-checkout-button-subtext">
-                                Доставляем {stores[0].working_hours.toLowerCase()}
-                            </div>
-                        ) : null}
+                        {!isOrdersBlocked && (
+                            !user ? (
+                                <div className="cart-checkout-button-subtext">
+                                    и зарегистрироваться
+                                </div>
+                            ) : stores.length > 0 && stores[0].working_hours ? (
+                                <div className="cart-checkout-button-subtext">
+                                    Доставляем {stores[0].working_hours.toLowerCase()}
+                                </div>
+                            ) : null
+                        )}
                     </button>
                 </>
             )}

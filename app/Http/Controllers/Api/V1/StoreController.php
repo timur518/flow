@@ -40,6 +40,7 @@ class StoreController extends Controller
                 'yandex_maps_url',
                 'yandex_maps_code',
                 'working_hours',
+                'orders_blocked',
                 'whatsapp_url',
                 'telegram_chat_url',
                 'telegram_channel_url',
@@ -67,6 +68,7 @@ class StoreController extends Controller
                     'yandex_maps_url' => $store->yandex_maps_url,
                     'yandex_maps_code' => $store->yandex_maps_code,
                     'working_hours' => $store->working_hours,
+                    'orders_blocked' => $store->orders_blocked,
                     'social_links' => [
                         'whatsapp' => $store->whatsapp_url,
                         'telegram_chat' => $store->telegram_chat_url,

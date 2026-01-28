@@ -19,6 +19,7 @@ export interface Store extends BaseModel {
     yandex_maps_url: string | null;
     yandex_maps_code: string | null;
     working_hours: string | null;
+    orders_blocked: boolean;
     social_links: SocialLinks;
     sort_order: number;
 }
