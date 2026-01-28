@@ -28,6 +28,7 @@ export interface RegisterData {
     phone?: string;
     password: string;
     password_confirmation: string;
+    city_id?: number;
 }
 
 export interface LoginData {

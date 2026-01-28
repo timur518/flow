@@ -72,6 +72,13 @@ class RegisterRequest extends FormRequest
                 'regex:/^[a-zA-Zа-яА-ЯёЁ0-9!@#$%^&*()_+\-=\[\]{};:,.<>?\/\\|`~]+$/',
                 'confirmed'
             ],
+
+            // Город: опциональный, должен существовать в таблице cities
+            'city_id' => [
+                'nullable',
+                'integer',
+                'exists:cities,id'
+            ],
         ];
     }
 

@@ -42,7 +42,7 @@ const Footer: React.FC = () => {
                     <div className="footer-column">
                         <h3 className="footer-heading">Скоро и в приложении</h3>
                         <p className="footer-text mb-4">
-                            Будут доступны
+                            Будем доступны
                         </p>
                         <p className="footer-text mb-4">
                             для iOS или Android

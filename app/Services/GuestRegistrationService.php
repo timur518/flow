@@ -19,9 +19,10 @@ class GuestRegistrationService
      * @param string $name Имя пользователя
      * @param string $phone Телефон
      * @param string $email Email
+     * @param int|null $cityId ID города
      * @return array{user: User, token: string, is_new: bool}
      */
-    public function registerOrFind(string $name, string $phone, string $email): array
+    public function registerOrFind(string $name, string $phone, string $email, ?int $cityId = null): array
     {
         // Ищем существующего пользователя по email или телефону
         $existingUser = User::where('email', $email)
@@ -48,6 +49,7 @@ class GuestRegistrationService
             'email' => $email,
             'phone' => $phone,
             'password' => Hash::make($password),
+            'city_id' => $cityId,
         ]);
 
         // Назначаем роль customer

@@ -35,6 +35,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'city_id' => $request->city_id,
         ]);
 
         // Назначаем роль customer по умолчанию

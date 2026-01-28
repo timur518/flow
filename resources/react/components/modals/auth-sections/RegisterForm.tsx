@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { useAuth } from '@/hooks';
+import { useAuth, useCity } from '@/hooks';
 
 interface RegisterFormProps {
     onBack: () => void;
@@ -19,6 +19,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     onSuccess,
 }) => {
     const { register, loading, error, clearError } = useAuth();
+    const { selectedCityId } = useCity();
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -30,7 +31,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await register(formData);
+            await register({
+                ...formData,
+                city_id: selectedCityId || undefined,
+            });
             onSuccess();
         } catch (err) {
             // Ошибка обрабатывается в хуке

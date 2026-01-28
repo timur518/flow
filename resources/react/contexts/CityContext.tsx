@@ -52,6 +52,7 @@ export const CityProvider: React.FC<CityProviderProps> = ({ children }) => {
 
         const initializeCity = () => {
             const cityParam = searchParams.get('city');
+            let selectedCity: number | null = null;
 
             // 1. Приоритет: параметр в URL
             if (cityParam) {
@@ -59,41 +60,46 @@ export const CityProvider: React.FC<CityProviderProps> = ({ children }) => {
                 const cityExists = cities.find(c => c.id === cityId);
 
                 if (cityExists) {
-                    setSelectedCityId(cityId);
-                    setIsInitialized(true);
-                    return;
+                    selectedCity = cityId;
                 }
             }
 
             // 2. Если пользователь авторизован, берем город из профиля
-            if (authContext.user?.city_id) {
+            if (!selectedCity && authContext.user?.city_id) {
                 const cityExists = cities.find(c => c.id === authContext.user.city_id);
 
                 if (cityExists) {
-                    setSelectedCityId(authContext.user.city_id);
-                    setIsInitialized(true);
-                    return;
+                    selectedCity = authContext.user.city_id;
                 }
             }
 
             // 3. Если пользователь не авторизован, берем из cookies
-            if (!authContext.user) {
+            if (!selectedCity && !authContext.user) {
                 const cookieCityId = CookieManager.getCityId();
 
                 if (cookieCityId) {
                     const cityExists = cities.find(c => c.id === cookieCityId);
 
                     if (cityExists) {
-                        setSelectedCityId(cookieCityId);
-                        setIsInitialized(true);
-                        return;
+                        selectedCity = cookieCityId;
                     }
                 }
             }
 
             // 4. По умолчанию выбираем первый город
-            setSelectedCityId(cities[0].id);
+            if (!selectedCity) {
+                selectedCity = cities[0].id;
+            }
+
+            // Устанавливаем выбранный город
+            setSelectedCityId(selectedCity);
             setIsInitialized(true);
+
+            // Всегда сохраняем город в cookies для неавторизованных пользователей
+            // Это нужно чтобы при регистрации мы знали какой город был выбран
+            if (!authContext.user) {
+                CookieManager.setCityId(selectedCity);
+            }
         };
 
         initializeCity();

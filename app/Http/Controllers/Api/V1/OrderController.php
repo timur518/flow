@@ -87,7 +87,8 @@ class OrderController extends Controller
                 $registrationResult = $this->guestRegistrationService->registerOrFind(
                     name: $request->customer_name,
                     phone: $request->customer_phone,
-                    email: $request->customer_email
+                    email: $request->customer_email,
+                    cityId: $request->city_id
                 );
 
                 $user = $registrationResult['user'];
