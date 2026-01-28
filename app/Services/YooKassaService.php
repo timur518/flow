@@ -17,9 +17,10 @@ class YooKassaService
      *
      * @param Order $order
      * @param Store $store
+     * @param string|null $authToken Токен авторизации для гостевых заказов
      * @return array{success: bool, payment_id?: string, payment_url?: string, error?: string}
      */
-    public function createPayment(Order $order, Store $store): array
+    public function createPayment(Order $order, Store $store, ?string $authToken = null): array
     {
         try {
             $client = $this->getClient($store);
@@ -57,6 +58,11 @@ class YooKassaService
 
             // Формируем return_url с параметром order_success
             $returnUrl = config('app.url') . '?order_success=' . $order->id;
+
+            // Если есть токен авторизации (гостевой заказ) — добавляем в URL
+            if ($authToken) {
+                $returnUrl .= '&auth_token=' . urlencode($authToken);
+            }
 
             // Создаем платеж
             $payment = $client->createPayment(

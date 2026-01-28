@@ -15,13 +15,21 @@ class StoreOrderRequest extends FormRequest
     }
 
     /**
+     * Проверяем, авторизован ли пользователь
+     */
+    protected function isGuest(): bool
+    {
+        return !$this->user();
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             // Тип оплаты
             'payment_type' => ['required', 'string', 'in:on_delivery,online'],
 
@@ -51,6 +59,30 @@ class StoreOrderRequest extends FormRequest
             'items.*.product_id' => ['required', 'exists:products,id'],
             'items.*.quantity' => ['required', 'integer', 'min:1'],
         ];
+
+        // Для гостей добавляем обязательные поля заказчика
+        if ($this->isGuest()) {
+            $rules['customer_name'] = [
+                'required',
+                'string',
+                'min:2',
+                'max:100',
+                'regex:/^[а-яА-ЯёЁa-zA-Z\s\-]+$/u'
+            ];
+            $rules['customer_phone'] = [
+                'required',
+                'string',
+                'regex:/^\+7\(\d{3}\)\d{3}-\d{2}-\d{2}$/'
+            ];
+            $rules['customer_email'] = [
+                'required',
+                'string',
+                'email:rfc,dns',
+                'max:255'
+            ];
+        }
+
+        return $rules;
     }
 
     /**
@@ -79,6 +111,16 @@ class StoreOrderRequest extends FormRequest
             'items.*.product_id.exists' => 'Товар не найден',
             'items.*.quantity.required' => 'Количество обязательно',
             'items.*.quantity.min' => 'Количество должно быть не менее 1',
+            // Сообщения для гостевых полей
+            'customer_name.required' => 'Имя заказчика обязательно',
+            'customer_name.min' => 'Имя должно содержать минимум 2 символа',
+            'customer_name.max' => 'Имя не должно превышать 100 символов',
+            'customer_name.regex' => 'Имя может содержать только буквы, пробелы и дефисы',
+            'customer_phone.required' => 'Телефон заказчика обязателен',
+            'customer_phone.regex' => 'Телефон должен быть в формате +7(XXX)XXX-XX-XX',
+            'customer_email.required' => 'Email заказчика обязателен',
+            'customer_email.email' => 'Некорректный формат email',
+            'customer_email.max' => 'Email не должен превышать 255 символов',
         ];
     }
 }

@@ -336,7 +336,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
         }
 
         if (onSubmit) {
-            onSubmit({
+            const orderData: any = {
                 deliveryType: deliveryMode,
                 address: clarifyWithRecipient ? 'Уточнить у получателя' : recipientData.address,
                 recipientName: recipientData.name,
@@ -350,7 +350,16 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 longitude: clarifyWithRecipient ? null : recipientData.longitude,
                 promoCode: promoCode,
                 cityId: selectedCityId,
-            });
+            };
+
+            // Если пользователь не авторизован — добавляем данные заказчика
+            if (!user) {
+                orderData.customerName = customerData.name;
+                orderData.customerPhone = customerData.phone;
+                orderData.customerEmail = customerData.email;
+            }
+
+            onSubmit(orderData);
         }
     };
 

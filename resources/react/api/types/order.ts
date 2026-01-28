@@ -85,6 +85,19 @@ export interface CreateOrderData {
     promo_code?: string;
     is_anonymous?: boolean;
     items: OrderItemData[];
+    // Данные заказчика для гостевых заказов
+    customer_name?: string;
+    customer_phone?: string;
+    customer_email?: string;
+}
+
+export interface CreateOrderResponse {
+    message: string;
+    order: Order;
+    payment_url?: string;
+    // Данные авторизации для гостевых заказов
+    auth_token?: string;
+    is_new_user?: boolean;
 }
 
 export interface OrderItemData {

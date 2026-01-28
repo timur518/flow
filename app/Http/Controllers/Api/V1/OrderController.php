@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Store;
 use App\Services\DeliveryService;
+use App\Services\GuestRegistrationService;
 use App\Services\PriceModifierService;
 use App\Services\PromoCodeService;
 use App\Services\TelegramService;
@@ -26,7 +27,8 @@ class OrderController extends Controller
         private TelegramService $telegramService,
         private DeliveryService $deliveryService,
         private PriceModifierService $priceModifier,
-        private YooKassaService $yooKassaService
+        private YooKassaService $yooKassaService,
+        private GuestRegistrationService $guestRegistrationService
     ) {}
 
     /**
@@ -71,6 +73,29 @@ class OrderController extends Controller
     {
         try {
             DB::beginTransaction();
+
+            // Определяем пользователя (авторизованный или гость)
+            $user = $request->user();
+            $authToken = null;
+            $isNewUser = false;
+
+            if (!$user) {
+                // Гость — регистрируем или находим существующего пользователя
+                $registrationResult = $this->guestRegistrationService->registerOrFind(
+                    name: $request->customer_name,
+                    phone: $request->customer_phone,
+                    email: $request->customer_email
+                );
+
+                $user = $registrationResult['user'];
+                $authToken = $registrationResult['token'];
+                $isNewUser = $registrationResult['is_new'];
+
+                Log::info('Guest order: user resolved', [
+                    'user_id' => $user->id,
+                    'is_new' => $isNewUser,
+                ]);
+            }
 
             // Генерируем номер заказа
             $orderNumber = Order::generateOrderNumber();
@@ -186,8 +211,8 @@ class OrderController extends Controller
                 'payment_type' => $request->payment_type,
                 'payment_status' => 'pending',
                 'promo_code' => $request->promo_code,
-                'user_id' => $request->user()->id,
-                'customer_phone' => $request->user()->phone,
+                'user_id' => $user->id,
+                'customer_phone' => $user->phone,
                 'is_anonymous' => $request->is_anonymous ?? false,
                 'recipient_name' => $request->recipient_name,
                 'recipient_phone' => $request->recipient_phone,
@@ -225,10 +250,20 @@ class OrderController extends Controller
                 'order' => new OrderResource($order),
             ];
 
+            // Если это был гость — добавляем токен авторизации в ответ
+            if ($authToken) {
+                $response['auth_token'] = $authToken;
+                $response['is_new_user'] = $isNewUser;
+            }
+
             // Если оплата онлайн, создаем платеж в YooKassa
             if ($request->payment_type === 'online') {
                 try {
-                    $paymentResult = $this->yooKassaService->createPayment($order, $store);
+                    $paymentResult = $this->yooKassaService->createPayment(
+                        order: $order,
+                        store: $store,
+                        authToken: $authToken // Передаём токен для включения в return URL
+                    );
 
                     // Сохраняем данные платежа в заказ
                     $order->update([

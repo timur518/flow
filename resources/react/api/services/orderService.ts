@@ -8,6 +8,7 @@ import { API_ENDPOINTS } from '../config/apiConfig';
 import {
     Order,
     CreateOrderData,
+    CreateOrderResponse,
     PromoCodeValidation,
     PromoCodeResponse,
     DeliveryCalculation,
@@ -38,16 +39,11 @@ export const orderService = {
     /**
      * Создать новый заказ
      */
-    async createOrder(data: CreateOrderData): Promise<{
-        order: Order;
-        payment_url?: string | null;
-        message?: string;
-    }> {
-        const response = await apiClient.post<{
-            order: Order;
-            payment_url?: string | null;
-            message?: string;
-        }>(API_ENDPOINTS.ORDERS, data);
+    async createOrder(data: CreateOrderData): Promise<CreateOrderResponse> {
+        const response = await apiClient.post<CreateOrderResponse>(
+            API_ENDPOINTS.ORDERS,
+            data
+        );
         return response.data;
     },
 

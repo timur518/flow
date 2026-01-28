@@ -55,10 +55,12 @@ Route::prefix('v1')->group(function () {
         Route::post('/addresses/{address}/set-default', [AddressController::class, 'setDefault']);
     });
 
-    // Защищенные маршруты для заказов
+    // Создание заказа (доступно и гостям, и авторизованным пользователям)
+    Route::post('/orders', [OrderController::class, 'store']);
+
+    // Защищенные маршруты для заказов (только для авторизованных)
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/orders', [OrderController::class, 'index']);
-        Route::post('/orders', [OrderController::class, 'store']);
         Route::get('/orders/{order}', [OrderController::class, 'show']);
     });
 

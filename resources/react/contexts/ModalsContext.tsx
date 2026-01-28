@@ -6,6 +6,7 @@
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { Product } from '@/api/types';
+import { TokenManager } from '@/api/utils/tokenManager';
 import { useAuth, useCart, useCity, useStores } from '@/hooks';
 import { orderService, yandexMetrikaService } from '@/api/services';
 import {
@@ -49,7 +50,7 @@ interface ModalsProviderProps {
 }
 
 export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
-    const { user, logout } = useAuth();
+    const { user, logout, getProfile } = useAuth();
     const { items: cartItems, total: cartTotal, clearCart } = useCart();
     const { selectedCityId } = useCity();
     const { stores } = useStores({ city_id: selectedCityId || undefined });
@@ -71,6 +72,7 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
         const orderSuccess = urlParams.get('order_success');
         const orderPending = urlParams.get('order_pending');
         const orderCancelled = urlParams.get('order_cancelled');
+        const authToken = urlParams.get('auth_token');
 
         // Очищаем URL от параметров
         const cleanUrl = () => {
@@ -78,8 +80,16 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
             url.searchParams.delete('order_success');
             url.searchParams.delete('order_pending');
             url.searchParams.delete('order_cancelled');
+            url.searchParams.delete('auth_token');
             window.history.replaceState({}, '', url.toString());
         };
+
+        // Если есть auth_token — авторизуем пользователя (гостевой заказ)
+        if (authToken) {
+            TokenManager.setToken(authToken);
+            // Загружаем профиль пользователя
+            getProfile().catch(console.error);
+        }
 
         if (orderSuccess) {
             const orderId = parseInt(orderSuccess, 10);
@@ -97,7 +107,7 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
             alert('Оплата не была завершена. Заказ будет отменён.');
             cleanUrl();
         }
-    }, []);
+    }, [getProfile]);
 
     // Функции открытия модальных окон
     const openAuthModal = useCallback(() => setAuthModalOpen(true), []);
@@ -156,21 +166,18 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
         longitude?: number | null;
         promoCode?: string;
         cityId?: number | null;
+        // Данные заказчика для гостевых заказов
+        customerName?: string;
+        customerPhone?: string;
+        customerEmail?: string;
     }) => {
         try {
-            if (!user) {
-                alert('Пожалуйста, авторизуйтесь для оформления заказа');
-                setCheckoutModalOpen(false);
-                setAuthModalOpen(true);
-                return;
-            }
-
             if (stores.length === 0) {
                 alert('Магазин в выбранном городе не найден');
                 return;
             }
 
-            const orderData = {
+            const orderData: any = {
                 store_id: stores[0].id,
                 city_id: data.cityId || selectedCityId,
                 delivery_type: data.deliveryType,
@@ -193,7 +200,21 @@ export const ModalsProvider: React.FC<ModalsProviderProps> = ({ children }) => {
                 })),
             };
 
+            // Если пользователь не авторизован — добавляем данные заказчика для гостевого заказа
+            if (!user) {
+                orderData.customer_name = data.customerName;
+                orderData.customer_phone = data.customerPhone;
+                orderData.customer_email = data.customerEmail;
+            }
+
             const response = await orderService.createOrder(orderData);
+
+            // Если это был гостевой заказ и вернулся токен — сохраняем его
+            if (response.auth_token) {
+                TokenManager.setToken(response.auth_token);
+                // Загружаем профиль нового пользователя
+                getProfile().catch(console.error);
+            }
 
             const validCartItems = cartItems.filter(item => item && item.id);
             if (validCartItems.length > 0) {

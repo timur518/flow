@@ -8,6 +8,7 @@ import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import HomePage from './HomePage';
 import { useProductDetail, useModals } from '@/hooks';
+import { ProductSchema } from '@/components/common';
 
 const ProductPage: React.FC = () => {
     const { productId } = useParams<{ categorySlug: string; productId: string }>();
@@ -30,7 +31,13 @@ const ProductPage: React.FC = () => {
         hasOpenedModal.current = false;
     }, [productId]);
 
-    return <HomePage />;
+    return (
+        <>
+            {/* Schema.org разметка для поисковиков (невидима для пользователей) */}
+            <ProductSchema product={product} />
+            <HomePage />
+        </>
+    );
 };
 
 export default ProductPage;
