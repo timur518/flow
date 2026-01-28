@@ -17,6 +17,8 @@ class SiteSetting extends Model
         'smtp_port',
         'smtp_username',
         'smtp_password',
+        'smtp_from_email',
+        'smtp_from_name',
         'home_title',
         'home_description',
         'yandex_metrika_code',

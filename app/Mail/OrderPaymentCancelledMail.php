@@ -2,23 +2,22 @@
 
 namespace App\Mail;
 
-use App\Models\User;
+use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class GuestRegistrationMail extends Mailable
+class OrderPaymentCancelledMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
-     * Собираем новое письмо (данные).
+     * Создаём новое письмо.
      */
     public function __construct(
-        public User $user,
-        public string $password
+        public Order $order
     ) {}
 
     /**
@@ -27,7 +26,7 @@ class GuestRegistrationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Добро пожаловать! Ваши данные для входа',
+            subject: 'Платёж по заказу №' . $this->order->order_number . ' отменён',
         );
     }
 
@@ -37,12 +36,12 @@ class GuestRegistrationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.guest-registration',
+            view: 'emails.order-payment-cancelled',
         );
     }
 
     /**
-     * Прикрепления к письму (пусто).
+     * Прикрепления к письму.
      *
      * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */

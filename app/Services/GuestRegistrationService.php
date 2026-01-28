@@ -6,11 +6,13 @@ use App\Mail\GuestRegistrationMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class GuestRegistrationService
 {
+    public function __construct(
+        private EmailService $emailService
+    ) {}
     /**
      * Зарегистрировать нового пользователя или найти существующего по email/телефону
      *
@@ -28,6 +30,7 @@ class GuestRegistrationService
 
         if ($existingUser) {
             // Пользователь уже существует — создаём токен и возвращаем
+            // TODO: Это не безопасно! Можно войти в аккаунт без авторизации - через создание заказа.
             $token = $existingUser->createToken('guest_order_token')->plainTextToken;
 
             return [
@@ -59,7 +62,7 @@ class GuestRegistrationService
         // Отправляем Telegram уведомление о новой регистрации
         $this->sendTelegramNotification($user);
 
-        Log::info('Guest user registered during order', [
+        Log::info('Зарегистрирован пользователь при оформлении заказа', [
             'user_id' => $user->id,
             'email' => $email,
             'phone' => $phone,
@@ -87,14 +90,14 @@ class GuestRegistrationService
     private function sendRegistrationEmail(User $user, string $password): void
     {
         try {
-            Mail::to($user->email)->send(new GuestRegistrationMail($user, $password));
+            $this->emailService->send($user->email, new GuestRegistrationMail($user, $password));
 
-            Log::info('Guest registration email sent', [
+            Log::info('Отправлено письмо о регистрации', [
                 'user_id' => $user->id,
                 'email' => $user->email,
             ]);
         } catch (\Exception $e) {
-            Log::error('Failed to send guest registration email', [
+            Log::error('Ошибка отправки email о регистрации', [
                 'user_id' => $user->id,
                 'email' => $user->email,
                 'error' => $e->getMessage(),
@@ -111,7 +114,7 @@ class GuestRegistrationService
             $telegramService = app(TelegramService::class);
             $telegramService->sendNewUserRegistrationNotification($user);
         } catch (\Exception $e) {
-            Log::error('Failed to send Telegram notification for guest registration', [
+            Log::error('Ошибка отправки телеграм уведомления о регистрации', [
                 'user_id' => $user->id,
                 'error' => $e->getMessage(),
             ]);

@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\StoreOrderRequest;
-
 use App\Http\Resources\OrderResource;
+use App\Mail\NewOrderMail;
+use App\Mail\OrderPaymentCancelledMail;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Store;
 use App\Services\DeliveryService;
+use App\Services\EmailService;
 use App\Services\GuestRegistrationService;
 use App\Services\PriceModifierService;
 use App\Services\PromoCodeService;
@@ -28,7 +30,8 @@ class OrderController extends Controller
         private DeliveryService $deliveryService,
         private PriceModifierService $priceModifier,
         private YooKassaService $yooKassaService,
-        private GuestRegistrationService $guestRegistrationService
+        private GuestRegistrationService $guestRegistrationService,
+        private EmailService $emailService
     ) {}
 
     /**
@@ -91,7 +94,7 @@ class OrderController extends Controller
                 $authToken = $registrationResult['token'];
                 $isNewUser = $registrationResult['is_new'];
 
-                Log::info('Guest order: user resolved', [
+                Log::info('Гостевой заказ: пользователь создан', [
                     'user_id' => $user->id,
                     'is_new' => $isNewUser,
                 ]);
@@ -275,7 +278,7 @@ class OrderController extends Controller
                     $response['message'] = 'Заказ создан. Перейдите по ссылке для оплаты.';
 
                 } catch (\Exception $e) {
-                    Log::error('YooKassa payment creation failed', [
+                    Log::error('Ошибка создания платежа в YooKassa', [
                         'order_id' => $order->id,
                         'error' => $e->getMessage(),
                     ]);
@@ -291,7 +294,7 @@ class OrderController extends Controller
             } else {
                 // Для наличной оплаты отправляем Telegram уведомление сразу
                 $this->telegramService->sendNewOrderNotification($order);
-
+                // Функционала выбора типа оплаты пока нет, по этому это заглушка на будущее
                 // TODO: Email-уведомление клиенту о созданном заказе
             }
 
@@ -394,10 +397,16 @@ class OrderController extends Controller
                         'status' => 'processing',
                     ]);
 
+                    // Загружаем связи для писем
+                    $order->load(['items', 'user']);
+
                     // Отправляем Telegram уведомление магазину
                     $this->telegramService->sendNewOrderNotification($order);
 
-                    // TODO: Email-уведомление клиенту об успешной оплате заказа
+                    // Email-уведомление клиенту о созданном заказе
+                    if ($order->user && $order->user->email) {
+                        $this->emailService->send($order->user->email, new NewOrderMail($order));
+                    }
 
                     Log::info('YooKassa webhook: платёж успешен', [
                         'order_id' => $order->id,
@@ -411,10 +420,16 @@ class OrderController extends Controller
                         'status' => 'cancelled',
                     ]);
 
+                    // Загружаем связи для писем
+                    $order->load(['items', 'user']);
+
                     // Отправляем Telegram уведомление магазину об отмене заказа
                     $this->telegramService->sendOrderCancelledNotification($order);
 
-                    // TODO: Email-уведомление клиенту об отмене заказа
+                    // Email-уведомление клиенту об отмене заказа
+                    if ($order->user && $order->user->email) {
+                        $this->emailService->send($order->user->email, new OrderPaymentCancelledMail($order));
+                    }
 
                     Log::info('YooKassa webhook: платёж отменён', [
                         'order_id' => $order->id,

@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\OrderPaymentCancelledMail;
 use App\Models\Order;
+use App\Services\EmailService;
 use App\Services\TelegramService;
 use App\Services\YooKassaService;
 use Illuminate\Console\Command;
@@ -26,7 +28,8 @@ class CancelExpiredPayments extends Command
 
     public function __construct(
         private readonly YooKassaService $yooKassaService,
-        private readonly TelegramService $telegramService
+        private readonly TelegramService $telegramService,
+        private readonly EmailService $emailService
     ) {
         parent::__construct();
     }
@@ -104,10 +107,11 @@ class CancelExpiredPayments extends Command
         // Отправляем Telegram уведомление магазину об отмене заказа
         $this->telegramService->sendOrderCancelledNotification($order);
 
-        // TODO: Отправить email уведомление клиенту об отмене заказа из-за неоплаты
-        // Пример:
-        // Mail::to($order->user?->email ?? $order->customer_email)
-        //     ->send(new OrderCancelledDueToNonPayment($order));
+        // Отправляем email уведомление клиенту об отмене заказа из-за неоплаты
+        $order->load(['items', 'user']);
+        if ($order->user && $order->user->email) {
+            $this->emailService->send($order->user->email, new OrderPaymentCancelledMail($order));
+        }
     }
 }
 

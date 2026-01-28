@@ -101,7 +101,7 @@ class SiteSettings extends Page implements HasForms
                         Tab::make('Настройки почты')
                             ->icon('heroicon-o-envelope')
                             ->schema([
-                                Section::make()
+                                Section::make('SMTP сервер')
                                     ->schema([
                                         TextInput::make('smtp_host')
                                             ->label('SMTP сервер')
@@ -122,6 +122,21 @@ class SiteSettings extends Page implements HasForms
                                             ->password()
                                             ->revealable()
                                             ->maxLength(255),
+                                    ])
+                                    ->columns(2),
+                                Section::make('Отправитель')
+                                    ->schema([
+                                        TextInput::make('smtp_from_email')
+                                            ->label('Email отправителя')
+                                            ->placeholder('noreply@example.com')
+                                            ->email()
+                                            ->maxLength(255)
+                                            ->helperText('Email, который будет указан как отправитель писем'),
+                                        TextInput::make('smtp_from_name')
+                                            ->label('Имя отправителя')
+                                            ->placeholder('Название магазина')
+                                            ->maxLength(255)
+                                            ->helperText('Имя, которое будет отображаться как отправитель'),
                                     ])
                                     ->columns(2),
                             ]),

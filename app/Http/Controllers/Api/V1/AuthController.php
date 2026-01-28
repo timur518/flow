@@ -8,15 +8,23 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
+use App\Mail\PasswordResetMail;
+use App\Mail\WelcomeMail;
 use App\Models\User;
+use App\Services\EmailService;
 use App\Services\TelegramService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        private EmailService $emailService
+    ) {}
+
     /**
      * Регистрация нового пользователя
      */
@@ -34,6 +42,9 @@ class AuthController extends Controller
 
         // Отправляем уведомление в Telegram о новой регистрации
         $telegramService->sendNewUserRegistrationNotification($user);
+
+        // Отправляем Email-письмо о регистрации
+        $this->emailService->send($user->email, new WelcomeMail($user));
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -144,11 +155,19 @@ class AuthController extends Controller
             ], 404);
         }
 
-        // TODO: Здесь должна быть логика отправки письма для восстановления пароля
-        // Например, через Password::sendResetLink()
+        // Генерируем новый пароль
+        $newPassword = Str::random(8);
+
+        // Обновляем пароль пользователя
+        $user->update([
+            'password' => Hash::make($newPassword),
+        ]);
+
+        // Отправляем письмо с новым паролем
+        $this->emailService->send($user->email, new PasswordResetMail($user, $newPassword));
 
         return response()->json([
-            'message' => 'Письмо для восстановления пароля отправлено на указанный email',
+            'message' => 'Новый пароль отправлен на указанный email',
         ]);
     }
 }
