@@ -798,6 +798,13 @@
     overflow-y: auto;
     height: 550px;
     max-height: 550px;
+    /* Скрываем скроллбар, но оставляем скролл */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE и Edge */
+}
+
+.product-modal-recommendations::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .product-modal-recommendations-title {
