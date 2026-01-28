@@ -13,6 +13,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
@@ -22,6 +24,22 @@ class UserResource extends Resource
     protected static ?string $recordTitleAttribute = 'Пользователи';
     public static ?string $navigationLabel = 'Пользователи';
     protected static null|string|\UnitEnum $navigationGroup = 'Пользователи';
+
+    /**
+     * Фильтрация пользователей по городу для city_admin.
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = Auth::user();
+
+        // Если city_admin - показываем только пользователей его города
+        if ($user && $user->hasRole('city_admin') && $user->city_id) {
+            $query->where('city_id', $user->city_id);
+        }
+
+        return $query;
+    }
 
     public static function form(Schema $schema): Schema
     {
