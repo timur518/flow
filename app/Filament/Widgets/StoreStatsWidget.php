@@ -10,6 +10,7 @@ use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class StoreStatsWidget extends BaseWidget
 {
@@ -19,10 +20,23 @@ class StoreStatsWidget extends BaseWidget
         'xl' => 1,
     ];
 
+    protected function getTableHeading(): string
+    {
+        $user = Auth::user();
+        $heading = 'Статистика по магазинам';
+
+        if ($user && $user->hasRole('city_admin') && $user->city) {
+            $heading .= ' (' . $user->city->name . ')';
+        }
+
+        return $heading;
+    }
+
     public function table(Table $table): Table
     {
+        // Global Scope автоматически фильтрует магазины по городу для city_admin
         return $table
-            ->heading('Статистика по магазинам')
+            ->heading($this->getTableHeading())
             ->query(
                 Store::query()
                     ->with('city')

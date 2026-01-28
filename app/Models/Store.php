@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Enums\VatCode;
+use App\Traits\BelongsToCity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Store extends Model
 {
+    use BelongsToCity;
     protected $fillable = [
         'city_id',
         'address',

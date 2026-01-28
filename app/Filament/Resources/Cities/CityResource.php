@@ -13,6 +13,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class CityResource extends Resource
 {
@@ -25,6 +27,23 @@ class CityResource extends Resource
     public static ?string $navigationLabel = 'Города';
     protected static null|string|\UnitEnum $navigationGroup = 'Магазины';
     protected static ?int $navigationSort = 1;
+
+    /**
+     * Фильтрация городов для city_admin.
+     * city_admin видит только свой город.
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = Auth::user();
+
+        // Если city_admin - показываем только его город
+        if ($user && $user->hasRole('city_admin') && $user->city_id) {
+            $query->where('id', $user->city_id);
+        }
+
+        return $query;
+    }
 
     public static function form(Schema $schema): Schema
     {

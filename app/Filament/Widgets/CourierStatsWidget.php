@@ -9,6 +9,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CourierStatsWidget extends BaseWidget
@@ -25,10 +26,23 @@ class CourierStatsWidget extends BaseWidget
         return $record->courier;
     }
 
+    protected function getTableHeading(): string
+    {
+        $user = Auth::user();
+        $heading = 'Статистика по курьерам';
+
+        if ($user && $user->hasRole('city_admin') && $user->city) {
+            $heading .= ' (' . $user->city->name . ')';
+        }
+
+        return $heading;
+    }
+
     public function table(Table $table): Table
     {
+        // Global Scope автоматически фильтрует заказы по городу для city_admin
         return $table
-            ->heading('Статистика по курьерам')
+            ->heading($this->getTableHeading())
             ->query(
                 Order::query()
                     ->select([

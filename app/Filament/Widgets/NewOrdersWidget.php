@@ -9,16 +9,30 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Auth;
 
 class NewOrdersWidget extends BaseWidget
 {
     protected static ?int $sort = 3;
     protected int | string | array $columnSpan = 'full';
 
+    protected function getTableHeading(): string
+    {
+        $user = Auth::user();
+        $heading = 'Новые заказы';
+
+        if ($user && $user->hasRole('city_admin') && $user->city) {
+            $heading .= ' (' . $user->city->name . ')';
+        }
+
+        return $heading;
+    }
+
     public function table(Table $table): Table
     {
+        // Global Scope автоматически фильтрует заказы по городу для city_admin
         return $table
-            ->heading('Новые заказы')
+            ->heading($this->getTableHeading())
             ->query(
                 Order::query()
                     ->where('status', OrderStatus::NEW->value)

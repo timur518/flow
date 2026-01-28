@@ -13,6 +13,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class ProductResource extends Resource
 {
@@ -24,6 +26,25 @@ class ProductResource extends Resource
     protected static ?string $recordTitleAttribute = 'Товары';
     protected static string|\UnitEnum|null $navigationGroup = 'Товары';
     protected static ?int $navigationSort = 1;
+
+    /**
+     * Фильтрация товаров по городу для city_admin.
+     * Товары связаны с городами через many-to-many.
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = Auth::user();
+
+        // Если city_admin - показываем только товары, привязанные к его городу
+        if ($user && $user->hasRole('city_admin') && $user->city_id) {
+            $query->whereHas('cities', function (Builder $q) use ($user) {
+                $q->where('cities.id', $user->city_id);
+            });
+        }
+
+        return $query;
+    }
 
     public static function form(Schema $schema): Schema
     {
