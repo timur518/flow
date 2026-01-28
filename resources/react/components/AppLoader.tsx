@@ -53,7 +53,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({ children }) => {
 
                             {/* Текст загрузки */}
                             <div className="text-sm text-gray-600">
-                                {settingsLoading && <p>Загружаем семена...</p>}
+                                {settingsLoading && <p>Сажаем семена...</p>}
                                 {authLoading && <p>Поливаем ростки...</p>}
                                 {citiesLoading && <p>Проверяем грядки...</p>}
                                 {!settingsLoading && !authLoading && !citiesLoading && !cityInitialized && (
