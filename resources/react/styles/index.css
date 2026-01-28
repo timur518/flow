@@ -1812,6 +1812,7 @@ body {
     background-color: #fc6c5f;
     border-radius: 100px;
     transition: opacity 0.2s;
+    cursor: pointer;
 }
 
 .cart-checkout-button:hover {
