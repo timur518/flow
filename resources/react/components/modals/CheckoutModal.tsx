@@ -225,6 +225,21 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
         }
     };
 
+    // Обработчик для поля имени - блокирует спецсимволы и цифры
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'customer' | 'recipient') => {
+        // Разрешаем только буквы (кириллица и латиница), пробелы и дефис
+        const filtered = e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ\s\-]/g, '');
+
+        if (type === 'customer') {
+            setCustomerData({ ...customerData, name: filtered });
+            if (validationErrors['customer_name']) {
+                setValidationErrors({ ...validationErrors, customer_name: false });
+            }
+        } else {
+            setRecipientData({ ...recipientData, name: filtered });
+        }
+    };
+
     const handleRecipientChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setRecipientData({
@@ -506,7 +521,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                                 type="text"
                                                 name="name"
                                                 value={customerData.name}
-                                                onChange={handleCustomerChange}
+                                                onChange={(e) => handleNameChange(e, 'customer')}
                                                 className={`checkout-form-input ${validationErrors['customer_name'] ? 'error' : ''}`}
                                                 placeholder="Введите имя"
                                                 required
@@ -560,7 +575,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                                 type="text"
                                                 name="name"
                                                 value={recipientData.name}
-                                                onChange={handleRecipientChange}
+                                                onChange={(e) => handleNameChange(e, 'recipient')}
                                                 className="checkout-form-input"
                                                 placeholder="Введите имя"
                                             />
@@ -759,7 +774,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                                 type="text"
                                                 name="name"
                                                 value={customerData.name}
-                                                onChange={handleCustomerChange}
+                                                onChange={(e) => handleNameChange(e, 'customer')}
                                                 className={`checkout-form-input ${validationErrors['customer_name'] ? 'error' : ''}`}
                                                 placeholder="Ваше имя"
                                                 required
@@ -771,9 +786,9 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                                 type="tel"
                                                 name="phone"
                                                 value={customerData.phone}
-                                                onChange={handleCustomerChange}
+                                                onChange={(e) => handlePhoneChange(e, 'customer')}
                                                 className={`checkout-form-input ${validationErrors['customer_phone'] ? 'error' : ''}`}
-                                                placeholder="+7 (___) ___-__-__"
+                                                placeholder="+7(999)999-99-99"
                                                 required
                                             />
                                         </div>
