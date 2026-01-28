@@ -88,7 +88,6 @@ class SiteSettings extends Page implements HasForms
                                             ->visibility('public')
                                             ->disk('public')
                                             ->maxSize(2048)
-                                            ->acceptedFileTypes(['image/x-icon', 'image/png'])
                                             ->helperText('Рекомендуемый формат: ICO, PNG, SVG. Размер: 32x32px или больше'),
                                         ColorPicker::make('primary_color')
                                             ->label('Акцентный цвет сайта')
