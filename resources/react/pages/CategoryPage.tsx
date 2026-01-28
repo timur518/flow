@@ -42,6 +42,11 @@ const CategoryPage: React.FC = () => {
         return categories.find(c => c.slug === slug);
     }, [categories, slug]);
 
+    // Сбрасываем выбранные теги при смене категории
+    useEffect(() => {
+        setSelectedTags([]);
+    }, [slug]);
+
     // Загружаем товары для этой категории
     const { products: allProducts, loading: productsLoading } = useProducts({
         city_id: selectedCityId || undefined,
