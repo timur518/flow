@@ -37,7 +37,7 @@ class StatsOverviewWidget extends BaseWidget
 
         return [
             Stat::make('Всего клиентов', $totalCustomers)
-                ->description('Зарегистрированных пользователей')
+                ->description('Зарегистрированных')
                 ->descriptionIcon('heroicon-o-user-group')
                 ->color('success'),
 
